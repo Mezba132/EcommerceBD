@@ -12,6 +12,7 @@ import RegisterComplete from './Pages/Auth/CompleteRegister';
 import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
 import ForgotPassword from './Pages/Auth/ForgotPassword';
+import { currentUser } from './Functions/auth';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -20,19 +21,32 @@ const App = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged( async (user) => {
             if(user) {
-                // console.log("user: ", user);
                 const idTokenResult = await user.getIdTokenResult();
+                // dispatch({
+                //     type: LOGGED_IN_USER,
+                //     payload : {
+                //         email: user.email,
+                //         idToken: idTokenResult.token
+                //     }
+                // })
 
-                dispatch({
-                    type: LOGGED_IN_USER,
-                    payload : {
-                        email: user.email,
-                        idToken: idTokenResult.token
-                    }
-                })
+                currentUser(idTokenResult.token)
+                    .then((res) => {
+                        dispatch({
+                            type: LOGGED_IN_USER,
+                            payload: {
+                                name: res.data.name,
+                                email: res.data.email,
+                                idToken: idTokenResult.token,
+                                role: res.data.role,
+                                _id: res.data._id
+                            }
+                        })
+                    })
+                    .catch(err => console.log(err))
             }
         });
-        toast.success('Passwordless Verification Success');
+        // toast.success('Passwordless Verification Success');
         // cleanup
         return () => unsubscribe();
     },[])

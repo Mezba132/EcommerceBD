@@ -28,13 +28,11 @@ const Header = () => {
             type: LOGOUT,
             payload: null
         })
-        toast.success('Logout success');
+        // toast.success('Logout success');
         history.push('/');
     }
 
-    useEffect(() => {
-          console.log(user);
-    },[user])
+    useEffect(() => {},[user]);
 
     return(
             <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">

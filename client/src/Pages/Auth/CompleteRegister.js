@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { auth } from '../../firebase';
 import {Spin} from "antd";
+import {LOGGED_IN_USER} from "../../Constants";
+import { useSelector,useDispatch } from "react-redux";
+import { createOrUpdateUser } from "../../Functions/auth";
 
 const CompleteRegister = ({history}) => {
 
@@ -17,6 +20,10 @@ const CompleteRegister = ({history}) => {
     const handleConfirmPassword = (e) => {
         setConfirmPassword(e.target.value);
     }
+
+    const dispatch = useDispatch();
+    const {user} = useSelector((state) => ({...state}));
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,8 +56,22 @@ const CompleteRegister = ({history}) => {
                 const idTokenResult = await user.getIdTokenResult();
                 // redux store
                 console.log('user', user, 'idTokenResult', idTokenResult);
+                createOrUpdateUser(idTokenResult.token)
+                    .then((res) => {
+                        dispatch({
+                            type: LOGGED_IN_USER,
+                            payload: {
+                                name: res.data.name,
+                                email: res.data.email,
+                                idToken: idTokenResult.token,
+                                role: res.data.role,
+                                _id: res.data._id
+                            }
+                        })                      
+                    })
+                    .catch(err => console.log(err))                
                 // redirect
-                toast.success(`${user.email} succeessfully login`);
+                // toast.success(`${user.email} succeessfully login`);
                 history.push('/');
             }
         }

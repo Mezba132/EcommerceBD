@@ -1,24 +1,34 @@
 import React, {useEffect, useState} from 'react';
 import { Spin } from 'antd';
 import { toast } from 'react-toastify';
-import {auth, googleAuthProvider} from '../../firebase';
-import { useDispatch } from "react-redux";
+import {auth, googleAuthProvider, facebookAuthProvider, githubAuthProvider} from '../../firebase';
+import { useSelector,useDispatch } from "react-redux";
 import {LOGGED_IN_USER} from "../../Constants";
 import {Link} from "react-router-dom";
-import { useSelector } from "react-redux";
+import { createOrUpdateUser } from "../../Functions/auth";
 
 const Login = ({history}) => {
 
     const [email, setEmail] = useState('csmezba@gmail.com');
-    const [password, setPassword] = useState('123456');
+    const [password, setPassword] = useState('gggggg');
     const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
     const { user } = useSelector(user => user);
+    // const {user} = useSelector((state) => ({...state}));
 
     useEffect(() => {
         if (user && user.idToken) history.push('/');
     },[user])
+
+    const roleBasedUser = (res) => {
+        if(res.data.role === 'admin') {
+            history.push('/admin/dashboard');
+        }
+        else {
+            history.push('/user/history');
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,22 +36,29 @@ const Login = ({history}) => {
         // console.table(email, password);
         try {
             const result = await auth.signInWithEmailAndPassword(email, password);
-            // console.log(result);
             const { user } = result;
             const idTokenResult = await user.getIdTokenResult();
 
-            dispatch({
-                type: LOGGED_IN_USER,
-                payload: {
-                    email: user.email,
-                    idToken: idTokenResult.token
-                }
-            })
+            createOrUpdateUser(idTokenResult.token)
+                  .then((res) => {
+
+                        dispatch({
+                            type: LOGGED_IN_USER,
+                            payload: {
+                                name: res.data.name,
+                                email: res.data.email,
+                                idToken: idTokenResult.token,
+                                role: res.data.role,
+                                _id: res.data._id
+                            }
+                        })
+
+                      roleBasedUser(res);
+                  })
+                  .catch(err => console.log(err))
             toast.success('Loging Success');
-            history.push('/');
         }
         catch (e) {
-            console.log(e);
             toast.error(e.message)
             setLoading(false);
         }
@@ -55,26 +72,95 @@ const Login = ({history}) => {
             const { user } = result;
             const idTokenResult = await user.getIdTokenResult();
 
-            dispatch({
-                type: LOGGED_IN_USER,
-                payload: {
-                    email: user.email,
-                    idToken: idTokenResult.token
-                }
-            })
+            createOrUpdateUser(idTokenResult.token)
+                  .then((res) => {
+                    dispatch({
+                        type: LOGGED_IN_USER,
+                        payload: {
+                            name: res.data.name,
+                            email: res.data.email,
+                            idToken: idTokenResult.token,
+                            role: res.data.role,
+                            _id: res.data._id
+                        }
+                    })
+
+                      roleBasedUser(res);
+
+                  })
+                  .catch(err => console.log(err))
             toast.success('Google Loging Success');
-            history.push('/');
         }
         catch (e) {
-            console.log(e);
             toast.error(e.message)
             setLoading(false);
         }
     }
 
-    const facebookLogin = () => {
-        //
+    const facebookLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const result = await auth.signInWithPopup(facebookAuthProvider);
+            const { user } = result;
+            const idTokenResult = await user.getIdTokenResult();
+
+            createOrUpdateUser(idTokenResult.token)
+                  .then((res) => {
+                    dispatch({
+                        type: LOGGED_IN_USER,
+                        payload: {
+                            name: res.data.name,
+                            email: res.data.email,
+                            idToken: idTokenResult.token,
+                            role: res.data.role,
+                            _id: res.data._id
+                        }
+                    })
+
+                      roleBasedUser(res);
+                  })
+                  .catch(err => console.log(err))
+            toast.success('Facebook Loging Success');
+        }
+        catch (e) {
+            toast.error(e.message)
+            setLoading(false);
+        }
     }
+
+    const githubLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const result = await auth.signInWithPopup(githubAuthProvider);
+            const { user } = result;
+            const idTokenResult = await user.getIdTokenResult();
+
+            createOrUpdateUser(idTokenResult.token)
+                  .then((res) => {
+                    dispatch({
+                        type: LOGGED_IN_USER,
+                        payload: {
+                            name: res.data.name,
+                            email: res.data.email,
+                            idToken: idTokenResult.token,
+                            role: res.data.role,
+                            _id: res.data._id
+                        }
+                    })
+
+                      roleBasedUser(res);
+                  })
+                  .catch(err => console.log(err))
+            toast.success('Github Loging Success');
+            history.push('/');
+        }
+        catch (e) {
+            toast.error(e.message)
+            setLoading(false);
+        }
+    }    
 
     const loginForm = () => (
         <form onSubmit={handleSubmit}>
@@ -123,7 +209,7 @@ const Login = ({history}) => {
                         <h4 className="card-title mt-3 text-center">LogIn</h4>
                         <p>
                             <button
-                                  className="btn btn-block btn-danger mb-2"
+                                  className="btn btn-block btn-danger"
                                   onClick={googleLogin}
                             >
                                 <i className="fab fa-google"></i> Login via Google
@@ -132,8 +218,14 @@ const Login = ({history}) => {
                                   className="btn btn-block btn-facebook"
                                   onClick={facebookLogin}
                             >
-                                <i className="fab fa-facebook-f"></i> Login via facebook
+                                <i className="fab fa-facebook-f"></i> Login via Facebook
                             </button>
+                            <button
+                                  className="btn btn-block btn-dark"
+                                  onClick={githubLogin}
+                            >
+                                <i className="fab fa-github"></i> Login via Github
+                            </button>                            
                         </p>
                         <p className="divider-text">
                             <span className="bg-light">OR</span>
