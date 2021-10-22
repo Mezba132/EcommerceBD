@@ -12,7 +12,9 @@ import RegisterComplete from './Pages/Auth/CompleteRegister';
 import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
 import ForgotPassword from './Pages/Auth/ForgotPassword';
+import History from "./Pages/User/History";
 import { currentUser } from './Functions/auth';
+import UserRoute from "./Components/Routes/UserRoutes";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -22,13 +24,6 @@ const App = () => {
         const unsubscribe = auth.onAuthStateChanged( async (user) => {
             if(user) {
                 const idTokenResult = await user.getIdTokenResult();
-                // dispatch({
-                //     type: LOGGED_IN_USER,
-                //     payload : {
-                //         email: user.email,
-                //         idToken: idTokenResult.token
-                //     }
-                // })
 
                 currentUser(idTokenResult.token)
                     .then((res) => {
@@ -62,6 +57,7 @@ const App = () => {
           <Route exact path="/register" component={Register} />
           <Route exact path="/register/complete" component={RegisterComplete} />
           <Route exact path="/forgot/password" component={ForgotPassword} />
+          <UserRoute exact path="/user/history" component={History} />
         </Switch>
       </BrowserRouter>
   )
