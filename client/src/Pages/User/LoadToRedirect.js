@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 const LoadToRedirect = () => {
 
-      const [count, setCount] = useState(10);
+      const [count, setCount] = useState(5);
       const history = useHistory();
 
       useEffect(() => {
@@ -16,7 +16,7 @@ const LoadToRedirect = () => {
             return () => clearInterval(interval);
       },[count])
 
-      return <div className="container p-5 text-center">
+      return  <div className="container p-5 text-center">
             <h1> Redirects you in {count} seconds </h1>
       </div>
 

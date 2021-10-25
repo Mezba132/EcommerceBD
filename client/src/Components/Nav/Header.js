@@ -46,7 +46,7 @@ const Header = () => {
                   }
                   {!user &&
                         <Item key="login" icon={<UserOutlined/>} className="float-right">
-                              <Link to='/register'>register</Link>
+                              <Link to='/register'>Register</Link>
                         </Item>
                   }
                   {user &&
