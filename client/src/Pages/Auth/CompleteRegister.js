@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { auth } from '../../firebase';
 import {Spin} from "antd";
 import {LOGGED_IN_USER} from "../../Constants";
-import { useSelector,useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createOrUpdateUser } from "../../Functions/auth";
 
 const CompleteRegister = ({history}) => {
@@ -22,7 +22,6 @@ const CompleteRegister = ({history}) => {
     }
 
     const dispatch = useDispatch();
-    const {user} = useSelector((state) => ({...state}));
 
 
     const handleSubmit = async (e) => {
@@ -55,7 +54,7 @@ const CompleteRegister = ({history}) => {
                 await user.updatePassword(password);
                 const idTokenResult = await user.getIdTokenResult();
                 // redux store
-                console.log('user', user, 'idTokenResult', idTokenResult);
+                // console.log('user', user, 'idTokenResult', idTokenResult);
                 createOrUpdateUser(idTokenResult.token)
                     .then((res) => {
                         dispatch({

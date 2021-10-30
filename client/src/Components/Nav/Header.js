@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { Menu } from 'antd';
-import { HomeOutlined, UserSwitchOutlined, UserOutlined, UserAddOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserSwitchOutlined, UserOutlined, UserAddOutlined, DashboardOutlined } from '@ant-design/icons';
 import {Link, useHistory} from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT } from "../../Constants";
 import firebase from "firebase";
-import {toast} from "react-toastify";
 
 const { SubMenu, Item } = Menu;
 
@@ -28,7 +27,6 @@ const Header = () => {
             type: LOGOUT,
             payload: null
         })
-        // toast.success('Logout success');
         history.push('/');
     }
 
@@ -55,8 +53,17 @@ const Header = () => {
                               title={user.email && user.email.split('@')[0]}
                               className='float-right'
                         >
-                              {/*<Item key="setting:1">User</Item>*/}
-                              {/*<Item key="setting:2">admin</Item>*/}
+                            {user && user.role === "subscriber" &&
+                                <Item icon={<DashboardOutlined/>}>
+                                    <Link to="/user/history">Dashboard</Link>
+                                </Item>
+                            }
+
+                            {user && user.role === "admin" &&
+                            <Item icon={<DashboardOutlined/>}>
+                                <Link to="/admin/dashboard">Dashboard</Link>
+                            </Item>
+                            }
                               <Item key="logout" icon={<UserOutlined/>} onClick={logout}>Logout</Item>
                         </SubMenu>
                   }

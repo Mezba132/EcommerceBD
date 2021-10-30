@@ -19,7 +19,7 @@ const Login = ({history}) => {
 
     useEffect(() => {
         if (user && user.idToken) history.push('/');
-    },[user])
+    },[user,history])
 
     const roleBasedUser = (res) => {
         if(res.data.role === 'admin') {
@@ -188,7 +188,7 @@ const Login = ({history}) => {
                     autoFocus
                 />
             </div>
-            <div class="form-group">
+            <div className="form-group">
                 <button
                     type="submit"
                     className="btn btn-primary btn-block"

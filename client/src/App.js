@@ -14,9 +14,11 @@ import Register from './Pages/Auth/Register';
 import ForgotPassword from './Pages/Auth/ForgotPassword';
 import History from "./Pages/User/History";
 import { currentUser } from './Functions/auth';
-import UserRoute from "./Components/Routes/UserRoutes";
+import UserRoute from "./Components/Routes/UserRoute";
 import Password from "./Pages/User/Password";
 import Wishlist from "./Pages/User/Wishlist";
+import AdminRoute from "./Components/Routes/AdminRoute";
+import AdminDashboard from "./Pages/Admin/AdminDashboard";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -46,7 +48,7 @@ const App = () => {
         // toast.success('Passwordless Verification Success');
         // cleanup
         return () => unsubscribe();
-    },[])
+    },[dispatch])
 
 
   return (
@@ -63,6 +65,7 @@ const App = () => {
           <UserRoute exact path="/user/history" component={History} />
           <UserRoute exact path="/user/password" component={Password} />
           <UserRoute exact path="/user/wishlist" component={Wishlist} />
+          <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
 
         </Switch>
       </BrowserRouter>

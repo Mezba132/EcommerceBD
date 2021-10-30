@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import UserNav from "../../Components/Nav/UserNav";
 import { auth } from "../../firebase";
-import {Spin, spin} from 'antd';
+import { Spin } from 'antd';
 import {toast} from "react-toastify";
 
 const Password = () => {
