@@ -10,8 +10,8 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
       try {
-            const { name } = req.body;
-            const category = await new Category({name, slug: slugify(name) }).save();
+            let { name } = req.body;
+            const category = await new Category({ name, slug: slugify(name) }).save();
             res.json(category);
       }
       catch (err) {
@@ -28,10 +28,13 @@ exports.read = async (req, res) => {
 
 exports.update = async (req, res) => {
       try {
-            const { name } = req.body;
+            const { updateName } = req.body;
+            console.log(req.params.slug);
+            console.log(req.body);
+
             const updated = await Category.findOneAndUpdate(
                   { slug: req.params.slug },
-                  { name, slug : slugify(name) },
+                  {  name : updateName, slug : slugify(updateName) },
                   { new : true }
             )
             res.json(updated)

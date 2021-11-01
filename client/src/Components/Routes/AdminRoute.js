@@ -13,11 +13,11 @@ const AdminRoute = ({ ...rest }) => {
             if(user && user.idToken) {
                   currentAdmin(user.idToken)
                         .then(res => {
-                              console.log("current admin res", res);
+                              // console.log("current admin res", res);
                               setOk(true)
                         })
                         .catch(err => {
-                              console.log("Admin error", err);
+                              // console.log("Admin error", err);
                               setOk(false)
                         })
             }
