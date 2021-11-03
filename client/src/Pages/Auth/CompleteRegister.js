@@ -4,7 +4,7 @@ import { auth } from '../../firebase';
 import {Spin} from "antd";
 import {LOGGED_IN_USER} from "../../Constants";
 import { useDispatch } from "react-redux";
-import { createOrUpdateUser } from "../../Functions/auth";
+import { createOrUpdateUser } from "../../Functions/Auth";
 
 const CompleteRegister = ({history}) => {
 

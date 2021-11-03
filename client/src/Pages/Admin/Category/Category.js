@@ -17,7 +17,7 @@ import {
 import Modal from "../../../Components/Shared/Modal";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
 
-const CategoryCreate = () => {
+const Category = () => {
       const [name, setName] = useState('')
       const [loading, setLoading] = useState(false)
       const [categories, setCategories] = useState([]);
@@ -205,7 +205,7 @@ const CategoryCreate = () => {
                         <div className="col-md-2">
                               <AdminNav/>
                         </div>
-                        <div className="container p-5">
+                        <div className="col-md-9">
                           {loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :  CategoryForm()}
                           <LocalSearch keyword={keyword} setKeyword={setKeyword}/> {/* step-2 && step-3 */}
                           {categories.length > 0 ?
@@ -251,4 +251,4 @@ const CategoryCreate = () => {
             )
 }
 
-export default CategoryCreate;
+export default Category;

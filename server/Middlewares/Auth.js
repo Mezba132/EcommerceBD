@@ -1,5 +1,5 @@
-const admin = require("../firebase");
-const User = require("../models/user");
+const admin = require("../Firebase");
+const User = require("../Models/User");
 
 exports.authCheck = async (req, res, next) => {
   // console.log(req.headers); // token

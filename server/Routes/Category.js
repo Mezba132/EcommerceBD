@@ -3,10 +3,10 @@ const express = require("express");
 const router = express.Router();
 
 // middleware
-const { authCheck, adminCheck } = require("../middlewares/auth");
+const { authCheck, adminCheck } = require("../Middlewares/Auth");
 
 // controller
-const { list, create, read, update, remove } = require("../controllers/Category");
+const { list, create, read, update, remove, readById } = require("../Controllers/Category");
 
 router.get("/categories", list);
 router.post("/category", authCheck, adminCheck, create);

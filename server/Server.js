@@ -20,13 +20,13 @@ mongoose
   .then(() => console.log("DB CONNECTED"))
   .catch((err) => console.log("DB CONNECTION ERR", err));
 
-// middlewares
+// Middlewares
 app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "2mb" }));
 app.use(cors());
 
-// routes middlewares
-readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
+// Routes Middlewares
+readdirSync("./Routes").map((r) => app.use("/api", require("./Routes/" + r)));
 
 // port
 const port = process.env.PORT || 8000;

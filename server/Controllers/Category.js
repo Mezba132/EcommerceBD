@@ -1,4 +1,4 @@
-const Category = require("../models/Category");
+const Category = require("../Models/Category");
 const slugify = require('slugify')
 
 exports.list = async (req, res) => {
@@ -29,12 +29,10 @@ exports.read = async (req, res) => {
 exports.update = async (req, res) => {
       try {
             const { updateName } = req.body;
-            console.log(req.params.slug);
-            console.log(req.body);
 
             const updated = await Category.findOneAndUpdate(
                   { slug: req.params.slug },
-                  {  name : updateName, slug : slugify(updateName) },
+                  { name : updateName, slug : slugify(updateName) },
                   { new : true }
             )
             res.json(updated)

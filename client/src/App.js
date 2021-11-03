@@ -13,18 +13,19 @@ import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
 import ForgotPassword from './Pages/Auth/ForgotPassword';
 import History from "./Pages/User/History";
-import { currentUser } from './Functions/auth';
+import { currentUser } from './Functions/Auth';
 import UserRoute from "./Components/Routes/UserRoute";
 import Password from "./Pages/User/Password";
 import Wishlist from "./Pages/User/Wishlist";
 import AdminRoute from "./Components/Routes/AdminRoute";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
-import CategoryCreate from "./Pages/Admin/Category/CategoryCreate";
+import Category from "./Pages/Admin/Category/Category";
+import SubCategory from "./Pages/Admin/SubCategory/SubCategory";
 
 const App = () => {
     const dispatch = useDispatch();
 
-    // to check firebase auth state
+    // to check Firebase auth state
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged( async (user) => {
             if(user) {
@@ -67,7 +68,9 @@ const App = () => {
           <UserRoute exact path="/user/password" component={Password} />
           <UserRoute exact path="/user/wishlist" component={Wishlist} />
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
-          <AdminRoute exact path="/admin/category" component={CategoryCreate} />
+          <AdminRoute exact path="/admin/category" component={Category} />
+          <AdminRoute exact path="/admin/sub-category" component={SubCategory} />
+
 
         </Switch>
       </BrowserRouter>

@@ -5,7 +5,7 @@ import {auth, googleAuthProvider, facebookAuthProvider, githubAuthProvider} from
 import { useSelector,useDispatch } from "react-redux";
 import {LOGGED_IN_USER} from "../../Constants";
 import {Link} from "react-router-dom";
-import { createOrUpdateUser } from "../../Functions/auth";
+import { createOrUpdateUser } from "../../Functions/Auth";
 
 const Login = ({history}) => {
 
