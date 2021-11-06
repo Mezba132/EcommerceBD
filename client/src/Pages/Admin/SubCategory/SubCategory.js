@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import Modal from "../../../Components/Shared/Modal";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
+import CreateSubForm from "../../../Components/Shared/Form/CreateSubForm";
 
 const SubCategory = () => {
 	const [name, setName] = useState('')
@@ -137,49 +138,50 @@ const SubCategory = () => {
 
 	const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword)
 
-	const subCategoryForm = () => (
-		<form onSubmit={handleSubmit}>
-			<div className="form-group">
-				<h1 className="text-center font-weight-bold">Admin SubCategory</h1>
-				<p className="font-weight-bold">Create New SubCategory</p>
-				<input
-					name=""
-					placeholder="Add New SubCategory"
-					className="form-control mb-3"
-					type="text"
-					onChange={e => setName(e.target.value)}
-					autoFocus
-					value={name}
-					disabled={loading}
-				/>
+	// const subCategoryForm = () => (
+	// 	<form onSubmit={handleSubmit}>
+	// 		<div className="form-group jumbotron">
+	// 			<h1 className="text-center font-weight-bold">Create SubCategory</h1>
+	// 			<p className="font-weight-bold">Create New SubCategory</p>
+	// 			<input
+	// 				name=""
+	// 				placeholder="Add New SubCategory"
+	// 				className="form-control mb-3"
+	// 				type="text"
+	// 				onChange={e => setName(e.target.value)}
+	// 				autoFocus
+	// 				value={name}
+	// 				disabled={loading}
+	// 			/>
+	//
+	// 			<p className="font-weight-bold">Add Parent Category</p>
+	// 			<Select
+	// 				className="mb-3"
+	// 				placeholder="Please Select Category"
+	// 				options={categories.map( c => ({
+	// 						"value" : c._id,
+	// 						"label" : c.name
+	// 					})
+	// 				)}
+	// 				onChange={e => {
+	// 					setCategory(e.value)
+	// 					setCatName(e.label)
+	// 				}}
+	// 			/>
+	// 			<button
+	// 					type="submit"
+	// 					className="btn btn-primary btn-block"
+	// 					disabled={!name || name.length < 2 || loading} > Submit
+	// 			</button>
+	// 		</div>
+	//
+	// 	</form>
+	// )
 
-				<p className="font-weight-bold">Add Parent Category</p>
-				<Select
-					placeholder="Please Select Category"
-					options={categories.map( c => ({
-							"value" : c._id,
-							"label" : c.name
-						})
-					)}
-					onChange={e => {
-						setCategory(e.value)
-						setCatName(e.label)
-					}}
-				/>
-			</div>
-
-				<button
-					type="submit"
-					className="btn btn-primary btn-block"
-					disabled={!name || name.length < 2 || loading} > Submit
-				</button>
-		</form>
-	)
-
-	const handleChange = e => {
-		setParentId(e.value)
-		setParentName(e.label)
-	}
+	// const handleChange = e => {
+	// 	setParentId(e.value)
+	// 	setParentName(e.label)
+	// }
 
 	return (
 		<React.Fragment>
@@ -234,7 +236,10 @@ const SubCategory = () => {
 												})
 										)}
 
-										onChange={handleChange}
+										onChange={e => {
+											setParentId(e.value)
+											setParentName(e.label)
+										}}
 								/>
 
 
@@ -266,7 +271,16 @@ const SubCategory = () => {
 						<AdminNav/>
 					</div>
 					<div className="col-md-9">
-						{loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :  subCategoryForm()}
+						{loading ?
+							<div className="text-center"> <Spin tip="Loading..." /> </div>
+							:
+							<CreateSubForm
+								handleSubmit={handleSubmit}
+								name={name} setName={setName}
+								loading={loading} categories={categories}
+								setCategory={setCategory}
+								setCatName={setCatName}/>
+						}
 						<LocalSearch keyword={keyword} setKeyword={setKeyword}/>
 						{subCategories.length > 0 ?
 							<div className="mt-3">
@@ -296,7 +310,7 @@ const SubCategory = () => {
 				                                    </span>
 												</td>
 											</tr>
-											</tbody>
+										</tbody>
 									)}
 								</table>
 							</div> :

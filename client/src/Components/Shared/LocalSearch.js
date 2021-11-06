@@ -11,7 +11,7 @@ const LocalSearch = ({keyword, setKeyword}) => {
 	return (
 		<input
 				type="text"
-				className="form-control-sm float-right m-2"
+				className="form-control-sm float-right mb-4"
 				placeholder="Search Category"
 				value={keyword}
 				onChange={handleSearchChange}

@@ -21,6 +21,7 @@ import AdminRoute from "./Components/Routes/AdminRoute";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import Category from "./Pages/Admin/Category/Category";
 import SubCategory from "./Pages/Admin/SubCategory/SubCategory";
+import CreateProduct from "./Pages/Admin/Product/Product";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -70,6 +71,7 @@ const App = () => {
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
           <AdminRoute exact path="/admin/category" component={Category} />
           <AdminRoute exact path="/admin/sub-category" component={SubCategory} />
+          <AdminRoute exact path="/admin/create-product" component={CreateProduct} />
 
 
         </Switch>

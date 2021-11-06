@@ -16,6 +16,7 @@ import {
 } from '@ant-design/icons';
 import Modal from "../../../Components/Shared/Modal";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
+import CreateCategoryForm from "../../../Components/Shared/Form/CreateCategory";
 
 const Category = () => {
       const [name, setName] = useState('')
@@ -120,29 +121,29 @@ const Category = () => {
       // step-4
       const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword)
 
-      const CategoryForm = () => (
-            <form onSubmit={handleSubmit}>
-                  <div className="form-group">
-                        <h1 className="text-center font-weight-bold">Admin Category</h1>
-                        <label><h3>Create New Category</h3></label>
-                        <input
-                              name=""
-                              placeholder="Add New Category"
-                              className="form-control"
-                              type="text"
-                              onChange={e => setName(e.target.value)}
-                              autoFocus
-                              value={name}
-                              disabled={loading}
-                        />
-                  </div>
-                  <button
-                        type="submit"
-                        className="btn btn-primary btn-block"
-                        disabled={!name || name.length < 2 || loading} > Submit
-                  </button>
-            </form>
-      )
+      // const CategoryForm = () => (
+      //       <form onSubmit={handleSubmit}>
+      //             <div className="form-group jumbotron mt-4">
+      //                 <h1 className="text-center font-weight-bold">Create Category</h1>
+      //                 <hr className="my-8"/>
+      //                 <p className="font-weight-bold">Create New Category</p>
+      //                   <input
+      //                         name=""
+      //                         placeholder="Add New Category"
+      //                         className="form-control mb-2"
+      //                         type="text"
+      //                         onChange={e => setName(e.target.value)}
+      //                         value={name}
+      //                         disabled={loading}
+      //                   />
+      //                 <button
+      //                         type="submit"
+      //                         className="btn btn-primary btn-block"
+      //                         disabled={!name || name.length < 2 || loading} > Submit
+      //                 </button>
+      //             </div>
+      //       </form>
+      // )
 
       return (
                 <React.Fragment>
@@ -168,7 +169,8 @@ const Category = () => {
                           header="Update Category"
                           children={
                             <div>
-                              <div className="form-group">
+                                <p className="font-weight-bold">Update Category</p>
+                                <div className="form-group">
                                 <input
                                   name=""
                                   placeholder="Add New Category"
@@ -206,7 +208,7 @@ const Category = () => {
                               <AdminNav/>
                         </div>
                         <div className="col-md-9">
-                          {loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :  CategoryForm()}
+                          {loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :  <CreateCategoryForm handleSubmit={handleSubmit} name={name} setName={setName} loading={loading} />}
                           <LocalSearch keyword={keyword} setKeyword={setKeyword}/> {/* step-2 && step-3 */}
                           {categories.length > 0 ?
                             <div className="mt-3">
