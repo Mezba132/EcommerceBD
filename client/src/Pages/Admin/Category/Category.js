@@ -121,30 +121,6 @@ const Category = () => {
       // step-4
       const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword)
 
-      // const CategoryForm = () => (
-      //       <form onSubmit={handleSubmit}>
-      //             <div className="form-group jumbotron mt-4">
-      //                 <h1 className="text-center font-weight-bold">Create Category</h1>
-      //                 <hr className="my-8"/>
-      //                 <p className="font-weight-bold">Create New Category</p>
-      //                   <input
-      //                         name=""
-      //                         placeholder="Add New Category"
-      //                         className="form-control mb-2"
-      //                         type="text"
-      //                         onChange={e => setName(e.target.value)}
-      //                         value={name}
-      //                         disabled={loading}
-      //                   />
-      //                 <button
-      //                         type="submit"
-      //                         className="btn btn-primary btn-block"
-      //                         disabled={!name || name.length < 2 || loading} > Submit
-      //                 </button>
-      //             </div>
-      //       </form>
-      // )
-
       return (
                 <React.Fragment>
                     <Modal
@@ -204,10 +180,12 @@ const Category = () => {
 
                     <div className="container-fluid">
                       <div className="row">
-                        <div className="col-md-2">
-                              <AdminNav/>
-                        </div>
-                        <div className="col-md-9">
+                          <div className="col-md-4">
+                              <div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
+                                  <AdminNav/>
+                              </div>
+                          </div>
+                        <div className="col-md-6 content">
                           {loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :  <CreateCategoryForm handleSubmit={handleSubmit} name={name} setName={setName} loading={loading} />}
                           <LocalSearch keyword={keyword} setKeyword={setKeyword}/> {/* step-2 && step-3 */}
                           {categories.length > 0 ?

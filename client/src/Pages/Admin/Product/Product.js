@@ -83,10 +83,12 @@ const CreateProduct = () => {
 	return (
 			<div className="container-fluid">
 				<div className="row">
-					<div className="col-md-3">
-						<AdminNav/>
+					<div className="col-md-4">
+						<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
+							<AdminNav/>
+						</div>
 					</div>
-					<div className="col-md-7">
+					<div className="col-md-6 content">
 						{loading ?
 							<div className="text-center"> <Spin tip="Loading..." /> </div>
 							:

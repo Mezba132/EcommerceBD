@@ -7,7 +7,7 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<div className="form-group jumbotron mt-5">
+			<div className="form-group jumbotron">
 				<h1 className="text-center font-weight-bold">Create Product</h1>
 				<hr className="my-8"/>
 				<div className="form-group row">

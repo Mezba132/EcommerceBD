@@ -2,7 +2,7 @@ import React from "react";
 
 const CreateCategoryForm = ({handleSubmit, name, setName, loading}) => (
 		<form onSubmit={handleSubmit}>
-			<div className="form-group jumbotron mt-4">
+			<div className="form-group jumbotron">
 				<h1 className="text-center font-weight-bold">Create Category</h1>
 				<hr className="my-8"/>
 				<p className="font-weight-bold">Create New Category</p>

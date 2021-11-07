@@ -117,3 +117,21 @@
 }
 
 /***/
+
+#sticky-sidebar {
+    position:fixed;
+    max-width: 20%;
+    text-align: center;
+    margin-top: 60px;
+}
+
+.fixed-header {
+    width: 100%;
+    position: fixed;
+    color: #fff;
+    z-index: 50;
+}
+
+.content {
+    padding-top: 70px;
+}

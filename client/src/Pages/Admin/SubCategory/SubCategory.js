@@ -267,10 +267,12 @@ const SubCategory = () => {
 
 			<div className="container-fluid">
 				<div className="row">
-					<div className="col-md-2">
-						<AdminNav/>
+					<div className="col-md-4">
+						<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
+							<AdminNav/>
+						</div>
 					</div>
-					<div className="col-md-9">
+					<div className="col-md-6 content">
 						{loading ?
 							<div className="text-center"> <Spin tip="Loading..." /> </div>
 							:

@@ -33,41 +33,44 @@ const Header = () => {
     useEffect(() => {},[user]);
 
     return(
-            <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
-                  <Item key="home" icon={<HomeOutlined/>}>
+            <div className="fixed-header">
+                <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal" >
+                    <Item key="home" icon={<HomeOutlined/>}>
                         <Link to='/'>Home</Link>
-                  </Item>
-                  {!user &&
-                        <Item key="register" icon={<UserAddOutlined/>} className="float-right">
-                              <Link to='/login'>Login</Link>
+                    </Item>
+                    {!user &&
+                    <Item key="register" icon={<UserAddOutlined/>} className="float-right">
+                        <Link to='/login'>Login</Link>
+                    </Item>
+                    }
+                    {!user &&
+                    <Item key="login" icon={<UserOutlined/>} className="float-right">
+                        <Link to='/register'>Register</Link>
+                    </Item>
+                    }
+                    {user &&
+                    <SubMenu
+                            key="SubMenu" icon={<UserSwitchOutlined/>}
+                            title={user.email && user.email.split('@')[0]}
+                            className='float-right'
+                    >
+                        {user && user.role === "subscriber" &&
+                        <Item icon={<DashboardOutlined/>}>
+                            <Link to="/user/history">Dashboard</Link>
                         </Item>
-                  }
-                  {!user &&
-                        <Item key="login" icon={<UserOutlined/>} className="float-right">
-                              <Link to='/register'>Register</Link>
-                        </Item>
-                  }
-                  {user &&
-                        <SubMenu
-                              key="SubMenu" icon={<UserSwitchOutlined/>}
-                              title={user.email && user.email.split('@')[0]}
-                              className='float-right'
-                        >
-                            {user && user.role === "subscriber" &&
-                                <Item icon={<DashboardOutlined/>}>
-                                    <Link to="/user/history">Dashboard</Link>
-                                </Item>
-                            }
+                        }
 
-                            {user && user.role === "admin" &&
-                            <Item icon={<DashboardOutlined/>}>
-                                <Link to="/admin/dashboard">Dashboard</Link>
-                            </Item>
-                            }
-                              <Item key="logout" icon={<UserOutlined/>} onClick={logout}>Logout</Item>
-                        </SubMenu>
-                  }
-            </Menu>
+                        {user && user.role === "admin" &&
+                        <Item icon={<DashboardOutlined/>}>
+                            <Link to="/admin/dashboard">Dashboard</Link>
+                        </Item>
+                        }
+                        <Item key="logout" icon={<UserOutlined/>} onClick={logout}>Logout</Item>
+                    </SubMenu>
+                    }
+                </Menu>
+            </div>
+
     )
 }
 

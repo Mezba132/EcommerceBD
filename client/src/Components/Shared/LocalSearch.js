@@ -5,7 +5,6 @@ const LocalSearch = ({keyword, setKeyword}) => {
 	const handleSearchChange = (e) => {
 		e.preventDefault();
 		setKeyword(e.target.value.toLowerCase());
-		console.log(e.target.value)
 	}
 
 	return (
