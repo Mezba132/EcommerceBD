@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
 	description : {
 		type : String,
 		required: true,
-		maxlength: 32,
+		maxlength: 500,
 		text: true
 	},
 	cost_price : {
@@ -54,9 +54,9 @@ const productSchema = new mongoose.Schema({
 		maxlength : 32,
 		default: 0
 	},
-	// images : {
-	// 	type : Array
-	// },
+	images : {
+		type : Array
+	},
 	shipping : {
 		type : String,
 		enum : ["Yes", "No"]

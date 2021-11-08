@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import FileUpload from "./FileUploadForm";
 
 const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, setValues }) => {
 
@@ -10,6 +11,17 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 			<div className="form-group jumbotron">
 				<h1 className="text-center font-weight-bold">Create Product</h1>
 				<hr className="my-8"/>
+
+				<div className="form-group row">
+					<label className="col-sm-2 col-form-label font-weight-bold"> Image Upload </label>
+					<div className="col-sm-8 float-right">
+						<FileUpload
+								values={values}
+								setValues={setValues}
+								images={images}
+						/>
+					</div>
+				</div>
 				<div className="form-group row">
 					<label className="col-sm-2 col-form-label font-weight-bold"> Title </label>
 					<div className="col-sm-8">

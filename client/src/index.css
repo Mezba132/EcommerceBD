@@ -135,3 +135,7 @@
 .content {
     padding-top: 70px;
 }
+
+.pointer {
+    cursor: pointer;
+}

@@ -3,7 +3,6 @@ import AdminNav from "../../../Components/Nav/AdminNav";
 import {Spin} from "antd";
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import Select from 'react-select';
 import {
 		createProduct
 	} from '../../../Functions/Product'
@@ -33,7 +32,7 @@ const initialState = {
 	showSubs: false
 }
 
-const CreateProduct = () => {
+const CreateProduct = ({history}) => {
 
 	const [values, setValues] = useState(initialState);
 	const [loading, setLoading] = useState(false)
@@ -51,6 +50,7 @@ const CreateProduct = () => {
 		createProduct(values, user.idToken)
 				.then(() => {
 					setLoading(false);
+					history.push('/admin/dashboard');
 					toast.success(`${title} inserted Successfully`);
 				})
 				.catch(err => {
@@ -90,16 +90,18 @@ const CreateProduct = () => {
 					</div>
 					<div className="col-md-6 content">
 						{loading ?
-							<div className="text-center"> <Spin tip="Loading..." /> </div>
+								<div className="text-center"> <Spin tip="Loading..." /> </div>
 							:
-							<CreateProductForm
-									values={values}
-									handleSubmit={handleSubmit}
-									handleChange={handleChange}
-									selectChange={selectChange}
-									setValues={setValues}
+								<div>
+									<CreateProductForm
+											values={values}
+											handleSubmit={handleSubmit}
+											handleChange={handleChange}
+											selectChange={selectChange}
+											setValues={setValues}
 
-							/>
+									/>
+								</div>
 						}
 					</div>
 				</div>
