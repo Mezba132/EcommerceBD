@@ -23,6 +23,7 @@ import Category from "./Pages/Admin/Category/Category";
 import SubCategory from "./Pages/Admin/SubCategory/SubCategory";
 import CreateProduct from "./Pages/Admin/Product/CreateProduct";
 import CreateProducts from "./Pages/Admin/Product/CreateProducts";
+import ListProducts from "./Pages/Admin/Product/ListProducts";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -74,7 +75,7 @@ const App = () => {
           <AdminRoute exact path="/admin/sub-category" component={SubCategory} />
           <AdminRoute exact path="/admin/create-product" component={CreateProduct} />
           <AdminRoute exact path="/admin/create-products" component={CreateProducts} />
-
+          <AdminRoute exact path="/admin/list-products" component={ListProducts}/>
 
         </Switch>
       </BrowserRouter>

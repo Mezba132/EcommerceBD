@@ -12,3 +12,13 @@ exports.create = async (req, res) => {
 		res.status(400).send("Create Product Failed")
 	}
 }
+
+exports.list = async (req, res) => {
+	const listProduct = await Product.find({})
+			.limit(parseInt(req.params.count))
+			.populate('category')
+			.populate('subs')
+			.sort({createdAt: -1})
+			.exec()
+	res.json(listProduct);
+}
