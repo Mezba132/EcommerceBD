@@ -5,7 +5,7 @@ import axios from "axios";
 import {Avatar, Badge} from "antd";
 import { UserOutlined, LoadingOutlined } from '@ant-design/icons';
 
-const FileUpload = ({values, setValues}) => {
+const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 
 	const [loading, setLoading] = useState(false);
 	const { user }  = useSelector(user => user);
@@ -34,11 +34,19 @@ const FileUpload = ({values, setValues}) => {
 								}
 							)
 							.then((res) => {
-								console.log("Uploaded Images", res.data);
+								// console.log("Uploaded Images", res.data);
 								setLoading(false);
 								uploadedFiles.push(res.data)
 
-								setValues({ ...values, images: uploadedFiles })
+								if(multiple) {
+									let data = [...arrays];
+									data[index]['images'] = uploadedFiles;
+									setValues(data);
+								}
+								else {
+									console.log('hello')
+									setValues({ ...values, images: uploadedFiles })
+								}
 							})
 							.catch(err => {
 								setLoading(false)
@@ -64,7 +72,14 @@ const FileUpload = ({values, setValues}) => {
 					let filteredImages = values.images.filter((item) => {
 						return item.public_id !== public_id
 					})
-					setValues({ ...values, images : filteredImages })
+					if(multiple) {
+						let data = [...arrays];
+						data[index]['images'] = filteredImages;
+						setValues(data);
+					}
+					else {
+						setValues({ ...values, images : filteredImages })
+					}
 				})
 				.catch( err => {
 					setLoading(false);
@@ -75,7 +90,7 @@ const FileUpload = ({values, setValues}) => {
 	return (
 			<React.Fragment>
 
-				{loading ? <LoadingOutlined className="text-success h1" /> :
+				{loading ? <LoadingOutlined className="text-success h1 ml-2" /> :
 					<div>
 						<input
 								type="file"

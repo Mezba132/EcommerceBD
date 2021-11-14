@@ -35,7 +35,7 @@ const initialState = {
 const CreateProduct = ({history}) => {
 
 	const [values, setValues] = useState(initialState);
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(false);
 
 	const {title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs} = values
 
@@ -83,12 +83,12 @@ const CreateProduct = ({history}) => {
 	return (
 			<div className="container-fluid">
 				<div className="row">
-					<div className="col-md-4">
+					<div className="col-md-2">
 						<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
 							<AdminNav/>
 						</div>
 					</div>
-					<div className="col-md-6 content">
+					<div className="col-md-10 content">
 						{loading ?
 								<div className="text-center"> <Spin tip="Loading..." /> </div>
 							:

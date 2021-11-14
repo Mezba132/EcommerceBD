@@ -14,7 +14,7 @@ const AdminNav = () => (
             </ul>
             <ul className="nav flex-column mb-3">
                   <li className="nav-item">
-                        <Link to="/admin/all-products" className="nav-link">All Products</Link>
+                        <Link to="/admin/create-products" className="nav-link">Create Products</Link>
                   </li>
             </ul>
             <ul className="nav flex-column mb-3">

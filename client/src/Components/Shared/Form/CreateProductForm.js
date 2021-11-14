@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Select from "react-select";
 import FileUpload from "./FileUploadForm";
 
@@ -8,7 +8,7 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<div className="form-group jumbotron">
+			<div className="form-group jumbotron w-75 ">
 				<h1 className="text-center font-weight-bold">Create Product</h1>
 				<hr className="my-8"/>
 
@@ -132,7 +132,7 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 										return []
 									}
 									setValues({...values, subs : arr})
-								}
+									}
 								}
 						/>
 					</div>
@@ -187,10 +187,16 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 					</div>
 				</div>
 
-				<button
-						type="submit"
-						className="btn btn-primary btn-block" > Submit
-				</button>
+				<div className="form-group row">
+					<div className="col-sm-10">
+						<button
+								type="submit"
+								className="btn btn-primary btn-md float-right" > Submit
+						</button>
+					</div>
+				</div>
+
+
 
 			</div>
 		</form>
