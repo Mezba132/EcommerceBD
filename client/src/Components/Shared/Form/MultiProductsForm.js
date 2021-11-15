@@ -19,7 +19,7 @@ const MultiProductForm = (
 		<form onSubmit={handleSubmit}>
 			{values.map((item, index) => (
 				<span className="row mt-3 border border-info" key={`item-${index}`}>
-					<div className="row m-3">
+					<div className="row m-2">
 						<div className="col-sm-2">
 							<span className="font-weight-bold">Title</span>
 							<input
@@ -81,6 +81,18 @@ const MultiProductForm = (
 						</div>
 
 						<div className="col-sm-2">
+							<span className="font-weight-bold">Tag</span>
+							<input
+									type="text"
+									className="form-control mb-2"
+									name="tags"
+									placeholder="Add Tags separated by commas"
+									value={item.tags}
+									onChange={e => handleChange(index, e)}
+							/>
+						</div>
+
+						<div className="col-sm-2">
 							<span className="font-weight-bold">Shipping</span>
 							<Select
 								placeholder="Select Shipping"
@@ -90,6 +102,7 @@ const MultiProductForm = (
 											"name": "shipping"
 										})
 								)}
+								className="mb-2"
 								onChange={(e) => selectChange(index, e)}
 							/>
 						</div>
@@ -97,57 +110,15 @@ const MultiProductForm = (
 						<div className="col-sm-2">
 							<span className="font-weight-bold">Color</span>
 							<Select
+								isMulti
+								isClearable
 								placeholder="Select Color"
 								options={item.colors.map(c => ({
 											"value": c,
-											"label": c,
-											"name": "color"
+											"label": c
 										})
 								)}
-								onChange={(e) => selectChange(index, e)}
-							/>
-						</div>
-
-						<div className="col-sm-2">
-							<span className="font-weight-bold">Brand</span>
-							<Select
-								placeholder="Add Brand"
-								options={item.brands.map(b => ({
-											"value": b,
-											"label": b,
-											"name": "brand"
-										})
-								)}
-								onChange={(e) => selectChange(index, e)}
-							/>
-						</div>
-
-						<div className="col-sm-2">
-							<span className="font-weight-bold">Category</span>
-							<Select
-								placeholder="Add Category"
-								options={item.categories.map(c => ({
-											"value": c._id,
-											"label": c.name,
-											"name": "category"
-										})
-								)}
-								onChange={(e) => selectChange(index, e)}
-							/>
-						</div>
-
-						{showSubs && item.subCategories.length > 0 &&
-						<div className="col-sm-2">
-							<span className="font-weight-bold">Sub Category</span>
-							<Select
-								isMulti
-								isClearable
-								placeholder="Add Sub-Category"
-								options={item.subCategories.map(s => ({
-											"value": s._id,
-											"label": s.name
-										})
-								)}
+								className="mb-2"
 								onChange={(e) => {
 									const arr = []
 									if (Array.isArray(e)) {
@@ -159,16 +130,104 @@ const MultiProductForm = (
 									}
 
 									let data = [...values];
-									data[index]['subs'] = arr;
+									data[index]['color'] = arr;
 									setValues(data);
-
 									}
 								}
 							/>
 						</div>
-						}
 
 						<div className="col-sm-2">
+							<span className="font-weight-bold">Brand</span>
+							<Select
+								placeholder="Add Brand"
+								options={item.brands.map(b => ({
+											"value": b._id,
+											"label": b.name,
+											"name": "brand"
+										})
+								)}
+								className="mb-2"
+								onChange={(e) => selectChange(index, e)}
+							/>
+						</div>
+
+						<div className="col-sm-2">
+							<span className="font-weight-bold">Size</span>
+							<Select
+									isMulti
+									isClearable
+									placeholder="Select Size"
+									options={item.sizes.map(s => ({
+												"value": s,
+												"label": s
+											})
+									)}
+									className="mb-2"
+									onChange={(e) => {
+										const arr = []
+										if (Array.isArray(e)) {
+											e.map(x => {
+												arr.push(x.value)
+											})
+										} else {
+											return []
+										}
+
+										let data = [...values];
+										data[index]['size'] = arr;
+										setValues(data);
+										}
+									}
+							/>
+						</div>
+
+						<div className="col-sm-2">
+							<span className="font-weight-bold">Category</span>
+							<Select
+									placeholder="Add Category"
+									options={item.categories.map(c => ({
+												"value": c._id,
+												"label": c.name,
+												"name": "category"
+											})
+									)}
+									onChange={(e) => selectChange(index, e)}
+							/>
+						</div>
+
+						{showSubs && item.subCategories.length > 0 &&
+							<div className="col-sm-2">
+								<span className="font-weight-bold">Sub Category</span>
+								<Select
+									isMulti
+									isClearable
+									placeholder="Add Sub-Category"
+									options={item.subCategories.map(s => ({
+												"value": s._id,
+												"label": s.name
+											})
+									)}
+									onChange={(e) => {
+										const arr = []
+										if (Array.isArray(e)) {
+											e.map(x => {
+												arr.push(x.value)
+											})
+										} else {
+											return []
+										}
+
+										let data = [...values];
+										data[index]['subs'] = arr;
+										setValues(data);
+										}
+									}
+								/>
+							</div>
+						}
+
+						<div className="col-sm-3">
 							<span className="font-weight-bold">Upload Images</span>
 							<FileUpload
 								values={item}

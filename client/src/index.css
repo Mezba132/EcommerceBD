@@ -120,7 +120,7 @@
 
 #sticky-sidebar {
     position:fixed;
-    max-width: 12%;
+    max-width: 10%;
     text-align: left;
     margin-top: 60px;
 }
@@ -132,8 +132,9 @@
     z-index: 50;
 }
 
-.content {
-    padding-top: 70px;
+.adjustment {
+    padding-top: 60px;
+    padding-left: 50px;
 }
 
 .pointer {

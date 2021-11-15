@@ -12,6 +12,7 @@ const ListProducts = () => {
 
 	useEffect(() => {
 		loadProducts();
+		console.log(products)
 	},[])
 
 	const loadProducts = () => {
@@ -25,7 +26,7 @@ const ListProducts = () => {
 	}
 
 	const searched = (keyword) => (c) => {
-		return  c.brand.toLowerCase().includes(keyword) ||
+		return  c.brand.name.toLowerCase().includes(keyword) ||
 				c.title.toLowerCase().includes(keyword) ||
 				c.category.name.toLowerCase().includes(keyword)
 	}
@@ -33,12 +34,12 @@ const ListProducts = () => {
 	return (
 			<div className="container-fluid">
 				<div className="row">
-					<div className="col-md-2">
+					<div className="col-md-1">
 						<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
 							<AdminNav/>
 						</div>
 					</div>
-					<div className="col-md-10 content">
+					<div className="col-md-11 adjustment">
 						<LocalSearch keyword={keyword} setKeyword={setKeyword}/>
 						<div>
 							<table className="table table-striped table-dark">
@@ -46,12 +47,14 @@ const ListProducts = () => {
 									<tr>
 										<th>Picture</th>
 										<th>Name</th>
+										<th>Description</th>
 										<th>Stock</th>
 										<th>Cost Price</th>
 										<th>MRP Price</th>
 										<th>Brand</th>
 										<th>Category</th>
 										<th>Sub-Category</th>
+										<th>Tag</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -76,11 +79,16 @@ const ListProducts = () => {
 											</td>
 											<td className="text-center">{item.title}</td>
 											<td className="text-center">
+												<span data-toggle="tooltip" data-placement="top" title={item.description}>
+														{item.description.substring(0,40) + "..."}
+												</span>
+											</td>
+											<td className="text-center">
 												{item.quantity > 0 ? <p className="text-success"> In Stock </p> : <p className="text-danger">Stock Out</p>}
 											</td>
 											<td className="text-center">{item.cost_price}</td>
 											<td className="text-center">{item.mrp_price}</td>
-											<td className="text-center">{item.brand}</td>
+											<td className="text-center">{item.brand.name}</td>
 											<td className="text-center">{item.category.name}</td>
 											<td className="text-center">
 												{
@@ -91,6 +99,20 @@ const ListProducts = () => {
 														}
 														else {
 															let str = s.name + ", "
+															return str
+														}
+													})
+												}
+											</td>
+											<td className="text-center">
+												{
+													item.tagList.length > 0 && item.tagList.map( (t, i, arr) => {
+														if(arr.length -1 === i) {
+															let str = t
+															return str
+														}
+														else {
+															let str = t + ", "
 															return str
 														}
 													})
@@ -108,6 +130,7 @@ const ListProducts = () => {
 											</td>
 
 										</tr>
+
 									</tbody>
 								))}
 							</table>

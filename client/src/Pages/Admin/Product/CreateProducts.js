@@ -5,6 +5,7 @@ import {createProduct} from "../../../Functions/Product";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import MultiProductForm from "../../../Components/Shared/Form/MultiProductsForm";
+import {getBrands} from "../../../Functions/Brand";
 
 const CreateProducts = () => {
 
@@ -16,8 +17,9 @@ const CreateProducts = () => {
 
 
 	const loadValues = () => {
-		getCategories()
-				.then((res) => {
+		getCategories().then(category => (
+			getBrands()
+				.then(brand => (
 					setValues([...values,
 						{
 							title:'',
@@ -25,19 +27,24 @@ const CreateProducts = () => {
 							cost_price:'',
 							mrp_price:'',
 							quantity:'',
-							categories : res.data,
-							colors:["Black", "Brown", "Silver", "White", "Blue"],
-							brands:["Apple", "Samsung", "Microsoft", "Lenovo", "ASUS"],
-							ship:["Yes","No"],
-							subCategories: [],
-							shipping:'',
-							subs: [],
-							color:'',
-							brand:'',
-							images:[],
+							categories : category.data,
 							category:'',
+							subCategories: [],
+							subs: [],
+							colors:["Black", "Brown", "Silver", "White", "Blue"],
+							color:[],
+							brands:brand.data,
+							brand:'',
+							ship:["Yes","No"],
+							shipping:'',
+							sizes:['SM','M','L','XL','XXL'],
+							size:[],
+							tags:'',
+							tagList:[],
+							images:[],
 						}])
-				})
+				))
+		))
 	};
 
 	useEffect(() => {
@@ -51,6 +58,7 @@ const CreateProducts = () => {
 
 	const handleSubmit = () => {
 		values.map(item => (
+				// console.log(item)
 			createProduct(item, user.idToken)
 				.then(() => {
 					toast.success(`${item.title} inserted Successfully`);
@@ -70,17 +78,22 @@ const CreateProducts = () => {
 	}
 
 	const selectChange = (index, e)  => {
-		let data = [...values];
-		data[index][e.name] = e.value;
-		setValues(data);
+		let data;
 		if(e.name === 'category') {
 			getSubCategories(e.value)
 					.then(res => {
+						data = [...values];
+						data[index]['subCategories'] = [];
+						setValues(data);
+						setShowSubs(true);
+						data = [...values];
 						data[index]['subCategories'] = res.data;
 						setValues(data);
-						setShowSubs(true)
 					})
 		}
+		data = [...values];
+		data[index][e.name] = e.value;
+		setValues(data);
 	}
 
 	const handleRemove = (index) => {
@@ -95,12 +108,12 @@ const CreateProducts = () => {
 	return (
 			<div className="container-fluid">
 				<div className="row">
-					<div className="col-md-2">
+					<div className="col-md-1">
 						<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
 							<AdminNav/>
 						</div>
 					</div>
-					<div className="col-md-10 content">
+					<div className="col-md-11 adjustment">
 						<div className="jumbotron">
 							<h1 className="text-center">Add Multiple Products</h1>
 							<MultiProductForm

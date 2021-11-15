@@ -4,7 +4,7 @@ const slugify = require('slugify')
 exports.create = async (req, res) => {
 	try {
 		req.body.slug = slugify(req.body.title);
-		req.body.tagList = req.body.tags.split(',');
+		req.body.tagList = req.body.tags.toLowerCase().split(',');
 		const product = await new Product( req.body ).save();
 		res.json( product );
 	}
@@ -19,7 +19,8 @@ exports.list = async (req, res) => {
 			.limit(parseInt(req.params.count))
 			.populate('category')
 			.populate('subs')
-			.sort(["createdAt", "desc"])
+			.populate('brand')
+			.sort([["createdAt", "desc"]])
 			.exec()
 	res.json(listProduct);
 }

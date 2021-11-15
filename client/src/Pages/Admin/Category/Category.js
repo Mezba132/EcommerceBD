@@ -180,12 +180,12 @@ const Category = () => {
 
                     <div className="container-fluid">
                       <div className="row">
-                          <div className="col-md-2">
+                          <div className="col-md-1">
                               <div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
                                   <AdminNav/>
                               </div>
                           </div>
-                        <div className="col-md-10 content">
+                        <div className="col-md-11 adjustment">
                           {loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :  <CreateCategoryForm handleSubmit={handleSubmit} name={name} setName={setName} loading={loading} />}
                           <LocalSearch keyword={keyword} setKeyword={setKeyword}/> {/* step-2 && step-3 */}
                           {categories.length > 0 ?
