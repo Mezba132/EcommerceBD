@@ -18,7 +18,7 @@ exports.list = async (req, res) => {
 			.limit(parseInt(req.params.count))
 			.populate('category')
 			.populate('subs')
-			.sort({createdAt: -1})
+			.sort(["createdAt", "desc"])
 			.exec()
 	res.json(listProduct);
 }
