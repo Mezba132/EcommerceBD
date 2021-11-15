@@ -4,16 +4,16 @@ import FileUpload from "./FileUploadForm";
 
 const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, setValues }) => {
 
-	const { title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs } = values
+	const { title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs, shipping, size, sizes, tags, listTag } = values
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<div className="form-group jumbotron w-75 ">
+			<div className="form-group jumbotron ">
 				<h1 className="text-center font-weight-bold">Create Product</h1>
 				<hr className="my-8"/>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Image Upload </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Image Upload </label>
 					<div className="col-sm-8 float-right">
 						<FileUpload
 								values={values}
@@ -22,14 +22,15 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 						/>
 					</div>
 				</div>
+
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Title </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Title </label>
 					<div className="col-sm-8">
 						<input
 								type="text"
 								className="form-control"
 								name="title"
-								placeholder="Product Title"
+								placeholder="Product Name"
 								value={title}
 								onChange={handleChange}
 						/>
@@ -37,7 +38,7 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Description </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Description </label>
 					<div className="col-sm-8">
 							<textarea
 									rows = "2"
@@ -51,8 +52,22 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Cost Price </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Tag </label>
 					<div className="col-sm-8">
+						<input
+								type="text"
+								className="form-control"
+								name="tags"
+								placeholder="Add Tags separated by commas"
+								value={tags}
+								onChange={handleChange}
+						/>
+					</div>
+				</div>
+
+				<div className="form-group row">
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Cost Price </label>
+					<div className="col-sm-3">
 						<input
 								type="number"
 								className="form-control"
@@ -62,11 +77,8 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 								onChange={handleChange}
 						/>
 					</div>
-				</div>
-
-				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> MRP Price </label>
-					<div className="col-sm-8">
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> MRP Price </label>
+					<div className="col-sm-3">
 						<input
 								type="number"
 								className="form-control"
@@ -79,8 +91,8 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Quantity </label>
-					<div className="col-sm-8">
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Quantity </label>
+					<div className="col-sm-3">
 						<input
 								type="number"
 								className="form-control"
@@ -90,58 +102,8 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 								onChange={handleChange}
 						/>
 					</div>
-				</div>
-
-				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Category </label>
-					<div className="col-sm-8">
-						<Select
-								name="category"
-								placeholder="Please Select Category"
-								options={categories.map( c => ({
-											"value" : c._id,
-											"label" : c.name
-										})
-								)}
-								onChange={selectChange}
-						/>
-					</div>
-				</div>
-
-				{showSubs && subCategories.length > 0 &&
-				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Sub Category </label>
-					<div className="col-sm-8">
-						<Select
-								isMulti
-								isClearable
-								name="subs"
-								placeholder="Please Select Sub Category"
-								options={subCategories.map(s => ({
-											"value": s._id,
-											"label": s.name
-										})
-								)}
-								onChange={(e) => {
-									const arr = []
-									if(Array.isArray(e)) {
-										e.map(x => {
-											arr.push(x.value)
-										})
-									} else {
-										return []
-									}
-									setValues({...values, subs : arr})
-									}
-								}
-						/>
-					</div>
-				</div>
-				}
-
-				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Shipping </label>
-					<div className="col-sm-8">
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Shipping </label>
+					<div className="col-sm-3">
 						<Select
 								name="shipping"
 								placeholder="Select Shipping"
@@ -156,9 +118,36 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Color </label>
-					<div className="col-sm-8">
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Size </label>
+					<div className="col-sm-3">
 						<Select
+								isMulti
+								isClearable
+								name="size"
+								placeholder="Select Size"
+								options={sizes.map( s => ({
+											"value": s,
+											"label": s
+										})
+								)}
+								onChange={(e) => {
+									const arr = []
+									if(Array.isArray(e)) {
+										e.map(x => {
+											arr.push(x.value)
+										})
+									} else {
+										return []
+									}
+									setValues({...values, size : arr})
+								}}
+						/>
+					</div>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Color </label>
+					<div className="col-sm-3">
+						<Select
+								isMulti
+								isClearable
 								name="color"
 								placeholder="Select Color"
 								options={colors.map( c => ({
@@ -166,20 +155,78 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 											"label": c
 										})
 								)}
-								onChange={selectChange}
+								onChange={(e) => {
+									const arr = []
+									if(Array.isArray(e)) {
+										e.map(x => {
+											arr.push(x.value)
+										})
+									} else {
+										return []
+									}
+									setValues({...values, color : arr})
+								}}
 						/>
 					</div>
 				</div>
 
+
+
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold"> Brand </label>
-					<div className="col-sm-8">
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Category </label>
+					<div className="col-sm-3">
+						<Select
+								name="category"
+								placeholder="Select Category"
+								options={categories.map( c => ({
+											"value" : c._id,
+											"label" : c.name
+										})
+								)}
+								onChange={selectChange}
+						/>
+					</div>
+					{showSubs && subCategories.length > 0 &&
+						<React.Fragment>
+							<label className="col-sm-2 col-form-label font-weight-bold text-center"> Sub Category </label>
+							<div className="col-sm-3">
+								<Select
+										isMulti
+										isClearable
+										name="subs"
+										placeholder="Please Select Sub Category"
+										options={subCategories.map(s => ({
+													"value": s._id,
+													"label": s.name
+												})
+										)}
+										onChange={(e) => {
+											const arr = []
+											if(Array.isArray(e)) {
+												e.map(x => {
+													arr.push(x.value)
+												})
+											} else {
+												return []
+											}
+											setValues({...values, subs : arr})
+										}
+										}
+								/>
+							</div>
+						</React.Fragment>
+					}
+				</div>
+
+				<div className="form-group row">
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Brand </label>
+					<div className="col-sm-3">
 						<Select
 								name="brand"
 								placeholder="Select Brand"
 								options={brands.map( b => ({
-											"value": b,
-											"label": b
+											"value" : b._id,
+											"label" : b.name
 										})
 								)}
 								onChange={selectChange}

@@ -4,6 +4,7 @@ const slugify = require('slugify')
 exports.create = async (req, res) => {
 	try {
 		req.body.slug = slugify(req.body.title);
+		req.body.tagList = req.body.tags.split(',');
 		const product = await new Product( req.body ).save();
 		res.json( product );
 	}

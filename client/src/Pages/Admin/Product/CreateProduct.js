@@ -10,6 +10,7 @@ import {
 		getCategories,
 		getSubCategories
 } from '../../../Functions/Categoy'
+import { getBrands } from '../../../Functions/Brand'
 import CreateProductForm from "../../../Components/Shared/Form/CreateProductForm";
 
 const initialState = {
@@ -25,10 +26,14 @@ const initialState = {
 	shipping:'',
 	quantity:'',
 	images:[],
+	brands:[],
 	colors:["Black", "Brown", "Silver", "White", "Blue"],
-	brands:["Apple", "Samsung", "Microsoft", "Lenovo", "ASUS"],
-	color:'',
+	color:[],
+	sizes:['SM','M','L','XL','XXL'],
+	size:[],
 	brand:'',
+	tags:'',
+	tagList:[],
 	showSubs: false
 }
 
@@ -37,27 +42,27 @@ const CreateProduct = ({history}) => {
 	const [values, setValues] = useState(initialState);
 	const [loading, setLoading] = useState(false);
 
-	const {title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs} = values
+	const {title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs, size, shipping, sizes, tags, listTag} = values
 
 	const { user }  = useSelector(user => user);
 
 	useEffect(() => {
-		loadCategories();
+		loadFields()
 	}, [])
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		createProduct(values, user.idToken)
-				.then(() => {
-					setLoading(false);
-					history.push('/admin/dashboard');
-					toast.success(`${title} inserted Successfully`);
-				})
-				.catch(err => {
-					console.log(err)
-					setLoading(false);
-					toast.error(`${title} insert Failed`);
-				})
+			.then(() => {
+				setLoading(false);
+				history.push('/admin/dashboard');
+				toast.success(`${title} inserted Successfully`);
+			})
+			.catch(err => {
+				console.log(err)
+				setLoading(false);
+				toast.error(`${title} insert Failed`);
+			})
 	}
 
 	const handleChange = (e) => {
@@ -75,9 +80,15 @@ const CreateProduct = ({history}) => {
 		setValues({...values, [action.name] : e.value})
 	}
 
-	const loadCategories = () => {
+	const loadFields = () => {
 		getCategories()
-				.then((res) => setValues({...values, categories: res.data}))
+			.then((category) => {
+				getBrands()
+					.then((brand) => {
+						setValues({...values, brands: brand.data, categories: category.data})
+					})
+			})
+
 	};
 
 	return (
@@ -94,12 +105,11 @@ const CreateProduct = ({history}) => {
 							:
 								<div>
 									<CreateProductForm
-											values={values}
-											handleSubmit={handleSubmit}
-											handleChange={handleChange}
-											selectChange={selectChange}
-											setValues={setValues}
-
+										values={values}
+										handleSubmit={handleSubmit}
+										handleChange={handleChange}
+										selectChange={selectChange}
+										setValues={setValues}
 									/>
 								</div>
 						}
