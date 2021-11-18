@@ -28,9 +28,9 @@ const SubCategory = () => {
 	const [categories, setCategories] = useState([]);
 	const [subCategories, setSubCategories] = useState([]);
 	const [slug, setSlug] = useState('')
+	const [updateName, setUpdateName] = useState('')
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
-	const [updateName, setUpdateName] = useState('')
 	const [keyword, setKeyword] = useState('');
 	const [category, setCategory] = useState('');
 	const [catName, setCatName] = useState('')
@@ -138,51 +138,6 @@ const SubCategory = () => {
 
 	const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword)
 
-	// const subCategoryForm = () => (
-	// 	<form onSubmit={handleSubmit}>
-	// 		<div className="form-group jumbotron">
-	// 			<h1 className="text-center font-weight-bold">Create SubCategory</h1>
-	// 			<p className="font-weight-bold">Create New SubCategory</p>
-	// 			<input
-	// 				name=""
-	// 				placeholder="Add New SubCategory"
-	// 				className="form-control mb-3"
-	// 				type="text"
-	// 				onChange={e => setName(e.target.value)}
-	// 				autoFocus
-	// 				value={name}
-	// 				disabled={loading}
-	// 			/>
-	//
-	// 			<p className="font-weight-bold">Add Parent Category</p>
-	// 			<Select
-	// 				className="mb-3"
-	// 				placeholder="Please Select Category"
-	// 				options={categories.map( c => ({
-	// 						"value" : c._id,
-	// 						"label" : c.name
-	// 					})
-	// 				)}
-	// 				onChange={e => {
-	// 					setCategory(e.value)
-	// 					setCatName(e.label)
-	// 				}}
-	// 			/>
-	// 			<button
-	// 					type="submit"
-	// 					className="btn btn-primary btn-block"
-	// 					disabled={!name || name.length < 2 || loading} > Submit
-	// 			</button>
-	// 		</div>
-	//
-	// 	</form>
-	// )
-
-	// const handleChange = e => {
-	// 	setParentId(e.value)
-	// 	setParentName(e.label)
-	// }
-
 	return (
 		<React.Fragment>
 
@@ -205,11 +160,10 @@ const SubCategory = () => {
 			<Modal
 					show={showUpdateModal}
 					onCancel={onCancelUpdateHandler}
-					header="Update Category"
+					header="Update Sub Category"
 					children={
-						<div>
 							<div className="form-group">
-								<p className="font-weight-bold">Create New SubCategory</p>
+								<p className="font-weight-bold">Update SubCategory</p>
 								<input
 										name=""
 										placeholder="Update Sub-Category"
@@ -220,7 +174,7 @@ const SubCategory = () => {
 										value={updateName}
 										disabled={loading}
 								/>
-								<p className="font-weight-bold">Add Parent Category</p>
+								<p className="font-weight-bold">Update Category</p>
 								<Select
 										// value={categories.map( c =>
 										// 			c._id === parentId ?
@@ -241,11 +195,7 @@ const SubCategory = () => {
 											setParentName(e.label)
 										}}
 								/>
-
-
-
 							</div>
-						</div>
 					}
 					footer={
 						<React.Fragment>

@@ -5,18 +5,20 @@ import BackDrop from './BackDrop';
 
 const ModalOverLay = props => {
       const content = (
-            <div className={`"custom_modal" ${props.className}`} >
-                  <header className={`modal__header ${props.headerClass}`}>
+            <div className={`custom_modal ${props.modal_body}`} >
+                <div className="modal_dialog">
+                    <header className={`modal__header ${props.headerClass}`}>
                         <h2>{props.header}</h2>
-                  </header>
-                  <form onSubmit={ props.onSubmit ? props.onSubmit : (event) => event.preventDefault()}>
+                    </header>
+                    <form onSubmit={ props.onSubmit ? props.onSubmit : (event) => event.preventDefault()}>
                         <div className={`modal__content ${props.contentClass}`}>
-                              {props.children}
+                            {props.children}
                         </div>
                         <footer className={`modal__footer  ${props.footerClass}`}>
-                              {props.footer}
+                            {props.footer}
                         </footer>
-                  </form>
+                    </form>
+                </div>
             </div>
       )
       return ReactDOM.createPortal(content, document.getElementById('modal-hooks'));

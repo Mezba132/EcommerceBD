@@ -44,7 +44,6 @@ const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 									setValues(data);
 								}
 								else {
-									console.log('hello')
 									setValues({ ...values, images: uploadedFiles })
 								}
 							})

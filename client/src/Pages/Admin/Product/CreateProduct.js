@@ -19,13 +19,13 @@ const initialState = {
 	cost_price:'',
 	mrp_price:'',
 	categories:[],
+	images:[],
 	category:'',
 	subCategories:[],
 	subs:[],
 	ship:["Yes", "No"],
 	shipping:'',
 	quantity:'',
-	images:[],
 	brands:[],
 	colors:["Black", "Brown", "Silver", "White", "Blue"],
 	color:[],
@@ -55,8 +55,23 @@ const CreateProduct = ({history}) => {
 		createProduct(values, user.idToken)
 			.then(() => {
 				setLoading(false);
-				history.push('/admin/dashboard');
+				setValues({...values,
+					title:'',
+					description:'',
+					cost_price:'',
+					mrp_price:'',
+					images:[],
+					ship:[],
+					subCategories: [],
+					colors: [],
+					size: [],
+					categories: [],
+					brands: [],
+					tags: '',
+					quantity: ''
+				})
 				toast.success(`${title} inserted Successfully`);
+				history.push('/admin/list-products');
 			})
 			.catch(err => {
 				console.log(err)

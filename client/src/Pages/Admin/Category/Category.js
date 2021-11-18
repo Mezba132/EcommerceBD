@@ -142,7 +142,7 @@ const Category = () => {
                     <Modal
                           show={showUpdateModal}
                           onCancel={onCancelUpdateHandler}
-                          header="Update Category"
+                          header={`Update "${updateName}" Category`}
                           children={
                             <div>
                                 <p className="font-weight-bold">Update Category</p>

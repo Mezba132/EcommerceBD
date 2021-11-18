@@ -18,7 +18,7 @@ const CreateSubForm = ({handleSubmit,name,setName,loading,categories,setCategory
 						disabled={loading}
 				/>
 
-				<p className="font-weight-bold">Add Parent Category</p>
+				<p className="font-weight-bold">Add Category</p>
 				<Select
 						className="mb-3"
 						placeholder="Please Select Category"

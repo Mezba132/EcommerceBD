@@ -1,10 +1,12 @@
 import React, {useState} from "react";
 import Select from "react-select";
 import FileUpload from "./FileUploadForm";
+// import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, setValues }) => {
 
-	const { title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs, shipping, size, sizes, tags, listTag } = values
+	const { title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs, shipping, size, sizes, tags } = values
 
 	return (
 		<form onSubmit={handleSubmit}>
@@ -48,6 +50,15 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 									value={description}
 									onChange={handleChange}
 							/>
+							{/*<CKEditor*/}
+							{/*	editor = {ClassicEditor}*/}
+							{/*	name="description"*/}
+							{/*	data = {description}*/}
+							{/*	onChange={ ( event, editor ) => {*/}
+							{/*		const data = editor.getData();*/}
+							{/*		console.log( data );*/}
+							{/*	} }*/}
+							{/*/>*/}
 					</div>
 				</div>
 
