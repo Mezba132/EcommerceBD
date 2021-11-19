@@ -21,6 +21,7 @@ import {
 import Modal from "../../../Components/Shared/Modal";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
 import CreateSubForm from "../../../Components/Shared/Form/CreateSubForm";
+import ReactPaginate from 'react-paginate'
 
 const SubCategory = () => {
 	const [name, setName] = useState('')
@@ -36,6 +37,8 @@ const SubCategory = () => {
 	const [catName, setCatName] = useState('')
 	const [parentId, setParentId] = useState(null)
 	const [parentName, setParentName] = useState('')
+	const [pageNumber, setPageNumber] = useState(0)
+
 
 	const { user }  = useSelector(user => user);
 
@@ -137,6 +140,13 @@ const SubCategory = () => {
 	}
 
 	const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword)
+
+	const subCatsPerPage = 5;
+	const pagesVisited = pageNumber * subCatsPerPage;
+	const pageCount = Math.ceil(subCategories.length / subCatsPerPage)
+	const handlePageClick = ({selected}) => {
+		setPageNumber(selected)
+	}
 
 	return (
 		<React.Fragment>
@@ -244,7 +254,10 @@ const SubCategory = () => {
 										<th>Action</th>
 									</tr>
 									</thead>
-									{subCategories.filter(searched(keyword)).map( s =>
+									{subCategories
+											.filter(searched(keyword))
+											.slice(pagesVisited, pagesVisited + subCatsPerPage)
+											.map( s =>
 										<tbody key={s._id}>
 											<tr>
 												<td className='text-center'>{s.name}</td>
@@ -270,6 +283,17 @@ const SubCategory = () => {
 								<h1>No Sub-Category Found</h1>
 							</div>
 						}
+						<ReactPaginate
+								previousLabel={"Previous"}
+								nextLabel={"Next"}
+								pageCount={pageCount}
+								onPageChange={handlePageClick}
+								containerClassName={"paginationBtns"}
+								previousLinkClassName={"previousBtn"}
+								nextLinkClassName={"nextBtn"}
+								disabledClassName={"paginationDisabled"}
+								activeClassName={"paginationActive"}
+						/>
 					</div>
 				</div>
 			</div>

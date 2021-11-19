@@ -14,6 +14,7 @@ import {
 	getSubCategories
 } from '../../../Functions/Categoy'
 import { getBrands } from '../../../Functions/Brand'
+import ReactPaginate from 'react-paginate'
 
 const initialState = {
 	title:'',
@@ -48,7 +49,8 @@ const ListProducts = () => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
 	const [slug, setSlug] = useState('');
-	const [values, setValues] = useState(initialState)
+	const [values, setValues] = useState(initialState);
+	const [pageNumber, setPageNumber] = useState(0)
 
 	const { user } = useSelector(user => user)
 
@@ -192,7 +194,7 @@ const ListProducts = () => {
 
 	const searched = (keyword) => (search) => {
 		let subs = search.subs.map(s => s.name);
-		let tag = search.tagList.map(t => t)
+		let tag = search.tagList.map(t => t);
 		return  search.brand.name.toLowerCase().includes(keyword) ||
 				search.title.toLowerCase().includes(keyword) ||
 				search.description.toLowerCase().includes(keyword) ||
@@ -200,6 +202,107 @@ const ListProducts = () => {
 				subs.toString().toLowerCase().includes(keyword) ||
 				tag.toString().toLowerCase().includes(keyword)
 	}
+
+	const productsPerPage = 5;
+	const pagesVisited = pageNumber * productsPerPage;
+	const pageCount = Math.ceil(products.length / productsPerPage)
+	const handlePageClick = ({selected}) => {
+		setPageNumber(selected)
+	}
+
+    const lists = () => (
+	    <div>
+		    <table className="table table-striped table-dark">
+			    <thead className="text-center">
+			    <tr>
+				    <th>Picture</th>
+				    <th>Name</th>
+				    <th>Description</th>
+				    <th>Stock</th>
+				    <th>Cost Price</th>
+				    <th>MRP Price</th>
+				    <th>Brand</th>
+				    <th>Color</th>
+				    <th>Size</th>
+				    <th>Category</th>
+				    <th>Sub-Category</th>
+				    <th>Tag</th>
+				    <th>Action</th>
+			    </tr>
+			    </thead>
+
+			    {products
+					    .filter(searched(keyword))
+					    .slice(pagesVisited, pagesVisited + productsPerPage)
+					    .map((item,index) => (
+					    <tbody key={`item-${index}`}>
+						    <tr>
+							    <td>
+								    {item.images.length > 0 && item.images.map((img,i,arr) => {
+									    if(arr[i] === arr[0]) {
+										    return (
+											    <Avatar
+													    key={`img-${img.public_id}`}
+													    shape="square"
+													    size={45}
+													    src={img.url}
+													    icon={<UserOutlined />}
+													    className="ml-2"
+											    />
+										    )
+									    }
+								    })}
+							    </td>
+							    <td className="text-center">{item.title}</td>
+							    <td className="text-center">
+													<span data-toggle="tooltip" data-placement="top" title={item.description}>
+															{ item.description.length < 50 ? item.description : item.description.substring(0,50) + "..."}
+													</span>
+							    </td>
+							    <td className="text-center">
+								    {item.quantity > 0 ? <p className="text-success"> In Stock </p> : <p className="text-danger">Stock Out</p>}
+							    </td>
+							    <td className="text-center">{item.cost_price}</td>
+							    <td className="text-center">{item.mrp_price}</td>
+							    <td className="text-center">{item.brand.name}</td>
+							    <td className="text-center">{item.color.toString()}</td>
+							    <td className="text-center">{item.size.toString()}</td>
+							    <td className="text-center">{item.category.name}</td>
+							    <td className="text-center">
+								    {
+									    item.subs.length > 0 && item.subs.map( (s, i, arr) => {
+										    if(arr.length -1 === i) {
+											    let str = s.name
+											    return str
+										    }
+										    else {
+											    let str = s.name + ", "
+											    return str
+										    }
+									    })
+								    }
+							    </td>
+							    <td className="text-center">{item.tagList.toString()}</td>
+							    <td className='text-center'>
+		                                          <span
+				                                          onClick={() => onOpenUpdateHandler(item.slug)}
+				                                          className="btn btn-md">
+		                                                <EditOutlined/>
+		                                          </span>
+								    <span
+										    onClick={() => onOpenDeleteHandler(item.slug)}
+										    className="btn btn-md">
+	                                                      <DeleteOutlined/>
+	                                              </span>
+							    </td>
+
+						    </tr>
+
+					    </tbody>
+			    ))}
+		    </table>
+	    </div>
+    )
 
 	return (
 			<React.Fragment>
@@ -472,95 +575,18 @@ const ListProducts = () => {
 						</div>
 						<div className="col-md-11 adjustment">
 							<LocalSearch keyword={keyword} setKeyword={setKeyword}/>
-							<div>
-								<table className="table table-striped table-dark">
-									<thead className="text-center">
-									<tr>
-										<th>Picture</th>
-										<th>Name</th>
-										<th>Description</th>
-										<th>Stock</th>
-										<th>Cost Price</th>
-										<th>MRP Price</th>
-										<th>Brand</th>
-										<th>Color</th>
-										<th>Size</th>
-										<th>Category</th>
-										<th>Sub-Category</th>
-										<th>Tag</th>
-										<th>Action</th>
-									</tr>
-									</thead>
-
-									{products.filter(searched(keyword)).map((item,index) => (
-											<tbody key={`item-${index}`}>
-											<tr>
-												<td>
-													{item.images.length > 0 && item.images.map((img,i,arr) => {
-														if(arr[i] === arr[0]) {
-															return (
-																<Avatar
-																		key={`img-${img.public_id}`}
-																		shape="square"
-																		size={45}
-																		src={img.url}
-																		icon={<UserOutlined />}
-																		className="ml-2"
-																/>
-															)
-														}
-													})}
-												</td>
-												<td className="text-center">{item.title}</td>
-												<td className="text-center">
-												<span data-toggle="tooltip" data-placement="top" title={item.description}>
-														{ item.description.length < 50 ? item.description : item.description.substring(0,50) + "..."}
-												</span>
-												</td>
-												<td className="text-center">
-													{item.quantity > 0 ? <p className="text-success"> In Stock </p> : <p className="text-danger">Stock Out</p>}
-												</td>
-												<td className="text-center">{item.cost_price}</td>
-												<td className="text-center">{item.mrp_price}</td>
-												<td className="text-center">{item.brand.name}</td>
-												<td className="text-center">{item.color.toString()}</td>
-												<td className="text-center">{item.size.toString()}</td>
-												<td className="text-center">{item.category.name}</td>
-												<td className="text-center">
-													{
-														item.subs.length > 0 && item.subs.map( (s, i, arr) => {
-															if(arr.length -1 === i) {
-																let str = s.name
-																return str
-															}
-															else {
-																let str = s.name + ", "
-																return str
-															}
-														})
-													}
-												</td>
-												<td className="text-center">{item.tagList.toString()}</td>
-												<td className='text-center'>
-	                                          <span
-			                                          onClick={() => onOpenUpdateHandler(item.slug)}
-			                                          className="btn btn-md">
-	                                                <EditOutlined/>
-	                                          </span>
-													<span
-															onClick={() => onOpenDeleteHandler(item.slug)}
-															className="btn btn-md">
-                                                      <DeleteOutlined/>
-                                              </span>
-												</td>
-
-											</tr>
-
-											</tbody>
-									))}
-								</table>
-							</div>
-
+							{lists()}
+							<ReactPaginate
+								previousLabel={"Previous"}
+								nextLabel={"Next"}
+								pageCount={pageCount}
+								onPageChange={handlePageClick}
+								containerClassName={"paginationBtns"}
+								previousLinkClassName={"previousBtn"}
+								nextLinkClassName={"nextBtn"}
+								disabledClassName={"paginationDisabled"}
+								activeClassName={"paginationActive"}
+							/>
 						</div>
 					</div>
 				</div>
