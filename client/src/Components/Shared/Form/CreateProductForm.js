@@ -181,8 +181,6 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 					</div>
 				</div>
 
-
-
 				<div className="form-group row">
 					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Category </label>
 					<div className="col-sm-3">

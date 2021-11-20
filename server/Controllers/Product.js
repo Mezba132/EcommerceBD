@@ -14,8 +14,17 @@ exports.create = async (req, res) => {
 	}
 }
 
-exports.list = async (req, res) => {
-	const listProduct = await Product.find({})
+exports.listByFilters = async (req, res) => {
+	let findArgs = {};
+	for (let key in req.body.filters) {
+		if(req.body.filters[key].length > 0) {
+			findArgs[key] = req.body.filters[key]
+		}
+		else {
+			console.log("Rest of the filter still unselected")
+		}
+	}
+	const listProduct = await Product.find(findArgs)
 			.limit(parseInt(req.params.count))
 			.populate('category')
 			.populate('subs')

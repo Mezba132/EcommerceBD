@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import AdminNav from "../../../Components/Nav/AdminNav";
-import { getProducts, removeProduct, getProduct, updateProduct } from "../../../Functions/Product";
+import { getProductsByFilters, removeProduct, getProduct, updateProduct } from "../../../Functions/Product";
 import {DeleteOutlined, EditOutlined, UserOutlined} from "@ant-design/icons";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
 import {Avatar} from "antd";
@@ -39,7 +39,7 @@ const initialState = {
 	sizes:['SM','M','L','XL','XXL'],
 	size:[],
 	tagList:[],
-	tags:''
+	tags:'',
 }
 
 const ListProducts = () => {
@@ -50,7 +50,17 @@ const ListProducts = () => {
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
 	const [slug, setSlug] = useState('');
 	const [values, setValues] = useState(initialState);
-	const [pageNumber, setPageNumber] = useState(0)
+	const [pageNumber, setPageNumber] = useState(0);
+	const [filteredData, setFilteredData] = useState({
+		filters: {
+			title: '',
+			category: '',
+			subs:[],
+			color:[],
+			brand:'',
+			quantity: ''
+		}
+	})
 
 	const { user } = useSelector(user => user)
 
@@ -80,13 +90,24 @@ const ListProducts = () => {
 			tagList
 	} = values
 
+	const stockOption = [
+			{
+				value : "InStock",
+				label: 'In Stock'
+			},
+			{
+				value : "StockOut",
+				label : 'Out of Stock'
+			}
+		]
+
 	useEffect(() => {
-		loadProducts();
+		loadProducts(filteredData.filters);
 		loadFields();
 	},[])
 
-	const loadProducts = () => {
-		getProducts()
+	const loadProducts = (currentFilters) => {
+		getProductsByFilters(currentFilters)
 				.then(res => {
 					setProducts(res.data);
 				})
@@ -230,13 +251,13 @@ const ListProducts = () => {
 				    <th>Action</th>
 			    </tr>
 			    </thead>
-
 			    {products
 					    .filter(searched(keyword))
 					    .slice(pagesVisited, pagesVisited + productsPerPage)
 					    .map((item,index) => (
 					    <tbody key={`item-${index}`}>
 						    <tr>
+
 							    <td>
 								    {item.images.length > 0 && item.images.map((img,i,arr) => {
 									    if(arr[i] === arr[0]) {
@@ -255,9 +276,9 @@ const ListProducts = () => {
 							    </td>
 							    <td className="text-center">{item.title}</td>
 							    <td className="text-center">
-													<span data-toggle="tooltip" data-placement="top" title={item.description}>
-															{ item.description.length < 50 ? item.description : item.description.substring(0,50) + "..."}
-													</span>
+										<span data-toggle="tooltip" data-placement="top" title={item.description}>
+												{ item.description.length < 50 ? item.description : item.description.substring(0,50) + "..."}
+										</span>
 							    </td>
 							    <td className="text-center">
 								    {item.quantity > 0 ? <p className="text-success"> In Stock </p> : <p className="text-danger">Stock Out</p>}
@@ -284,16 +305,16 @@ const ListProducts = () => {
 							    </td>
 							    <td className="text-center">{item.tagList.toString()}</td>
 							    <td className='text-center'>
-		                                          <span
-				                                          onClick={() => onOpenUpdateHandler(item.slug)}
-				                                          className="btn btn-md">
-		                                                <EditOutlined/>
-		                                          </span>
-								    <span
-										    onClick={() => onOpenDeleteHandler(item.slug)}
-										    className="btn btn-md">
-	                                                      <DeleteOutlined/>
-	                                              </span>
+                                      <span
+	                                          onClick={() => onOpenUpdateHandler(item.slug)}
+	                                          className="btn btn-md">
+                                            <EditOutlined/>
+                                      </span>
+									    <span
+											    onClick={() => onOpenDeleteHandler(item.slug)}
+											    className="btn btn-md">
+		                                                      <DeleteOutlined/>
+								        </span>
 							    </td>
 
 						    </tr>
@@ -303,6 +324,158 @@ const ListProducts = () => {
 		    </table>
 	    </div>
     )
+
+	const filterDataForm = () => (
+			<form >
+				<span className="row border border-info">
+						<div className="row col-md-12 m-2">
+							<div className="col-sm-3">
+								<span className="font-weight-bold">Category</span>
+								<Select
+										isClearable
+										name="category"
+										placeholder="Select Category"
+										options={categories.map( c => ({
+													"value" : c._id || "",
+													"label" : c.name,
+													"name"  : "category"
+												})
+										)}
+										onChange={e => {
+											if(e === null) {
+												let UpdatedFilters = {...filteredData}
+												UpdatedFilters.filters['category'] = ""
+												setFilteredData(UpdatedFilters);
+												loadProducts(UpdatedFilters.filters)
+											}
+											else {
+												let UpdatedFilters = {...filteredData}
+												UpdatedFilters.filters[e.name] = e.value
+												getSubCategories(e.value)
+														.then(res => {
+															setValues({...values, subCategories: res.data})
+														})
+												setFilteredData(UpdatedFilters);
+												loadProducts(UpdatedFilters.filters)
+											}
+										}}
+								/>
+							</div>
+							<div className="col-sm-3">
+								<span className="font-weight-bold">Sub Category</span>
+								<Select
+										isMulti
+										isClearable
+										placeholder="Add Sub-Category"
+										options={subCategories.map(s => ({
+													"value": s._id,
+													"label": s.name
+												})
+										)}
+										onChange={e => {
+											if(e === null)
+											{
+												let UpdatedFilters = {...filteredData}
+												UpdatedFilters.filters["subs"] = ""
+												setFilteredData(UpdatedFilters);
+												loadProducts(UpdatedFilters.filters)
+											}
+											else
+											{
+												const arr = []
+												if(Array.isArray(e)) {
+													e.map(x => {
+														arr.push(x.value)
+													})
+												} else {
+													return []
+												}
+												let UpdatedFilters = {...filteredData}
+												UpdatedFilters.filters["subs"] = arr
+												setFilteredData(UpdatedFilters);
+												loadProducts(UpdatedFilters.filters)
+											}
+										}}
+
+								/>
+							</div>
+							<div className="col-sm-3">
+								<span className="font-weight-bold">Brand</span>
+								<Select
+										isClearable
+										placeholder="Add Brand"
+										options={brands.map(b => ({
+													"value": b._id,
+													"label": b.name,
+													"name": "brand"
+												})
+										)}
+										onChange={e => {
+											if(e === null) {
+												let UpdatedFilters = {...filteredData}
+												UpdatedFilters.filters['brand'] = ""
+												setFilteredData(UpdatedFilters);
+												loadProducts(UpdatedFilters.filters)
+											}
+											else {
+												let UpdatedFilters = {...filteredData}
+												UpdatedFilters.filters[e.name] = e.value
+												setFilteredData(UpdatedFilters);
+												loadProducts(UpdatedFilters.filters)
+											}
+										}}
+								/>
+							</div>
+							<div className="col-sm-3">
+								<span className="font-weight-bold">Color</span>
+								<Select
+										isMulti
+										isClearable
+										placeholder="Select Color"
+										options={colors.map(c => ({
+													"value": c,
+													"label": c
+												})
+										)}
+										className="mb-2"
+										onChange={e => {
+											if(e === null)
+											{
+												let UpdatedFilters = {...filteredData}
+												UpdatedFilters.filters["color"] = ""
+												setFilteredData(UpdatedFilters);
+												loadProducts(UpdatedFilters.filters)
+											}
+											else
+											{
+												const arr = []
+												if(Array.isArray(e)) {
+													e.map(x => {
+														arr.push(x.value)
+													})
+												} else {
+													return []
+												}
+												let UpdatedFilters = {...filteredData}
+												UpdatedFilters.filters["color"] = arr
+												setFilteredData(UpdatedFilters);
+												loadProducts(UpdatedFilters.filters)
+											}
+										}}
+								/>
+							</div>
+							<div className="col-sm-3">
+								<span className="font-weight-bold">Stock</span>
+								<Select
+										isClearable
+										placeholder="Add Sub-Category"
+										options={stockOption}
+								/>
+							</div>
+						</div>
+				</span>
+			</form>
+	)
 
 	return (
 			<React.Fragment>
@@ -574,26 +747,29 @@ const ListProducts = () => {
 							</div>
 						</div>
 						<div className="col-md-11 adjustment">
+							<div className="jumbotron">
+								{filterDataForm()}
+							</div>
 							<LocalSearch keyword={keyword} setKeyword={setKeyword}/>
 							{lists()}
-							<ReactPaginate
-								previousLabel={"Previous"}
-								nextLabel={"Next"}
-								pageCount={pageCount}
-								onPageChange={handlePageClick}
-								containerClassName={"paginationBtns"}
-								previousLinkClassName={"previousBtn"}
-								nextLinkClassName={"nextBtn"}
-								disabledClassName={"paginationDisabled"}
-								activeClassName={"paginationActive"}
-							/>
+							{products.length > 0 &&
+									<ReactPaginate
+											previousLabel={"Previous"}
+											nextLabel={"Next"}
+											pageCount={pageCount}
+											onPageChange={handlePageClick}
+											containerClassName={"paginationBtns"}
+											previousLinkClassName={"previousBtn"}
+											nextLinkClassName={"nextBtn"}
+											disabledClassName={"paginationDisabled"}
+											activeClassName={"paginationActive"}
+									/>
+							}
 						</div>
 					</div>
 				</div>
 			</React.Fragment>
-
 	)
-
 }
 
 export default ListProducts;

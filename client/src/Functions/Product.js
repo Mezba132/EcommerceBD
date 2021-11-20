@@ -8,8 +8,8 @@ export const createProduct = async (product, authtoken) =>
 				},
 			})
 
-export const getProducts = async () =>
-		await axios.get(`${process.env.REACT_APP_API}/products/50`)
+export const getProductsByFilters = async (filters = {}) =>
+		await axios.post(`${process.env.REACT_APP_API}/products/50`, {filters})
 
 export const removeProduct = async (slug, authtoken) =>
 		await axios.delete(`${process.env.REACT_APP_API}/product/${slug}`,
