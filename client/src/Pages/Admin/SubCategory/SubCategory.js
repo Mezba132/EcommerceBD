@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import AdminNav from "../../../Components/Nav/AdminNav";
 import {Spin} from "antd";
-import Select from 'react-select';
 import {
 	createSubCategory,
 	getSubCategories,
@@ -14,14 +13,12 @@ import {
 } from '../../../Functions/Categoy'
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import {
-	EditOutlined,
-	DeleteOutlined
-} from '@ant-design/icons';
-import Modal from "../../../Components/Shared/Modal";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
-import CreateSubForm from "../../../Components/Shared/Form/CreateSubForm";
+import CreateSub from "../../../Components/Shared/Form/Admin/CreateSub";
 import ReactPaginate from 'react-paginate'
+import Delete from "../../../Components/Shared/Modal/Delete";
+import SubUpdate from "../../../Components/Shared/Modal/Admin/SubCategoryUpdate";
+import SubList from "../../../Components/Shared/ListPages/Admin/ListSub";
 
 const SubCategory = () => {
 	const [name, setName] = useState('')
@@ -38,7 +35,6 @@ const SubCategory = () => {
 	const [parentId, setParentId] = useState(null)
 	const [parentName, setParentName] = useState('')
 	const [pageNumber, setPageNumber] = useState(0)
-
 
 	const { user }  = useSelector(user => user);
 
@@ -151,79 +147,25 @@ const SubCategory = () => {
 	return (
 		<React.Fragment>
 
-			<Modal
-					show={showDeleteModal}
-					onCancel={onCancelDeleteHandler}
-					header="Are You Sure ?"
-					footerClass="place-item__modal-actions"
-					footer={
-						<React.Fragment>
-							<button className="btn btn-danger float-right mb-2 ml-2" onClick={onConfirmDeleteHandler}>Delete</button>
-							<button className="btn btn-primary float-right mb-2 ml-2" onClick={onCancelDeleteHandler}>Cancel</button>
-						</React.Fragment>
-					}>
-				<div>
-					<p>Would You want to Delete ?</p>
-				</div>
-			</Modal>
+			<Delete
+					showDeleteModal={showDeleteModal}
+					onCancelDeleteHandler={onCancelDeleteHandler}
+					onConfirmDeleteHandler={onConfirmDeleteHandler}
+			/>
 
-			<Modal
-					show={showUpdateModal}
-					onCancel={onCancelUpdateHandler}
-					header="Update Sub Category"
-					children={
-							<div className="form-group">
-								<p className="font-weight-bold">Update SubCategory</p>
-								<input
-										name=""
-										placeholder="Update Sub-Category"
-										className="form-control mb-2"
-										type="text"
-										onChange={e => setUpdateName(e.target.value)}
-										autoFocus
-										value={updateName}
-										disabled={loading}
-								/>
-								<p className="font-weight-bold">Update Category</p>
-								<Select
-										// value={categories.map( c =>
-										// 			c._id === parentId ?
-										// 				{
-										// 					"value" : parentId,
-										// 					"label" : parentName
-										// 				} : null
-										// )}
-										value={{value: parentId, label:parentName}}
-										options={categories.map( c => ({
-													"value" : c._id,
-													"label" : c.name
-												})
-										)}
-
-										onChange={e => {
-											setParentId(e.value)
-											setParentName(e.label)
-										}}
-								/>
-							</div>
-					}
-					footer={
-						<React.Fragment>
-							<button
-									type="submit"
-									className="btn btn-primary float-right ant-btn-lg"
-									disabled={!updateName || updateName.length < 2 || loading}> Update
-							</button>
-							<span
-									className="btn btn-warning float-right ant-btn-lg mr-3"
-									onClick={onCancelUpdateHandler}> Cancel
-                              </span>
-						</React.Fragment>
-					}
-					onSubmit={updateFormSubmit}
-					footerClass="mb-5"
-			>
-			</Modal>
+			<SubUpdate
+					showUpdateModal={showUpdateModal}
+					onCancelUpdateHandler={onCancelUpdateHandler}
+					updateName={updateName}
+					setUpdateName={setUpdateName}
+					loading={loading}
+					updateFormSubmit={updateFormSubmit}
+					parentId={parentId}
+					parentName={parentName}
+					categories={categories}
+					setParentId={setParentId}
+					setParentName={setParentName}
+			/>
 
 			<div className="container-fluid">
 				<div className="row">
@@ -236,7 +178,7 @@ const SubCategory = () => {
 						{loading ?
 							<div className="text-center"> <Spin tip="Loading..." /> </div>
 							:
-							<CreateSubForm
+							<CreateSub
 								handleSubmit={handleSubmit}
 								name={name} setName={setName}
 								loading={loading} categories={categories}
@@ -246,38 +188,15 @@ const SubCategory = () => {
 						<LocalSearch keyword={keyword} setKeyword={setKeyword}/>
 						{subCategories.length > 0 ?
 							<div className="mt-3">
-								<table className="table table-striped table-dark">
-									<thead className="text-center">
-									<tr>
-										<th>Sub-Category Name</th>
-										<th>Category Name</th>
-										<th>Action</th>
-									</tr>
-									</thead>
-									{subCategories
-											.filter(searched(keyword))
-											.slice(pagesVisited, pagesVisited + subCatsPerPage)
-											.map( s =>
-										<tbody key={s._id}>
-											<tr>
-												<td className='text-center'>{s.name}</td>
-												<td className='text-center'>{s.cname}</td>
-												<td className='text-center'>
-													<span
-				                                          onClick={() => onOpenUpdateHandler(s.slug)}
-				                                          className="btn btn-md">
-				                                        <EditOutlined/>
-													</span>
-													<span
-															onClick={() => onOpenDeleteHandler(s.slug)}
-															className="btn btn-md">
-				                                              <DeleteOutlined/>
-				                                    </span>
-												</td>
-											</tr>
-										</tbody>
-									)}
-								</table>
+								<SubList
+										subCategories={subCategories}
+										searched={searched}
+										keyword={keyword}
+										pagesVisited={pagesVisited}
+										subCatsPerPage={subCatsPerPage}
+										onOpenUpdateHandler={onOpenUpdateHandler}
+										onOpenDeleteHandler={onOpenDeleteHandler}
+								/>
 							</div> :
 							<div className="text-center mt-5">
 								<h1>No Sub-Category Found</h1>

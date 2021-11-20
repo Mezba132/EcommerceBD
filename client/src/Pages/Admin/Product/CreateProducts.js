@@ -4,7 +4,7 @@ import {getCategories, getSubCategories} from "../../../Functions/Categoy";
 import {createProduct} from "../../../Functions/Product";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
-import MultiProductForm from "../../../Components/Shared/Form/MultiProductsForm";
+import MultiProductForm from "../../../Components/Shared/Form/Admin/MultiProducts";
 import {getBrands} from "../../../Functions/Brand";
 
 const CreateProducts = () => {

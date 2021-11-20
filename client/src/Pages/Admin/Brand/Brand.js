@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
 import AdminNav from "../../../Components/Nav/AdminNav";
-import Modal from "../../../Components/Shared/Modal";
 import {Spin} from "antd";
-import CreateBrand from "../../../Components/Shared/Form/CreateBrand";
+import CreateBrand from "../../../Components/Shared/Form/Admin/CreateBrand";
 import {
 	getBrands,
 	createBrand,
@@ -11,9 +10,12 @@ import {
 	updateBrand
 } from '../../../Functions/Brand'
 import LocalSearch from "../../../Components/Shared/LocalSearch";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {toast} from "react-toastify";
+import ReactPaginate from 'react-paginate'
 import {useSelector} from "react-redux";
+import Delete from "../../../Components/Shared/Modal/Delete";
+import UpdateBrand from "../../../Components/Shared/Modal/Admin/BrandUpdate";
+import BrandList from "../../../Components/Shared/ListPages/Admin/ListBrand";
 
 const Brand = () => {
 
@@ -25,6 +27,7 @@ const Brand = () => {
 	const [updateName, setUpdateName] = useState('')
 	const [brands, setBrands] = useState([])
 	const [keyword, setKeyword] = useState('')
+	const [pageNumber, setPageNumber] = useState(0)
 
 	const { user } = useSelector(user => user)
 
@@ -118,63 +121,30 @@ const Brand = () => {
 
 	const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword)
 
+	const brandsPerPage = 5;
+	const pagesVisited = pageNumber * brandsPerPage;
+	const pageCount = Math.ceil(brands.length / brandsPerPage)
+	const handlePageClick = ({selected}) => {
+		setPageNumber(selected)
+	}
+
 	return (
 		<React.Fragment>
 
-			<Modal
-					show={showDeleteModal}
-					onCancel={onCancelDeleteHandler}
-					header="Are You Sure ?"
-					footerClass="place-item__modal-actions"
-					footer={
-						<React.Fragment>
-							<button className="btn btn-danger float-right mb-2 ml-2" onClick={onConfirmDeleteHandler}>Delete</button>
-							<button className="btn btn-primary float-right mb-2 ml-2" onClick={onCancelDeleteHandler}>Cancel</button>
-						</React.Fragment>
-					}>
-				<div>
-					<p>Would You want to Delete ?</p>
-				</div>
-			</Modal>
+			<Delete
+					showDeleteModal={showDeleteModal}
+					onCancelDeleteHandler={onCancelDeleteHandler}
+					onConfirmDeleteHandler={onConfirmDeleteHandler}
+			/>
 
-			<Modal
-					show={showUpdateModal}
-					onCancel={onCancelUpdateHandler}
-					header="Update Category"
-					children={
-						<div>
-							<p className="font-weight-bold">Update Brand</p>
-							<div className="form-group">
-								<input
-										name=""
-										placeholder="Add New Category"
-										className="form-control"
-										type="text"
-										onChange={e => setUpdateName(e.target.value)}
-										autoFocus
-										value={updateName}
-										disabled={loading}
-								/>
-							</div>
-						</div>
-					}
-					footer={
-						<React.Fragment>
-							<button
-									type="submit"
-									className="btn btn-primary float-right ant-btn-lg"
-									disabled={!updateName || updateName.length < 2 || loading}> Update
-							</button>
-							<span
-									className="btn btn-warning float-right ant-btn-lg mr-3"
-									onClick={onCancelUpdateHandler}> Cancel
-                              </span>
-						</React.Fragment>
-					}
-					onSubmit={updateSubmit}
-					footerClass="mb-5"
-			>
-			</Modal>
+			<UpdateBrand
+					showUpdateModal={showUpdateModal}
+					onCancelUpdateHandler={onCancelUpdateHandler}
+					updateName={updateName}
+					setUpdateName={setUpdateName}
+					loading={loading}
+					updateSubmit={updateSubmit}
+			/>
 
 			<div className="container-fluid">
 				<div className="row">
@@ -195,39 +165,32 @@ const Brand = () => {
 						<LocalSearch keyword={keyword} setKeyword={setKeyword}/>
 						{brands.length > 0 ?
 							<div className="mt-3">
-								<table className="table table-striped table-dark">
-									<thead className="text-center">
-										<tr>
-											<th>Brand Name</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									{brands.filter(searched(keyword)).map( b =>
-										<tbody key={b._id}>
-											<tr>
-												<td className='text-center'>{b.name}</td>
-												<td className='text-center'>
-				                                        <span
-						                                        onClick={() => onOpenUpdateHandler(b.slug)}
-						                                        className="btn btn-md">
-                                                                    <EditOutlined/>
-			                                            </span>
-														<span
-																onClick={() => onOpenDeleteHandler(b.slug)}
-																className="btn btn-md">
-			                                                        <DeleteOutlined/>
-			                                            </span>
-												</td>
-											</tr>
-										</tbody>
-									)}
-								</table>
+								<BrandList
+										brands={brands}
+										searched={searched}
+										keyword={keyword}
+										onOpenUpdateHandler={onOpenUpdateHandler}
+										onOpenDeleteHandler={onOpenDeleteHandler}
+										pagesVisited={pagesVisited}
+										brandsPerPage={brandsPerPage}
+								/>
 							</div> :
 							<div className="text-center mt-5">
 								<h1>No Brand Found</h1>
 							</div>
 
 						}
+						<ReactPaginate
+								previousLabel={"Previous"}
+								nextLabel={"Next"}
+								pageCount={pageCount}
+								onPageChange={handlePageClick}
+								containerClassName={"paginationBtns"}
+								previousLinkClassName={"previousBtn"}
+								nextLinkClassName={"nextBtn"}
+								disabledClassName={"paginationDisabled"}
+								activeClassName={"paginationActive"}
+						/>
 					</div>
 				</div>
 			</div>

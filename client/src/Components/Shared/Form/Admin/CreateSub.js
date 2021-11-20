@@ -1,7 +1,7 @@
 import Select from "react-select";
 import React from "react";
 
-const CreateSubForm = ({handleSubmit,name,setName,loading,categories,setCategory,setCatName}) => (
+const CreateSub = ({handleSubmit,name,setName,loading,categories,setCategory,setCatName}) => (
 
 		<form onSubmit={handleSubmit}>
 			<div className="form-group jumbotron">
@@ -42,4 +42,4 @@ const CreateSubForm = ({handleSubmit,name,setName,loading,categories,setCategory
 		</form>
 )
 
-export default CreateSubForm;
+export default CreateSub;

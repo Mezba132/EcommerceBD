@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import Select from "react-select";
-import FileUpload from "./FileUploadForm";
+import FileUpload from "./FileUpload";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, setValues }) => {
+const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setValues }) => {
 
 	const { title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs, shipping, size, sizes, tags } = values
 
@@ -257,4 +257,4 @@ const CreateProductForm = ({ values, handleSubmit, handleChange, selectChange, s
 			</div>
 		</form>
 )}
-export default CreateProductForm;
+export default CreateProduct;

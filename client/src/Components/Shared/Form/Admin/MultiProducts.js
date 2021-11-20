@@ -1,6 +1,6 @@
 import React from "react";
 import Select from "react-select";
-import FileUpload from "./FileUploadForm";
+import FileUpload from "./FileUpload";
 import {DeleteTwoTone, PlusCircleTwoTone} from "@ant-design/icons";
 
 const MultiProductForm = (

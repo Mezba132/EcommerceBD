@@ -11,7 +11,7 @@ import {
 		getSubCategories
 } from '../../../Functions/Categoy'
 import { getBrands } from '../../../Functions/Brand'
-import CreateProductForm from "../../../Components/Shared/Form/CreateProductForm";
+import CreateProductForm from "../../../Components/Shared/Form/Admin/CreateProduct";
 
 const initialState = {
 	title:'',
@@ -37,7 +37,7 @@ const initialState = {
 	showSubs: false
 }
 
-const CreateProduct = ({history}) => {
+const NewProduct = ({history}) => {
 
 	const [values, setValues] = useState(initialState);
 	const [loading, setLoading] = useState(false);
@@ -134,4 +134,4 @@ const CreateProduct = ({history}) => {
 	)
 }
 
-export default CreateProduct;
+export default NewProduct;
