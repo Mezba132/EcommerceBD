@@ -295,8 +295,7 @@ const ProductUpdate = (
 			}
 			onSubmit={updateFormSubmit}
 			footerClass="mb-5"
-	>
-	</Modal>
+	/>
 )}
 
 export default ProductUpdate;

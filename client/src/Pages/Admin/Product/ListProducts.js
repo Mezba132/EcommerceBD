@@ -15,6 +15,7 @@ import ListProduct from "../../../Components/Shared/ListPages/Admin/ListProduct"
 import ListFilter from "../../../Components/Shared/Filters/Admin/ProductsFilter";
 import Delete from "../../../Components/Shared/Modal/Delete";
 import ProductUpdate from "../../../Components/Shared/Modal/Admin/ProductUpdate";
+import ShowProduct from "../../../Components/Shared/Modal/Admin/ProductShow";
 
 const initialState = {
 	title:'',
@@ -48,6 +49,7 @@ const ListProducts = () => {
 	const [keyword, setKeyword] = useState('');
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
+	const [showProductModal, setShowProductModal] = useState(false);
 	const [slug, setSlug] = useState('');
 	const [values, setValues] = useState(initialState);
 	const [pageNumber, setPageNumber] = useState(0);
@@ -116,6 +118,43 @@ const ListProducts = () => {
 				})
 	}
 
+	const LoadSingleProduct = (slug) => {
+		getProduct(slug)
+				.then(res => {
+					let value = res.data;
+					getSubCategories(value.category._id)
+							.then(sub =>
+							{
+								let subArr = [];
+								value.subs.map(s => {
+									subArr.push(s._id)
+								})
+								console.log(subArr)
+								setValues({...values,
+									title: value.title,
+									description: value.description,
+									tags: value.tagList.toString(),
+									cost_price: value.cost_price,
+									mrp_price: value.mrp_price,
+									quantity: value.quantity,
+									shipping: value.shipping,
+									size: value.size,
+									color: value.color,
+									getCatById: value.category,
+									category: value.category._id,
+									categoryName: value.category.name,
+									getBrandById: value.brand,
+									brand: value.brand._id,
+									brandName: value.brand.name,
+									subCategories: sub.data,
+									subList: value.subs,
+									images: value.images,
+									subs: subArr
+								})
+							})
+				})
+	}
+
 	const loadFields = () => {
 		getCategories().then(category => {
 			getBrands().then(brand => {
@@ -149,39 +188,7 @@ const ListProducts = () => {
 	const onOpenUpdateHandler = (slug) => {
 		setShowUpdateModal(true);
 		setSlug(slug);
-		getProduct(slug)
-			.then(res => {
-				let value = res.data;
-				// console.log(value)
-				getSubCategories(value.category._id)
-					.then(sub =>
-					{
-						let subArr = [];
-						value.subs.map(s => {
-							subArr.push(s._id)
-						})
-						console.log(subArr)
-						setValues({...values,
-							title: value.title,
-							description: value.description,
-							tags: value.tagList.toString(),
-							cost_price: value.cost_price,
-							mrp_price: value.mrp_price,
-							quantity: value.quantity,
-							shipping: value.shipping,
-							size: value.size,
-							color: value.color,
-							getCatById: value.category,
-							category: value.category._id,
-							getBrandById: value.brand,
-							brand: value.brand._id,
-							subCategories: sub.data,
-							subList: value.subs,
-							images: value.images,
-							subs: subArr
-						})
-					})
-			})
+		LoadSingleProduct(slug);
 	};
 
 	const onCancelUpdateHandler = () => {
@@ -203,6 +210,17 @@ const ListProducts = () => {
 
 				})
 
+	}
+
+	const onOpenProductHandler = (slug) => {
+		setShowProductModal(true);
+		setSlug(slug)
+		LoadSingleProduct(slug);
+	}
+
+	const onCancelProductHandler = (slug) => {
+		setShowProductModal(false);
+		setSlug('')
 	}
 
 	const handleChange = (e) => {
@@ -228,8 +246,9 @@ const ListProducts = () => {
 	const pagesVisited = pageNumber * productsPerPage;
 	const pageCount = Math.ceil(products.length / productsPerPage)
 	const handlePageClick = ({selected}) => {
-		setPageNumber(selected)
+		setPageNumber(selected);
 	}
+
 
 	return (
 			<React.Fragment>
@@ -248,6 +267,13 @@ const ListProducts = () => {
 						handleChange={handleChange}
 						selectChange={selectChange}
 						updateFormSubmit={updateFormSubmit}
+				/>
+
+				<ShowProduct
+						values={values}
+						setValues={setValues}
+						onCancelProductHandler={onCancelProductHandler}
+						showProductModal={showProductModal}
 				/>
 
 				<div className="container-fluid">
@@ -281,6 +307,7 @@ const ListProducts = () => {
 								productsPerPage={productsPerPage}
 								onOpenUpdateHandler={onOpenUpdateHandler}
 								onOpenDeleteHandler={onOpenDeleteHandler}
+								onOpenProductHandler={onOpenProductHandler}
 							/>
 							{products.length > 0 &&
 									<ReactPaginate

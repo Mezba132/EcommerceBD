@@ -77,7 +77,6 @@ const AdminNav = () => {
             </li>
         </ul>
 
-
         <ul className="nav flex-column mb-2">
             <li className="nav-item">
                 <Link to="/user/password" className="nav-link">Change Password</Link>

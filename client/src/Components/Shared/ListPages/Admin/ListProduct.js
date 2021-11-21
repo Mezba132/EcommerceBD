@@ -11,7 +11,8 @@ const ListProduct = (
 			pagesVisited,
 			productsPerPage,
 			onOpenUpdateHandler,
-			onOpenDeleteHandler
+			onOpenDeleteHandler,
+			onOpenProductHandler
 		}) => {
 
 	return (
@@ -57,7 +58,12 @@ const ListProduct = (
 											}
 										})}
 									</td>
-									<td className="text-center">{item.title}</td>
+									<td className="text-center">
+										<span className="pointer"
+												onClick={ () => onOpenProductHandler(item.slug)}>
+											{item.title}
+										</span>
+									</td>
 									<td className="text-center">
 										<span data-toggle="tooltip" data-placement="top" title={item.description}>
 												{ item.description.length < 50 ? item.description : item.description.substring(0,50) + "..."}
