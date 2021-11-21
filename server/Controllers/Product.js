@@ -15,6 +15,7 @@ exports.create = async (req, res) => {
 }
 
 exports.listByFilters = async (req, res) => {
+	console.log(req.body.filters)
 	let findArgs = {};
 	for (let key in req.body.filters) {
 		if(req.body.filters[key].length > 0) {

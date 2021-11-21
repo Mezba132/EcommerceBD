@@ -67,13 +67,13 @@ const AdminNav = () => {
 
         <ul className="nav flex-column mb-2">
             <li className="nav-item">
-                <Link to="/admin/settings" className="nav-link">Settings</Link>
+                <Link to="/admin/reviews" className="nav-link">Product Reviews</Link>
             </li>
         </ul>
 
         <ul className="nav flex-column mb-2">
             <li className="nav-item">
-                <Link to="/admin/reviews" className="nav-link">Product Reviews</Link>
+                <Link to="/admin/settings" className="nav-link">Settings</Link>
             </li>
         </ul>
 

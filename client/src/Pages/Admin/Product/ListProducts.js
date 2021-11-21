@@ -60,7 +60,8 @@ const ListProducts = () => {
 			subs:[],
 			color:[],
 			brand:'',
-			quantity: ''
+			stock: '',
+			createdDate:[]
 		}
 	})
 
@@ -248,7 +249,6 @@ const ListProducts = () => {
 	const handlePageClick = ({selected}) => {
 		setPageNumber(selected);
 	}
-
 
 	return (
 			<React.Fragment>

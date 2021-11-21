@@ -1,6 +1,9 @@
 import React from "react";
 import Select from "react-select";
 import {getSubCategories} from "../../../../Functions/Categoy";
+import $ from "jquery";
+import daterangepicker from 'daterangepicker'
+import moment from "moment";
 
 const ListFilter = (
 			{
@@ -16,6 +19,38 @@ const ListFilter = (
 				setValues
 			}
 		) => {
+
+		let start = moment().subtract(29, 'days');
+		let end = moment();
+
+		const cb = (start, end) => {
+			$('#reportrange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+			let UpdatedFilters = {...filteredData}
+			UpdatedFilters.filters['createdDate'] = [start, end]
+			setFilteredData(UpdatedFilters);
+			loadProducts(UpdatedFilters.filters)
+		}
+
+		$('#reportrange').daterangepicker({
+			startDate: start,
+			endDate: end,
+			showDropdowns: true,
+			minYear: 1901,
+			maxYear: parseInt(moment().format('YYYY'),10),
+			ranges: {
+				'Today': [moment(), moment()],
+				'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+				'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+				'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+				'This Month': [moment().startOf('month'), moment().endOf('month')],
+				'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+			}
+		}, cb);
+
+		// cb(start, end);
+
+
+
 	return (
 		<span className="row border border-info">
 			<div className="row col-md-12 m-2">
@@ -161,6 +196,14 @@ const ListFilter = (
 							placeholder="Add Sub-Category"
 							options={stockOption}
 					/>
+				</div>
+				<div className="col-sm-3">
+					<span className="font-weight-bold">Date</span>
+					<div id="reportrange" className="daterange">
+						<i className="fa fa-calendar"></i> &nbsp;
+						<span>{start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY')}</span> &nbsp;
+						<i className="fa fa-caret-down"></i>
+					</div>
 				</div>
 			</div>
 		</span>

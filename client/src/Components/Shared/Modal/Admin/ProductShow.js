@@ -31,7 +31,7 @@ const ShowProduct = (
 				show={showProductModal}
 				onCancel={onCancelProductHandler}
 				header={`${values.title}`}
-				modal_body={"pro_height"}
+				modal_body={"single_product"}
 				children={
 					<div>
 						<table>
