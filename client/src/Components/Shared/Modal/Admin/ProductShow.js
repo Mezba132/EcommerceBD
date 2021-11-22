@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from '../index'
 import ShowImage from "../../ShowImage";
+import parse from 'html-react-parser'
 
 const ShowProduct = (
 			{
@@ -9,22 +10,6 @@ const ShowProduct = (
 				showProductModal
 			}
 		) => {
-
-	const text = () => {
-				let arr = []
-				for (let i in values.description) {
-					arr.push(values.description[i]);
-				}
-
-				return arr.map(s => {
-					if (s === '\n') {
-						return <br/>
-					}
-					else {
-						return s
-					}
-				})
-	}
 
 	return (
 		<Modal
@@ -37,8 +22,8 @@ const ShowProduct = (
 						<table>
 							<tbody>
 								<tr >
-									<td className="col-sm-4 font align-text-top">Pictures : </td>
-									<td className="col-sm-20">
+									<td className="font align-text-top">Pictures : </td>
+									<td>
 										<ShowImage
 												values={values}
 										/>
@@ -46,11 +31,11 @@ const ShowProduct = (
 								</tr>
 								<tr >
 									<td className="col-sm-4 font align-text-top">Title : </td>
-									<td className="col-sm-20 font font-weight-bold">{values.title}</td>
+									<td className="font font-weight-bold">{values.title}</td>
 								</tr>
 								<tr>
 									<td className="col-sm-4 font align-text-top">Description : </td>
-									<td className="font font-weight-bold">{text()}</td>
+									<td className="font">{parse(values.description)}</td>
 								</tr>
 								<tr>
 									<td className="col-sm-4 font align-text-top">Tag : </td>

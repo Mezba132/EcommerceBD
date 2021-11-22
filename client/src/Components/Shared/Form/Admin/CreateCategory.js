@@ -5,12 +5,13 @@ const CreateCategoryForm = ({handleSubmit, name, setName, loading}) => (
 			<div className="form-group jumbotron">
 				<h1 className="text-center font-weight-bold">Create Category</h1>
 				<hr className="my-8"/>
-				<p className="font-weight-bold">Create New Category</p>
+				<p className="font-weight-bold">Create New Category <span className="text-danger"> * </span></p>
 				<input
 						name=""
 						placeholder="Add New Category"
 						className="form-control mb-2"
 						type="text"
+						required
 						onChange={e => setName(e.target.value)}
 						value={name}
 						disabled={loading}

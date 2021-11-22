@@ -34,32 +34,38 @@ const productSchema = new mongoose.Schema({
 		maxlength: 32
 	},
 	category : {
+		required: true,
 		type : ObjectId,
 		ref: "Category"
 	},
 	subs : [
 		{
+			required: true,
 			type : ObjectId,
 			ref : "SubCategory"
 		},
 	],
 	quantity : {
+		required: true,
 		type : Number,
 		trim: true,
 		maxlength: 32
 	},
 	sold : {
+		required: true,
 		type : Number,
 		trim : true,
 		maxlength : 32,
 		default: 0
 	},
 	images : {
+		required: true,
 		type : Array
 	},
 	shipping : {
 		type : String,
-		enum : ["Yes", "No"]
+		enum : ["Yes", "No"],
+		default: "No"
 	},
 	color : {
 		type : Array
@@ -68,12 +74,19 @@ const productSchema = new mongoose.Schema({
 		type : Array
 	},
 	tagList : {
+		required: true,
 		type : Array
 	},
 	brand: {
+		required: true,
 		type : ObjectId,
 		ref: "Brand"
 	},
+	stock: {
+		type: String,
+		enum: ["In Stock","Stock Out"],
+		default: "In Stock"
+	}
 	// ratings: [
 	//   {
 	//     star: Number,

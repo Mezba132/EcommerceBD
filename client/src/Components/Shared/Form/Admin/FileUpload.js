@@ -94,7 +94,7 @@ const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 						<input
 								type="file"
 								multiple
-								className="form-control-file mb-3"
+								className="form-control-file mb-3 mt-2"
 								accept="images/*"
 								onChange={ uploadandresize }
 						/>

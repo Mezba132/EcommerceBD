@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import Select from "react-select";
 import FileUpload from "./FileUpload";
-// import { CKEditor } from '@ckeditor/ckeditor5-react';
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setValues }) => {
 
@@ -15,7 +15,7 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 				<hr className="my-8"/>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Image Upload </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Image Upload <span className="text-danger"> * </span> </label>
 					<div className="col-sm-8 float-right">
 						<FileUpload
 								values={values}
@@ -26,13 +26,14 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Title </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Title <span className="text-danger"> * </span> </label>
 					<div className="col-sm-8">
 						<input
 								type="text"
 								className="form-control"
 								name="title"
 								placeholder="Product Name"
+								required
 								value={title}
 								onChange={handleChange}
 						/>
@@ -40,30 +41,22 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Description </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Description <span className="text-danger"> * </span> </label>
 					<div className="col-sm-8">
-							<textarea
-									rows = "2"
-									className="form-control"
-									name="description"
-									placeholder="Product Description"
-									value={description}
-									onChange={handleChange}
+							<CKEditor
+								editor = {ClassicEditor}
+								name="description"
+								data = {description}
+								onChange={ ( event, editor ) => {
+									const data = editor.getData();
+									setValues({...values, ['description'] : data})
+								}}
 							/>
-							{/*<CKEditor*/}
-							{/*	editor = {ClassicEditor}*/}
-							{/*	name="description"*/}
-							{/*	data = {description}*/}
-							{/*	onChange={ ( event, editor ) => {*/}
-							{/*		const data = editor.getData();*/}
-							{/*		console.log( data );*/}
-							{/*	} }*/}
-							{/*/>*/}
 					</div>
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Tag </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Tag <span className="text-danger"> * </span> </label>
 					<div className="col-sm-8">
 						<input
 								type="text"
@@ -71,13 +64,14 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 								name="tags"
 								placeholder="Add Tags separated by commas"
 								value={tags}
+								required
 								onChange={handleChange}
 						/>
 					</div>
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Cost Price </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Cost Price <span className="text-danger"> * </span> </label>
 					<div className="col-sm-3">
 						<input
 								type="number"
@@ -85,10 +79,11 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 								name="cost_price"
 								placeholder="Cost Price"
 								value={cost_price}
+								required
 								onChange={handleChange}
 						/>
 					</div>
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> MRP Price </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> MRP Price <span className="text-danger"> * </span></label>
 					<div className="col-sm-3">
 						<input
 								type="number"
@@ -96,13 +91,14 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 								name="mrp_price"
 								placeholder="MRP Price"
 								value={mrp_price}
+								required
 								onChange={handleChange}
 						/>
 					</div>
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Quantity </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Quantity <span className="text-danger"> * </span></label>
 					<div className="col-sm-3">
 						<input
 								type="number"
@@ -110,6 +106,7 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 								name="quantity"
 								placeholder="Total Quantity"
 								value={quantity}
+								required
 								onChange={handleChange}
 						/>
 					</div>
@@ -182,7 +179,7 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Category </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Category <span className="text-danger"> * </span></label>
 					<div className="col-sm-3">
 						<Select
 								name="category"
@@ -197,7 +194,7 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 					</div>
 					{showSubs && subCategories.length > 0 &&
 						<React.Fragment>
-							<label className="col-sm-2 col-form-label font-weight-bold text-center"> Sub Category </label>
+							<label className="col-sm-2 col-form-label font-weight-bold text-center"> Sub Category <span className="text-danger"> * </span></label>
 							<div className="col-sm-3">
 								<Select
 										isMulti
@@ -219,7 +216,7 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 												return []
 											}
 											setValues({...values, subs : arr})
-										}
+											}
 										}
 								/>
 							</div>
@@ -228,7 +225,7 @@ const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setVa
 				</div>
 
 				<div className="form-group row">
-					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Brand </label>
+					<label className="col-sm-2 col-form-label font-weight-bold text-center"> Brand <span className="text-danger"> * </span></label>
 					<div className="col-sm-3">
 						<Select
 								name="brand"

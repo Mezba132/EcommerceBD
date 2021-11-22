@@ -148,12 +148,10 @@ const Brand = () => {
 
 			<div className="container-fluid">
 				<div className="row">
-					<div className="col-md-1">
-						<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
-							<AdminNav/>
-						</div>
+					<div className="sticky-sidebar">
+						<AdminNav/>
 					</div>
-					<div className="col-md-11 adjustment">
+					<div className="adjustment">
 						{loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :
 							<CreateBrand
 								handleSubmit={handleSubmit}

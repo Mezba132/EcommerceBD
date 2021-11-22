@@ -21,11 +21,12 @@ const UpdateBrand = (
 						<div className="form-group">
 							<input
 									name=""
-									placeholder="Add New Category"
+									placeholder="Update Brand Name"
 									className="form-control"
 									type="text"
 									onChange={e => setUpdateName(e.target.value)}
 									autoFocus
+									required
 									value={updateName}
 									disabled={loading}
 							/>

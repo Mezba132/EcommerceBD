@@ -46,10 +46,11 @@
     position: fixed;
     top: 15vh;
     left: 35%;
-    width: 40%;
+    width: 45%;
     background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
     overflow-y: auto;
+    padding-right: 50px;
 }
 
 .pro_height {
@@ -61,7 +62,7 @@
 }
 
 .modal__header {
-    width: 40%;
+    width: 45%;
     padding: .7rem 0;
     background: aquamarine;
     color: white;
@@ -129,11 +130,14 @@
 
 /***/
 
-#sticky-sidebar {
+.sticky-sidebar {
     position:fixed;
-    max-width: 10%;
+    max-width: 200px;
     text-align: left;
-    margin-top: 60px;
+    margin-top: 50px;
+    background-color: #1d2124;
+    height: 100%;
+    z-index: 1000;
 }
 
 .fixed-header {
@@ -145,7 +149,8 @@
 
 .adjustment {
     padding-top: 60px;
-    padding-left: 50px;
+    width: 98%;
+    padding-left: 150px;
 }
 
 .pointer {

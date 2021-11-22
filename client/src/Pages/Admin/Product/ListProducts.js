@@ -278,12 +278,10 @@ const ListProducts = () => {
 
 				<div className="container-fluid">
 					<div className="row">
-						<div className="col-md-1">
-							<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
-								<AdminNav/>
-							</div>
+						<div className="sticky-sidebar">
+							<AdminNav/>
 						</div>
-						<div className="col-md-11 adjustment">
+						<div className="adjustment">
 							<div className="jumbotron">
 								<ListFilter
 										filteredData={filteredData}

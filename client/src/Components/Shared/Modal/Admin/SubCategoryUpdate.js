@@ -36,6 +36,8 @@ const SubUpdate = (
 						/>
 						<p className="font-weight-bold">Update Category</p>
 						<Select
+								isClearable
+
 								value={{value: parentId, label:parentName}}
 								options={categories.map( c => ({
 											"value" : c._id,
@@ -44,8 +46,15 @@ const SubUpdate = (
 								)}
 
 								onChange={e => {
-									setParentId(e.value)
-									setParentName(e.label)
+
+									if(e === null) {
+										setParentId("")
+										setParentName("")
+									}
+									else {
+										setParentId(e.value)
+										setParentName(e.label)
+									}
 								}}
 						/>
 					</div>

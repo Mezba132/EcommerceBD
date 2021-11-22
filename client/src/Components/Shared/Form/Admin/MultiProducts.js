@@ -2,6 +2,8 @@ import React from "react";
 import Select from "react-select";
 import FileUpload from "./FileUpload";
 import {DeleteTwoTone, PlusCircleTwoTone} from "@ant-design/icons";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import {CKEditor} from "@ckeditor/ckeditor5-react";
 
 const MultiProductForm = (
 		{   values,
@@ -32,15 +34,18 @@ const MultiProductForm = (
 
 							/>
 						</div>
-						<div className="col-sm-2">
+						<div className="col-sm-4">
 							<span className="font-weight-bold">Description</span>
-							<textarea
-								className="form-control mb-2"
-								name="description"
-								placeholder="Product Description"
-								value={item.description}
-								onChange={e => handleChange(index, e)}
-
+							<CKEditor
+									editor = {ClassicEditor}
+									name="description"
+									data = {item.description}
+									onChange={ ( event, editor ) => {
+										let data = [...values];
+										data[index]['description'] = editor.getData();
+										console.log(data)
+										setValues(data);
+									}}
 							/>
 						</div>
 
@@ -196,7 +201,7 @@ const MultiProductForm = (
 							/>
 						</div>
 
-						{showSubs && item.subCategories.length > 0 &&
+						{/*{showSubs && item.subCategories.length > 0 &&*/}
 							<div className="col-sm-2">
 								<span className="font-weight-bold">Sub Category</span>
 								<Select
@@ -225,9 +230,9 @@ const MultiProductForm = (
 									}
 								/>
 							</div>
-						}
+						{/*}*/}
 
-						<div className="col-sm-3">
+						<div className="col-sm-2">
 							<span className="font-weight-bold">Upload Images</span>
 							<FileUpload
 								values={item}

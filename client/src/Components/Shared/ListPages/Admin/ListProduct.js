@@ -1,6 +1,7 @@
 import React from "react";
 import {Avatar} from "antd";
 import {DeleteOutlined, EditOutlined, UserOutlined} from "@ant-design/icons";
+import parse from 'html-react-parser'
 
 
 const ListProduct = (
@@ -65,9 +66,11 @@ const ListProduct = (
 										</span>
 									</td>
 									<td className="text-center">
-										<span data-toggle="tooltip" data-placement="top" title={item.description}>
-												{ item.description.length < 50 ? item.description : item.description.substring(0,50) + "..."}
-										</span>
+											{/*{  parse(item.description.substring(0,50))}*/}
+											<span data-toggle="tooltip" data-placement="top" title={item.description}>
+													{ item.description.length < 50 ? parse(item.description) : parse(item.description.substring(0,50) + "...") }
+											</span>
+
 									</td>
 									<td className="text-center">
 										{item.quantity > 0 ? <p className="text-success"> In Stock </p> : <p className="text-danger">Stock Out</p>}

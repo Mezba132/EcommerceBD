@@ -10,6 +10,8 @@ const CreateBrand = ({handleSubmit, name, setName, loading}) => (
 						placeholder="Add New Brand"
 						className="form-control mb-2"
 						type="text"
+						required
+						autoFocus
 						onChange={e => setName(e.target.value)}
 						value={name}
 						disabled={loading}
@@ -17,7 +19,7 @@ const CreateBrand = ({handleSubmit, name, setName, loading}) => (
 				<button
 						type="submit"
 						className="btn btn-primary btn-block"
-						disabled={!name || name.length < 2 || loading} > Submit
+						disabled={!name || name.length < 2 || loading}> Submit
 				</button>
 			</div>
 		</form>

@@ -108,12 +108,10 @@ const CreateProducts = () => {
 	return (
 			<div className="container-fluid">
 				<div className="row">
-					<div className="col-md-1">
-						<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
+					<div className="sticky-sidebar">
 							<AdminNav/>
-						</div>
 					</div>
-					<div className="col-md-11 adjustment">
+					<div className="adjustment">
 						<div className="jumbotron">
 							<h1 className="text-center">Add Multiple Products</h1>
 							<MultiProductForm

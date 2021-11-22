@@ -31,7 +31,7 @@ const SubCategory = () => {
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
 	const [keyword, setKeyword] = useState('');
 	const [category, setCategory] = useState('');
-	const [catName, setCatName] = useState('')
+	const [catName, setCatName] = useState('');
 	const [parentId, setParentId] = useState(null)
 	const [parentName, setParentName] = useState('')
 	const [pageNumber, setPageNumber] = useState(0)
@@ -53,6 +53,7 @@ const SubCategory = () => {
 	const loadSubCategories = () => {
 		getSubCategories()
 				.then((res) => {
+					console.log(res.data)
 					setSubCategories(res.data)
 				})
 	}
@@ -110,6 +111,7 @@ const SubCategory = () => {
 				console.log(err)
 				setLoading(false);
 				setName('')
+				setCategory('')
 				toast.error(`${name} insert Failed`);
 			})
 	}
@@ -169,12 +171,10 @@ const SubCategory = () => {
 
 			<div className="container-fluid">
 				<div className="row">
-					<div className="col-md-1">
-						<div className="col-md-6 bg-dark h-100" id="sticky-sidebar">
-							<AdminNav/>
-						</div>
+					<div className="sticky-sidebar">
+						<AdminNav/>
 					</div>
-					<div className="col-md-11 adjustment">
+					<div className="adjustment">
 						{loading ?
 							<div className="text-center"> <Spin tip="Loading..." /> </div>
 							:
@@ -183,7 +183,9 @@ const SubCategory = () => {
 								name={name} setName={setName}
 								loading={loading} categories={categories}
 								setCategory={setCategory}
-								setCatName={setCatName}/>
+								setCatName={setCatName}
+								category={category}
+							/>
 						}
 						<LocalSearch keyword={keyword} setKeyword={setKeyword}/>
 						{subCategories.length > 0 ?
