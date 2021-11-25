@@ -1,31 +1,82 @@
 import axios from "axios";
+import CryptoJS from "crypto-js";
 
-export const createOrUpdateUser = async (authtoken) => {
-      return await axios.post(`${process.env.REACT_APP_API}/create-or-update-user`, {},
+export const userSignUp = async (data) => {
+      let encrypt_pass = CryptoJS.AES.encrypt(data.password, 'secret_key#leo132').toString();
+      data.password = encrypt_pass;
+
+      return await axios.post(`${process.env.REACT_APP_API}/register`, data,
               {
                   headers : {
-                      authtoken,
+                      Accept : 'application/json',
+                      'Content-Type' : 'application/json'
                   },
               }
         )
 };
 
-export const currentUser = async (authtoken) => {
-    return await axios.post(`${process.env.REACT_APP_API}/current-user`, {},
+export const userSignIn = async (data) => {
+      let encrypt_pass = CryptoJS.AES.encrypt(data.password, 'secret_key#leo132').toString();
+      data.password = encrypt_pass;
+
+      return await axios.post(`${process.env.REACT_APP_API}/login`, data,
             {
                 headers : {
-                    authtoken,
+                    Accept : 'application/json',
+                    'Content-Type' : 'application/json'
                 },
             }
       );
 };
 
-export const currentAdmin = async (authtoken) => {
-      return await axios.post(`${process.env.REACT_APP_API}/current-admin`, {},
+export const currentAdmin = async (user,token) => {
+      return await axios.post(`${process.env.REACT_APP_API}/current-admin`, user,
             {
-                  headers : {
-                        authtoken,
-                  },
+                headers : {
+                    Accept : 'application/json',
+                    'Content-Type' : 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
             }
       );
 };
+
+export const currentUser = async (user, token) => {
+    return await axios.post(`${process.env.REACT_APP_API}/current-user`, user,
+            {
+                headers : {
+                    Accept : 'application/json',
+                    'Content-Type' : 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            }
+    );
+};
+
+export const userSignOut = async () => {
+    return await axios.post(`${process.env.REACT_APP_API}/logout`, {},
+            {
+                headers : {
+                    Accept : 'application/json',
+                    'Content-Type' : 'application/json',
+                }
+            }
+    );
+};
+
+export const authenticate = (data, cb) => {
+    if(typeof window !== 'undefined') {
+        localStorage.setItem('jwt', JSON.stringify(data))
+        cb();
+    }
+}
+
+export const isAuthenticate = () => {
+    if(typeof window === 'undefined') return false;
+    if(localStorage.getItem('jwt')) {
+        return JSON.parse(localStorage.getItem('jwt'));
+    }
+    else {
+        return false;
+    }
+}

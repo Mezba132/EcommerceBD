@@ -1,15 +1,16 @@
 const express = require("express");
-
 const router = express.Router();
-
 // middleware
-const { authCheck, adminCheck } = require("../Middlewares/Auth");
+const { requireSignIn, isAuth, isAdmin } = require("../Middlewares/Auth");
+const { userSignInValidation , userSignUpValidation, validationResult, passwordDecrypt } = require("../Validator")
 
 // controller
-const { createOrUpdateUser, currentUser } = require("../Controllers/Auth");
+const { userSignUp, userSignIn, currentUser, userSignOut } = require("../Controllers/Auth");
 
-router.post("/create-or-update-user", authCheck, createOrUpdateUser);
-router.post("/current-user", authCheck, currentUser);
-router.post("/current-admin", authCheck, adminCheck, currentUser);
+router.post("/register", passwordDecrypt, userSignUpValidation, validationResult, userSignUp );
+router.post("/login", passwordDecrypt, userSignInValidation, validationResult, userSignIn );
+router.post("/logout", userSignOut );
+router.post("/current-user", requireSignIn, isAuth, currentUser);
+router.post("/current-admin", requireSignIn, isAuth, isAdmin, currentUser);
 
 module.exports = router;

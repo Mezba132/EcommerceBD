@@ -1,8 +1,7 @@
 import React, {useEffect} from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {toast, ToastContainer} from 'react-toastify';
-import { useDispatch } from "react-redux";
-import {auth} from "./firebase";
+import {useDispatch, useSelector} from "react-redux";
 import {LOGGED_IN_USER} from "./Constants";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,7 +12,7 @@ import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
 import ForgotPassword from './Pages/Auth/ForgotPassword';
 import History from "./Pages/User/History";
-import { currentUser } from './Functions/Auth';
+import {currentUser, isAuthenticate} from './Functions/Auth';
 import UserRoute from "./Components/Routes/UserRoute";
 import Password from "./Pages/User/Password";
 import Wishlist from "./Pages/User/Wishlist";
@@ -29,31 +28,31 @@ import Brand from "./Pages/Admin/Brand/Brand";
 const App = () => {
     const dispatch = useDispatch();
 
-    // to check Firebase auth state
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged( async (user) => {
-            if(user) {
-                const idTokenResult = await user.getIdTokenResult();
+    const { user, token } = isAuthenticate()
 
-                currentUser(idTokenResult.token)
-                    .then((res) => {
-                        dispatch({
-                            type: LOGGED_IN_USER,
-                            payload: {
-                                name: res.data.name,
-                                email: res.data.email,
-                                idToken: idTokenResult.token,
-                                role: res.data.role,
-                                _id: res.data._id
-                            }
-                        })
+
+    useEffect(() => {
+
+        if(user && token) {
+
+            currentUser(user, token)
+                .then((res) => {
+                    let data = res.data;
+                    dispatch({
+                        type: LOGGED_IN_USER,
+                        payload: {
+                            name: data.name,
+                            email: data.email,
+                            token: data.token,
+                            role: data.role,
+                            _id: data._id,
+                        }
                     })
-                    .catch(err => console.log(err))
-            }
-        });
-        // toast.success('Passwordless Verification Success');
-        // cleanup
-        return () => unsubscribe();
+                })
+                .catch(err => console.log(err))
+
+        }
+
     },[dispatch])
 
 

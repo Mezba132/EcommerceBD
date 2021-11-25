@@ -1,28 +1,32 @@
 import React, {useEffect, useState} from 'react';
 import { Spin } from 'antd';
 import { toast } from 'react-toastify';
-import {auth, googleAuthProvider, facebookAuthProvider, githubAuthProvider} from '../../firebase';
-import { useSelector,useDispatch } from "react-redux";
-import {LOGGED_IN_USER} from "../../Constants";
-import {Link} from "react-router-dom";
-import { createOrUpdateUser } from "../../Functions/Auth";
+import { useSelector, useDispatch } from "react-redux";
+import { LOGGED_IN_USER } from "../../Constants";
+import { Link } from "react-router-dom";
+import { userSignIn, authenticate } from '../../Functions/Auth'
+const initialState = {
+    email : "leomezba@gmail.com",
+    password : "mm123"
+}
 
 const Login = ({history}) => {
 
-    const [email, setEmail] = useState('csmezba@gmail.com');
-    const [password, setPassword] = useState('123456');
+    const [values, setValues] = useState(initialState);
     const [loading, setLoading] = useState(false);
+
+    const { email, password } = values;
 
     const dispatch = useDispatch();
     const { user } = useSelector(user => user);
-    // const {user} = useSelector((state) => ({...state}));
 
     useEffect(() => {
-        if (user && user.idToken) history.push('/');
+        if(user && user.token) history.push('/')
+        setValues({...values})
     },[user,history])
 
     const roleBasedUser = (res) => {
-        if(res.data.role === 'admin') {
+        if(res.user.role === 'admin') {
             history.push('/admin/dashboard');
         }
         else {
@@ -30,161 +34,70 @@ const Login = ({history}) => {
         }
     }
 
+    const handleChange = (e) => {
+        setValues({...values, [e.target.name]: e.target.value})
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        // console.table(email, password);
         try {
-            const result = await auth.signInWithEmailAndPassword(email, password);
-            const { user } = result;
-            const idTokenResult = await user.getIdTokenResult();
-
-            createOrUpdateUser(idTokenResult.token)
-                  .then((res) => {
-
-                        dispatch({
-                            type: LOGGED_IN_USER,
-                            payload: {
-                                name: res.data.name,
-                                email: res.data.email,
-                                idToken: idTokenResult.token,
-                                role: res.data.role,
-                                _id: res.data._id
-                            }
-                        })
-
-                      roleBasedUser(res);
-                  })
-                  .catch(err => console.log(err))
-            toast.success('Loging Success');
-        }
+            userSignIn(values)
+                .then(res => {
+                    authenticate(res.data, () => {
+                        setValues({...values})
+                    })
+                    dispatch({
+                        type: LOGGED_IN_USER,
+                        payload: {
+                            name: res.data.user.name,
+                            email: res.data.user.email,
+                            token: res.data.token,
+                            role: res.data.user.role,
+                            _id: res.data.user._id,
+                        }
+                    })
+                    setLoading(false);
+                    toast.success('Login Successfully');
+                    setValues(initialState);
+                    roleBasedUser(res.data);
+                })
+                .catch(e => {
+                    let err = e.response.data
+                    toast.error(err.error)
+                    setLoading(false);
+                    setValues(initialState)
+                })
+            }
         catch (e) {
             toast.error(e.message)
             setLoading(false);
         }
     };
 
-    const googleLogin = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const result = await auth.signInWithPopup(googleAuthProvider);
-            const { user } = result;
-            const idTokenResult = await user.getIdTokenResult();
-
-            createOrUpdateUser(idTokenResult.token)
-                  .then((res) => {
-                    dispatch({
-                        type: LOGGED_IN_USER,
-                        payload: {
-                            name: res.data.name,
-                            email: res.data.email,
-                            idToken: idTokenResult.token,
-                            role: res.data.role,
-                            _id: res.data._id
-                        }
-                    })
-
-                      roleBasedUser(res);
-
-                  })
-                  .catch(err => console.log(err))
-            toast.success('Google Loging Success');
-        }
-        catch (e) {
-            toast.error(e.message)
-            setLoading(false);
-        }
-    }
-
-    const facebookLogin = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const result = await auth.signInWithPopup(facebookAuthProvider);
-            const { user } = result;
-            const idTokenResult = await user.getIdTokenResult();
-
-            createOrUpdateUser(idTokenResult.token)
-                  .then((res) => {
-                    dispatch({
-                        type: LOGGED_IN_USER,
-                        payload: {
-                            name: res.data.name,
-                            email: res.data.email,
-                            idToken: idTokenResult.token,
-                            role: res.data.role,
-                            _id: res.data._id
-                        }
-                    })
-
-                      roleBasedUser(res);
-                  })
-                  .catch(err => console.log(err))
-            toast.success('Facebook Loging Success');
-        }
-        catch (e) {
-            toast.error(e.message)
-            setLoading(false);
-        }
-    }
-
-    const githubLogin = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const result = await auth.signInWithPopup(githubAuthProvider);
-            const { user } = result;
-            const idTokenResult = await user.getIdTokenResult();
-
-            createOrUpdateUser(idTokenResult.token)
-                  .then((res) => {
-                    dispatch({
-                        type: LOGGED_IN_USER,
-                        payload: {
-                            name: res.data.name,
-                            email: res.data.email,
-                            idToken: idTokenResult.token,
-                            role: res.data.role,
-                            _id: res.data._id
-                        }
-                    })
-
-                      roleBasedUser(res);
-                  })
-                  .catch(err => console.log(err))
-            toast.success('Github Loging Success');
-            history.push('/');
-        }
-        catch (e) {
-            toast.error(e.message)
-            setLoading(false);
-        }
-    }    
-
     const loginForm = () => (
         <form onSubmit={handleSubmit}>
             <div className="form-group input-group mb-2">
                 <span className="input-group-text"> <i className="fa fa-envelope"></i> </span>
                 <input
-                    name=""
+                    name="email"
                     placeholder="Email"
                     className="form-control"
                     type="email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={handleChange}
                     autoFocus
                 />
             </div>
             <div className="form-group input-group mb-2">
                 <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
                 <input
-                    name=""
+                    name="password"
                     placeholder="Password"
                     className="form-control"
                     type="password"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={handleChange}
                     autoFocus
                 />
             </div>
@@ -201,37 +114,38 @@ const Login = ({history}) => {
     )
 
     return (
-        <div className="container">
-            <div className="card bg-light mb-5">
-                <article className="card-body mx-auto">
-                    {loading ? <div > <Spin tip="Loading..." /> </div> :
-                    <div>
-                        <h4 className="card-title mt-3 text-center">LogIn</h4>
-                        <p>
-                            <button
-                                  className="btn btn-block btn-danger"
-                                  onClick={googleLogin}
-                            >
-                                <i className="fab fa-google"></i> Login via Google
-                            </button>
-                            <button
-                                  className="btn btn-block btn-facebook"
-                                  onClick={facebookLogin}
-                            >
-                                <i className="fab fa-facebook-f"></i> Login via Facebook
-                            </button>
-                            <button
-                                  className="btn btn-block btn-dark"
-                                  onClick={githubLogin}
-                            >
-                                <i className="fab fa-github"></i> Login via Github
-                            </button>                            
-                        </p>
-                        <p className="divider-text">
-                            <span className="bg-light">OR</span>
-                        </p>
-                        {loginForm()}
-                        <span>
+        <div className="container-fluid">
+            <div className="adjustment">
+                <div className="card bg-light mb-5">
+                    <article className="card-body mx-auto">
+                        {loading ? <div > <Spin tip="Loading..." /> </div> :
+                                <div>
+                                    <h4 className="card-title mt-3 text-center">LogIn</h4>
+                                    <p>
+                                        <button
+                                                className="btn btn-block btn-danger"
+                                                // onClick={googleLogin}
+                                        >
+                                            <i className="fa fa-google"></i> Login via Google
+                                        </button>
+                                        <button
+                                                className="btn btn-block btn-facebook"
+                                                // onClick={facebookLogin}
+                                        >
+                                            <i className="fa fa-facebook-f"></i> Login via Facebook
+                                        </button>
+                                        <button
+                                                className="btn btn-block btn-dark"
+                                                // onClick={githubLogin}
+                                        >
+                                            <i className="fa fa-github"></i> Login via Github
+                                        </button>
+                                    </p>
+                                    <p className="divider-text">
+                                        <span className="bg-light">OR</span>
+                                    </p>
+                                    {loginForm()}
+                                    <span>
                             <ul className='float-right'>
                                 <li className='list-unstyled text-right'>
                                     <p><Link to='/forgot/password'>Forgot Password</Link></p>
@@ -241,9 +155,10 @@ const Login = ({history}) => {
                                 </li>
                             </ul>
                         </span>
-                    </div>
-                    }
-                </article>
+                                </div>
+                        }
+                    </article>
+                </div>
             </div>
         </div>
     )

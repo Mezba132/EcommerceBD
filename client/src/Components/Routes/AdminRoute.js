@@ -2,22 +2,20 @@ import React, {useEffect, useState} from "react";
 import { Route} from 'react-router-dom';
 import { useSelector } from "react-redux";
 import LoadToRedirect from "../../Pages/User/LoadToRedirect";
-import { currentAdmin } from "../../Functions/Auth";
+import {currentAdmin} from "../../Functions/Auth";
 
 const AdminRoute = ({ ...rest }) => {
 
-      const { user } = useSelector( user => user );
+      const { user } = useSelector(user => user);
       const [ok, setOk] = useState(false);
 
       useEffect(() => {
-            if(user && user.idToken) {
-                  currentAdmin(user.idToken)
+            if(user && user.token) {
+                  currentAdmin(user, user.token)
                         .then(res => {
-                              // console.log("current admin res", res);
                               setOk(true)
                         })
                         .catch(err => {
-                              // console.log("Admin error", err);
                               setOk(false)
                         })
             }

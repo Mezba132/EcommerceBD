@@ -1,33 +1,26 @@
-const admin = require("../Firebase");
-const User = require("../Models/User");
+const expressJWT = require('express-jwt') // for authorization check
 
-exports.authCheck = async (req, res, next) => {
-  // console.log(req.headers); // token
-  try {
-    const firebaseUser = await admin
-      .auth()
-      .verifyIdToken(req.headers.authtoken);
-    // console.log("FIREBASE USER IN AUTHCHECK", firebaseUser);
-    req.user = firebaseUser;
-    next();
-  } catch (err) {
-    res.status(401).json({
-      err: "Invalid or expired token",
-    });
-  }
-};
+exports.requireSignIn = expressJWT({
+  secret: process.env.JWT_SECRET,
+  algorithms: ["HS256"],
+  userProperty: "auth",
+})
 
-exports.adminCheck = async (req, res, next) => {
-  const { email } = req.user;
-
-  const adminUser = await User.findOne({email}).exec();
-
-  if(adminUser.role !== 'admin') {
-    res.status(403).json({
-      err : "Access Denied"
+exports.isAuth = (req, res, next) => {
+  let user = req.body && req.auth && req.body._id === req.auth._id;
+  if(!user) {
+    return res.status(403).json({
+      error : "Access denied"
     })
   }
-  else {
-    next();
+  next();
+};
+
+exports.isAdmin = (req, res, next) => {
+  if(req.body.role !== "admin"){
+    return res.status(403).json({
+      error : "Admin resource! Access Denied"
+    })
   }
-}
+  next();
+};
