@@ -1,5 +1,17 @@
 const User = require("../Models/User");
 const jwt = require('jsonwebtoken');
+const nodemailer = require("nodemailer");
+const crypto = require('crypto')
+
+// create reusable transporter object using the default SMTP transport
+let transporter = nodemailer.createTransport({
+  host: "smtp.live.com",
+  port: 587,
+  auth: {
+    user: process.env.NODEMAILER_USERNAME, // generated ethereal user
+    pass: process.env.NODEMAILER_PASSWORD, // generated ethereal password
+  },
+});
 
 exports.userSignUp = async (req, res) => {
 
@@ -40,8 +52,8 @@ exports.userSignUp = async (req, res) => {
 exports.userSignIn = async (req, res) => {
   try {
     const { email, password } = req.body;
-    User.findOne({email}, (err, user) => {
-      if(err || !user) {
+    const user = await User.findOne({email} ).exec()
+      if(!user) {
         return res.status(400).json({
           error : "Email and Password dont match"
         })
@@ -51,6 +63,7 @@ exports.userSignIn = async (req, res) => {
           error : 'Email and Password dont match'
         })
       }
+
       else {
 
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
@@ -60,7 +73,6 @@ exports.userSignIn = async (req, res) => {
 
       }
 
-    })
   }
   catch (err) {
     return res.status(400).json(err)
@@ -73,14 +85,63 @@ exports.userSignOut = (req, res) => {
 }
 
 exports.currentUser = async (req, res) => {
-  User.findOne({ email : req.body.email }).exec((err, user) => {
-    if (err) {
-      return res.status(401).json({
-        error : 'Email not found'
-      })
+  const user = await User.findOne({ email : req.body.email }).exec();
+    if (!user) {
+      return res.status(401).json({error : 'Email not found'})
     }
-    else {
-      res.json(user);
-    }
-  });
+    res.json(user);
 };
+
+exports.resetPassword = async (req, res) => {
+    const buffer = await crypto.randomBytes(64);
+    if(!buffer){
+        console.log('Error detected')
+    }
+    const token = buffer.toString('hex');
+    const user = await User.findOne({ email: req.body.email }).exec()
+    if(!user) {
+          return res.status(422).json({
+            error : `User don't exist with this email ${req.body.email}`
+          })
+    }
+
+    user.resetToken = token;
+    user.expireToken = Date.now() + 3600000;
+    user.save((err, result) => {
+        if (err) {
+            return res.status(400).json({
+                error: "Can't save in user"
+            })
+        }
+        transporter.sendMail({
+            to: user.email,
+            from: process.env.NODEMAILER_USERNAME,
+            subject: "Reset Password",
+            html: `
+                  <h1>Please Click the link Below</h1>
+                  <p>Reset Password Link: <a href="http://localhost:3000/reset_password/${token}">Click Here</a></p>
+            `
+        })
+        res.json({message: "Check Your Email"})
+    })
+
+}
+
+exports.newPassword = async (req, res) => {
+    const newPassword = req.body.password;
+    const newToken = req.body.token;
+    const user = await User.findOne({resetToken : newToken, expireToken : {$gt : Date.now()}} ).exec();
+    if(!user) {
+        return res.status(422).json({error : "Your Link is expired. Try again"})
+    }
+    user.password = newPassword;
+    user.resetToken = undefined;
+    user.expireToken = undefined;
+
+    user.save((err, result) => {
+        if(err) {
+            return res.status(422).json({error : "Password reset failed.Try again"})
+        }
+        res.json({message : "password update successfully"})
+    })
+}

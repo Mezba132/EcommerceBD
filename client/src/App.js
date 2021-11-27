@@ -7,14 +7,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Home from './Pages/Home';
 import Header from './Components/Nav/Header';
-import RegisterComplete from './Pages/Auth/CompleteRegister';
 import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
-import ForgotPassword from './Pages/Auth/ForgotPassword';
+import NewPassword from "./Pages/Auth/NewPassword";
+import ResetPassword from './Pages/Auth/ResetPassword';
 import History from "./Pages/User/History";
 import {currentUser, isAuthenticate} from './Functions/Auth';
 import UserRoute from "./Components/Routes/UserRoute";
-import Password from "./Pages/User/Password";
 import Wishlist from "./Pages/User/Wishlist";
 import AdminRoute from "./Components/Routes/AdminRoute";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
@@ -65,10 +64,9 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
-          <Route exact path="/register/complete" component={RegisterComplete} />
-          <Route exact path="/forgot/password" component={ForgotPassword} />
+          <Route exact path="/forgot/password" component={ResetPassword} />
+          <Route exact path="/reset_password/:token" component={NewPassword} />
           <UserRoute exact path="/user/history" component={History} />
-          <UserRoute exact path="/user/password" component={Password} />
           <UserRoute exact path="/user/wishlist" component={Wishlist} />
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
           <AdminRoute exact path="/admin/category" component={Category} />

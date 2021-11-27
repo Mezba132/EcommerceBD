@@ -1,40 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { auth } from '../../firebase';
 import { Spin } from 'antd';
 import { useSelector } from "react-redux";
+import { resetPassword } from '../../Functions/Auth'
 
-const ForgotPassword = ({history}) => {
+const ResetPassword = ({history}) => {
 
-      const [email, setEmail] = useState('');
+      const [email, setEmail] = useState('csmezba@gmail.com');
       const [loading, setLoading] = useState(false);
 
       const { user } = useSelector(user => user);
 
       useEffect(() => {
-            if (user && user.idToken) history.push('/');
+            if (user && user.token) history.push('/');
       },[user,history])
 
-      const handleSubmit = async (e) => {
+      const handleSubmit = (e) => {
             e.preventDefault();
             setLoading(true);
 
-            const config = {
-                  url: process.env.REACT_APP_FORGOT_PASSWORD_REDIRECT,
-                  handleCodeInApp: true
-            }
-
-            try {
-                  await auth.sendPasswordResetEmail(email, config);
-                  setEmail('');
-                  toast.success(`Email is sent to ${email}. Click the link to reset your password`);
-                  setLoading(false);
-            }
-            catch (err) {
-                  console.log(err)
-                  toast.error(err.message);
-                  setLoading(false);
-            }
+            resetPassword(email)
+                    .then(res => {
+                        setEmail('')
+                        setLoading(false);
+                        toast.success(`Email is sent to ${email}. Check your email to reset password`);
+                    })
+                    .catch(err => {
+                        setEmail('')
+                        setLoading(false)
+                        toast.error(err.response.data.error)
+                    })
       }
 
       const forgotPasswordForm = () => (
@@ -51,27 +46,29 @@ const ForgotPassword = ({history}) => {
                               autoFocus
                         />
                   </div>
-                  <div class="form-group">
+                  <div className="form-group">
                         <button type="submit" className="btn btn-primary btn-block" disabled={!email}> Send </button>
                   </div>
             </form>
       )
 
       return (
-            <div className="container">
-                  <div className="card bg-light mb-5">
-                        <article className="card-body mx-auto">
+            <div className="container-fluid">
+                  <div className="adjustment">
+                      <div className="card bg-light mb-5">
+                          <article className="card-body mx-auto">
                               {loading ? <div > <Spin tip="Loading..." /> </div> :
-                                    <div>
-                                          <h4 className="card-title mt-3 text-center">Forgot Password</h4>
-                                          {forgotPasswordForm()}
-                                    </div>
+                                  <div>
+                                      <h4 className="card-title mt-3 text-center">Forgot Password</h4>
+                                      {forgotPasswordForm()}
+                                  </div>
                               }
-                        </article>
+                          </article>
+                      </div>
                   </div>
             </div>
       )
 
 }
 
-export default ForgotPassword;
+export default ResetPassword;

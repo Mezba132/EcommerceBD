@@ -2,7 +2,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 
 export const userSignUp = async (data) => {
-      let encrypt_pass = CryptoJS.AES.encrypt(data.password, 'secret_key#leo132').toString();
+      let encrypt_pass = CryptoJS.AES.encrypt(data.password, process.env.CRYPTOJS_SECRETKEY).toString();
       data.password = encrypt_pass;
 
       return await axios.post(`${process.env.REACT_APP_API}/register`, data,
@@ -16,7 +16,7 @@ export const userSignUp = async (data) => {
 };
 
 export const userSignIn = async (data) => {
-      let encrypt_pass = CryptoJS.AES.encrypt(data.password, 'secret_key#leo132').toString();
+      let encrypt_pass = CryptoJS.AES.encrypt(data.password, process.env.CRYPTOJS_SECRETKEY).toString();
       data.password = encrypt_pass;
 
       return await axios.post(`${process.env.REACT_APP_API}/login`, data,
@@ -79,4 +79,26 @@ export const isAuthenticate = () => {
     else {
         return false;
     }
+}
+
+export const resetPassword = async (email) => {
+    return await axios.post(`${process.env.REACT_APP_API}/reset-password`, {email},
+            {
+                headers : {
+                    Accept : 'application/json',
+                    'Content-Type' : 'application/json',
+                }
+            }
+    );
+}
+
+export const newPassword = async (password, token) => {
+    return await axios.post(`${process.env.REACT_APP_API}/new-password`, {password, token},
+            {
+                headers : {
+                    Accept : 'application/json',
+                    'Content-Type' : 'application/json',
+                }
+            }
+    );
 }

@@ -51,6 +51,8 @@ const userSchema = new mongoose.Schema({
             type: Array,
             default: []
       },
+      resetToken: String,
+      expireToken: String,
       // wishlist: [{
       //       type: ObjectId,
       //       ref: 'product'
