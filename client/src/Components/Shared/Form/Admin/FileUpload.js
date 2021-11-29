@@ -26,10 +26,12 @@ const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 					0,
 					(uri) => {
 						axios.post(`${process.env.REACT_APP_API}/upload-images`,
-							{image : uri},
+							{user, image : uri},
 							{
-									headers: {
-										authtoken : user ? user.idToken : ""
+									headers : {
+										Accept : 'application/json',
+										'Content-Type' : 'application/json',
+										Authorization: `Bearer ${user.token}`
 									}
 								}
 							)
@@ -59,11 +61,13 @@ const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 
 	}
 
-	const handleImageRemove = (public_id) => {
-		axios.post(`${process.env.REACT_APP_API}/remove-image`, {public_id},
+	const handleImageRemove = (user, public_id) => {
+		axios.post(`${process.env.REACT_APP_API}/remove-image`, {user, public_id},
 				{
-					headers: {
-						authtoken : user ? user.idToken : ""
+					headers : {
+						Accept : 'application/json',
+						'Content-Type' : 'application/json',
+						Authorization: `Bearer ${user.token}`
 					}
 				})
 				.then((res) => {
@@ -102,7 +106,7 @@ const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 							<Badge
 									count="X"
 									key={img.public_id}
-									onClick={() => handleImageRemove(img.public_id)}
+									onClick={() => handleImageRemove(user, img.public_id)}
 									className="pointer"
 							>
 								<Avatar

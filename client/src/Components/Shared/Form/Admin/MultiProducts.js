@@ -43,7 +43,6 @@ const MultiProductForm = (
 									onChange={ ( event, editor ) => {
 										let data = [...values];
 										data[index]['description'] = editor.getData();
-										console.log(data)
 										setValues(data);
 									}}
 							/>

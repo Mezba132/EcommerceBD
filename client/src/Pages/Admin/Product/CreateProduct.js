@@ -52,7 +52,7 @@ const NewProduct = ({history}) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		createProduct(values, user.idToken)
+		createProduct(user, values, user.token)
 			.then(() => {
 				setLoading(false);
 				setValues({...values,

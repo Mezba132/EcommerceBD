@@ -58,8 +58,7 @@ const CreateProducts = () => {
 
 	const handleSubmit = () => {
 		values.map(item => (
-				// console.log(item)
-			createProduct(item, user.idToken)
+			createProduct(user, item, user.token)
 				.then(() => {
 					toast.success(`${item.title} inserted Successfully`);
 				})

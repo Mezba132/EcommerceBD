@@ -10,7 +10,7 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
 	try {
-		let { name, parent, cname } = req.body;
+		let { name, parent, cname } = req.body.sub;
 		const subCat = await new SubCat({ name, parent, cname, slug: slugify(name) }).save();
 		res.json(subCat);
 	}
@@ -27,7 +27,7 @@ exports.read = async (req, res) => {
 
 exports.update = async (req, res) => {
 	try {
-		const { name , parent, cname } = req.body;
+		const { name , parent, cname } = req.body.sub;
 
 		const updated = await SubCat.findOneAndUpdate(
 				{ slug: req.params.slug },

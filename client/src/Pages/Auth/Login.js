@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { userSignIn, authenticate } from '../../Functions/Auth'
 const initialState = {
     email : "leomezba@gmail.com",
-    password : "mm123"
+    password : "m12345"
 }
 
 const Login = ({history}) => {
@@ -52,7 +52,7 @@ const Login = ({history}) => {
                         payload: {
                             name: res.data.user.name,
                             email: res.data.user.email,
-                            token: res.data.token,
+                            token: res.data.user.token,
                             role: res.data.user.role,
                             _id: res.data.user._id,
                         }

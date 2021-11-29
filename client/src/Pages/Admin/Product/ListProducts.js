@@ -4,7 +4,6 @@ import { getProductsByFilters, removeProduct, getProduct, updateProduct } from "
 import LocalSearch from "../../../Components/Shared/LocalSearch";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
-
 import {
 	getCategories,
 	getSubCategories
@@ -130,7 +129,6 @@ const ListProducts = () => {
 								value.subs.map(s => {
 									subArr.push(s._id)
 								})
-								console.log(subArr)
 								setValues({...values,
 									title: value.title,
 									description: value.description,
@@ -167,15 +165,15 @@ const ListProducts = () => {
 	const onOpenDeleteHandler = (slug) => {
 		setShowDeleteModal(true);
 		setSlug(slug);
-	};
+	}
 
 	const onCancelDeleteHandler = () => {
 		setShowDeleteModal(false);
 		setSlug('');
-	};
+	}
 
 	const onConfirmDeleteHandler = () => {
-		removeProduct(slug, user.idToken)
+		removeProduct(user, slug, user.token)
 				.then(res => {
 					setShowDeleteModal(false);
 					toast.success(`${res.data.title} deleted Successfully`)
@@ -190,17 +188,16 @@ const ListProducts = () => {
 		setShowUpdateModal(true);
 		setSlug(slug);
 		LoadSingleProduct(slug);
-	};
+	}
 
 	const onCancelUpdateHandler = () => {
 		setShowUpdateModal(false);
 		setSlug('');
-	};
+	}
 
 	const updateFormSubmit = (e) => {
 		e.preventDefault();
-		console.log(values);
-		updateProduct(slug, values, user.idToken)
+		updateProduct(user, slug, values, user.token)
 				.then(res => {
 					toast.success(`${res.data.title} Update Successfully`);
 					setShowUpdateModal(false);
@@ -208,7 +205,6 @@ const ListProducts = () => {
 				})
 				.catch(err => {
 					toast.success(err);
-
 				})
 
 	}
@@ -225,6 +221,7 @@ const ListProducts = () => {
 	}
 
 	const handleChange = (e) => {
+		console.log(values)
 		setValues({...values, [e.target.name]: e.target.value})
 	}
 

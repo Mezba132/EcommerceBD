@@ -52,27 +52,24 @@ exports.userSignUp = async (req, res) => {
 exports.userSignIn = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({email} ).exec()
-      if(!user) {
-        return res.status(400).json({
-          error : "Email and Password dont match"
-        })
-      }
-      if(!user.authenticate(password)) {
-        return res.status(401).json({
-          error : 'Email and Password dont match'
-        })
-      }
+    const user = await User.findOne({email}).exec()
+        if (!user) {
+            return res.status(400).json({
+                error: "Email and Password dont match"
+            })
+        }
+        if (!user.authenticate(password)) {
+            return res.status(400).json({
+                error: 'Email and Password dont match'
+            })
+        } else {
 
-      else {
+            const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET);
+            res.cookie("CookieToken", token, {expire: new Date() + 9999})
+            const {_id, name, email, role, mobile} = user;
+            return res.json({user: {_id, email, token, name, role, mobile}})
 
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-        res.cookie("CookieToken", token, { expire : new Date() + 9999 })
-        const { _id, name, email, role, mobile } = user;
-        return res.json({ token, user : { _id, email, name, role, mobile }})
-
-      }
-
+        }
   }
   catch (err) {
     return res.status(400).json(err)
@@ -85,7 +82,7 @@ exports.userSignOut = (req, res) => {
 }
 
 exports.currentUser = async (req, res) => {
-  const user = await User.findOne({ email : req.body.email }).exec();
+  const user = await User.findOne({ email : req.body.user.email }).exec();
     if (!user) {
       return res.status(401).json({error : 'Email not found'})
     }

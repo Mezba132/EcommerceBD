@@ -69,7 +69,7 @@ const Category = () => {
       };
 
       const onConfirmDeleteHandler = () => {
-            removeCategory(slug, user.idToken)
+            removeCategory(user , slug, user.token)
                   .then(res => {
                         setShowDeleteModal(false);
                         toast.success(`${res.data.name} deleted Successfully`)
@@ -83,7 +83,7 @@ const Category = () => {
       const handleSubmit = (e) => {
             e.preventDefault();
             setLoading(true);
-            createCategory({ name } , user.idToken)
+            createCategory(user,{ name } , user.token)
                   .then(() => {
                         setLoading(false);
                         setName('')
@@ -101,7 +101,7 @@ const Category = () => {
       const updateSubmit = (e) => {
             e.preventDefault();
             setLoading(true);
-            updateCategory(slug,{ updateName } , user.idToken)
+            updateCategory(slug, user,{ updateName }, user.token )
                   .then(() => {
                         setLoading(false);
                         setUpdateName('')

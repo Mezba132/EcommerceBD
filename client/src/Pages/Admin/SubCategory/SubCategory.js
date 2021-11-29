@@ -69,7 +69,7 @@ const SubCategory = () => {
 	};
 
 	const onConfirmDeleteHandler = () => {
-		removeSubCategory(slug, user.idToken)
+		removeSubCategory(user, slug, user.token)
 				.then(res => {
 					setShowDeleteModal(false);
 					toast.success(`${res.data.name} deleted Successfully`)
@@ -99,7 +99,7 @@ const SubCategory = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setLoading(true);
-		createSubCategory({ name, parent : category, cname : catName } , user.idToken)
+		createSubCategory(user,{ name, parent : category, cname : catName } , user.token)
 			.then(() => {
 				setLoading(false);
 				setName('')
@@ -119,7 +119,7 @@ const SubCategory = () => {
 	const updateFormSubmit = (e) => {
 		e.preventDefault();
 		setLoading(true)
-		updateSubCategory(slug,{ name : updateName, parent : parentId, cname : parentName } , user.idToken)
+		updateSubCategory(user, slug,{ name : updateName, parent : parentId, cname : parentName } , user.token)
 			.then(() => {
 				setLoading(false);
 				setUpdateName('')

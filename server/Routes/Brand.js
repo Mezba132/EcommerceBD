@@ -3,16 +3,15 @@ const express = require("express");
 const router = express.Router();
 
 // middleware
-const { authCheck, adminCheck } = require("../Middlewares/Auth");
+const { requireSignIn, isAuth, isAdmin } = require("../Middlewares/Auth");
 
 // controller
-const { list, create, read, update, remove, getSubs } = require("../Controllers/Brand");
+const { list, create, read, update, remove } = require("../Controllers/Brand");
 
 router.get("/brands", list);
-router.post("/brand", authCheck, adminCheck, create);
+router.post("/brand", requireSignIn, isAuth, isAdmin, create);
 router.get("/brand/:slug", read);
-router.put("/brand/:slug", authCheck, adminCheck, update);
-router.delete("/brand/:slug", authCheck, adminCheck, remove);
-// router.get("/brand/subs/:_id", getSubs);
+router.put("/brand/:slug", requireSignIn, isAuth, isAdmin, update);
+router.delete("/brand/:slug", requireSignIn, isAuth, isAdmin, remove);
 
 module.exports = router;

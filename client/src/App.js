@@ -12,7 +12,7 @@ import Register from './Pages/Auth/Register';
 import NewPassword from "./Pages/Auth/NewPassword";
 import ResetPassword from './Pages/Auth/ResetPassword';
 import History from "./Pages/User/History";
-import {currentUser, isAuthenticate} from './Functions/Auth';
+import {currentAdmin, currentUser, isAuthenticate} from './Functions/Auth';
 import UserRoute from "./Components/Routes/UserRoute";
 import Wishlist from "./Pages/User/Wishlist";
 import AdminRoute from "./Components/Routes/AdminRoute";
@@ -27,14 +27,14 @@ import Brand from "./Pages/Admin/Brand/Brand";
 const App = () => {
     const dispatch = useDispatch();
 
-    const { user, token } = isAuthenticate()
+    const { user } = isAuthenticate()
 
 
     useEffect(() => {
 
-        if(user && token) {
+        if(user && user.token && user.role === 'subscriber') {
 
-            currentUser(user, token)
+            currentUser(user, user.token)
                 .then((res) => {
                     let data = res.data;
                     dispatch({
@@ -42,13 +42,33 @@ const App = () => {
                         payload: {
                             name: data.name,
                             email: data.email,
-                            token: data.token,
+                            token: user.token,
                             role: data.role,
                             _id: data._id,
                         }
                     })
                 })
                 .catch(err => console.log(err))
+
+        }
+
+        if(user && user.token && user.role === 'admin') {
+
+            currentAdmin(user, user.token)
+                    .then((res) => {
+                        let data = res.data;
+                        dispatch({
+                            type: LOGGED_IN_USER,
+                            payload: {
+                                name: data.name,
+                                email: data.email,
+                                token: user.token,
+                                role: data.role,
+                                _id: data._id,
+                            }
+                        })
+                    })
+                    .catch(err => console.log(err))
 
         }
 

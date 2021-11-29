@@ -3,6 +3,8 @@ import Modal from '../index'
 import FileUpload from "../../Form/Admin/FileUpload";
 import Select from "react-select";
 import {getSubCategories} from "../../../../Functions/Categoy";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import {CKEditor} from "@ckeditor/ckeditor5-react";
 
 const ProductUpdate = (
 			{
@@ -15,32 +17,6 @@ const ProductUpdate = (
 				updateFormSubmit
 			}
 		) => {
-
-	const {
-		title,
-		description,
-		cost_price,
-		mrp_price,
-		categories,
-		getCatById,
-		category,
-		subCategories,
-		subList,
-		subs,
-		ship,
-		quantity,
-		images,
-		colors,
-		brands,
-		color,
-		getBrandById,
-		brand,
-		size,
-		shipping,
-		sizes,
-		tags,
-		tagList
-	} = values
 
 	return(
 	<Modal
@@ -67,20 +43,17 @@ const ProductUpdate = (
 									className="form-control"
 									name="title"
 									placeholder="Product Name"
-									value={title || ""}
+									value={values.title || ""}
 									onChange={handleChange}
 							/>
 						</div>
 						<label className="col-form-label font-weight-bold text-center"> Description </label>
 						<div>
-										<textarea
-												rows="2"
-												className="form-control"
-												name="description"
-												placeholder="Product Description"
-												value={description || ""}
-												onChange={handleChange}
-										/>
+									<CKEditor
+											editor = {ClassicEditor}
+											data = {values.description}
+									/>
+
 						</div>
 						<label className=" col-form-label font-weight-bold text-center"> Tag </label>
 						<div>
@@ -89,7 +62,7 @@ const ProductUpdate = (
 									className="form-control"
 									name="tags"
 									placeholder="Add Tags separated by commas"
-									value={tags || ""}
+									value={values.tags || ""}
 									onChange={handleChange}
 							/>
 						</div>
@@ -100,7 +73,7 @@ const ProductUpdate = (
 									className="form-control"
 									name="cost_price"
 									placeholder="Cost Price"
-									value={cost_price || ""}
+									value={values.cost_price || ""}
 									onChange={handleChange}
 							/>
 						</div>
@@ -111,7 +84,7 @@ const ProductUpdate = (
 									className="form-control"
 									name="mrp_price"
 									placeholder="MRP Price"
-									value={mrp_price || ""}
+									value={values.mrp_price || ""}
 									onChange={handleChange}
 							/>
 						</div>
@@ -122,17 +95,17 @@ const ProductUpdate = (
 									className="form-control"
 									name="quantity"
 									placeholder="Total Quantity"
-									value={quantity || ""}
+									value={values.quantity || ""}
 									onChange={handleChange}
 							/>
 						</div>
 						<label className=" col-form-label font-weight-bold text-center"> Shipping </label>
 						<div>
 							<Select
-									value={{value: shipping || "", label: shipping}}
+									value={{value: values.shipping || "", label: values.shipping}}
 									name="shipping"
 									placeholder="Select Shipping"
-									options={ship.map(s => ({
+									options={values.ship.map(s => ({
 												"value": s,
 												"label": s
 											})
@@ -145,13 +118,13 @@ const ProductUpdate = (
 							<Select
 									isMulti
 									isClearable
-									value={size.map(s => ({
+									value={values.size.map(s => ({
 												"value": s || "",
 												"label": s
 											})
 									)}
 									placeholder="Select Size"
-									options={sizes.map(s => ({
+									options={values.sizes.map(s => ({
 												"value": s,
 												"label": s,
 											})
@@ -175,13 +148,13 @@ const ProductUpdate = (
 							<Select
 									isMulti
 									isClearable
-									value={color.map(co => ({
+									value={values.color.map(co => ({
 												"value": co || "",
 												"label": co
 											})
 									)}
 									placeholder="Select Color"
-									options={colors.map(c => ({
+									options={values.colors.map(c => ({
 												"value": c,
 												"label": c
 											})
@@ -204,8 +177,8 @@ const ProductUpdate = (
 							<Select
 									name="category"
 									placeholder="Select Category"
-									value={{value: getCatById._id || "", label: category.name || getCatById.name}}
-									options={categories.map(c => ({
+									value={{value: values.getCatById._id || "", label: values.category.name || values.getCatById.name}}
+									options={values.categories.map(c => ({
 												"value": c._id,
 												"label": c.name
 											})
@@ -230,13 +203,13 @@ const ProductUpdate = (
 							<Select
 									isMulti
 									isClearable
-									value={subList.map(sub => ({
+									value={values.subList.map(sub => ({
 												"value": sub._id || sub.value,
 												"label": sub.name || sub.label
 											})
 									)}
 									placeholder="Please Select Sub Category"
-									options={subCategories.map(s => ({
+									options={values.subCategories.map(s => ({
 												"value": s._id,
 												"label": s.name
 											})
@@ -261,9 +234,9 @@ const ProductUpdate = (
 						<div>
 							<Select
 									name="brand"
-									value={{value: getBrandById._id || "", label: getBrandById.name}}
+									value={{value: values.getBrandById._id || "", label: values.getBrandById.name}}
 									placeholder="Select Brand"
-									options={brands.map(b => ({
+									options={values.brands.map(b => ({
 												"value": b._id,
 												"label": b.name,
 											})

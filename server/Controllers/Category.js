@@ -11,13 +11,13 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
       try {
-            let { name } = req.body;
+            let { name } = req.body.category;
             const category = await new Category({ name, slug: slugify(name) }).save();
             res.json(category);
       }
       catch (err) {
             console.log(err)
-            res.status(400).send("Create Category Failed")
+            res.status(403).send("Create Category Failed")
       }
 }
 
@@ -29,7 +29,7 @@ exports.read = async (req, res) => {
 
 exports.update = async (req, res) => {
       try {
-            const { updateName } = req.body;
+            const { updateName } = req.body.category;
 
             const updated = await Category.findOneAndUpdate(
                   { slug: req.params.slug },
@@ -56,7 +56,6 @@ exports.remove = async (req, res) => {
 }
 
 exports.getSubs = async (req, res) => {
-      console.log(req.params._id)
       try {
             const subsByCat = await SubCat.find({parent : req.params._id}).exec()
             res.json(subsByCat);

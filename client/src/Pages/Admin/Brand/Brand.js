@@ -35,10 +35,19 @@ const Brand = () => {
 		loadBrands()
 	},[])
 
+	const loadBrands = () => {
+		setLoading(true);
+		getBrands()
+				.then(res => {
+					setLoading(false)
+					setBrands(res.data)
+				})
+	}
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setLoading(true);
-		createBrand({ name } , user.idToken)
+		createBrand(user,{ name } , user.token)
 			.then(() => {
 				setLoading(false);
 				setName('');
@@ -53,15 +62,6 @@ const Brand = () => {
 			})
 	}
 
-	const loadBrands = () => {
-		setLoading(true);
-		getBrands()
-			.then(res => {
-				setLoading(false)
-				setBrands(res.data)
-			})
-	}
-
 	const onOpenDeleteHandler = (slug) => {
 		setShowDeleteModal(true);
 		setSlug(slug);
@@ -73,7 +73,7 @@ const Brand = () => {
 	};
 
 	const onConfirmDeleteHandler = () => {
-		removeBrand(slug, user.idToken)
+		removeBrand(user, slug, user.token)
 				.then(res => {
 					setShowDeleteModal(false);
 					toast.success(`${res.data.name} - Brand deleted Successfully`)
@@ -101,7 +101,7 @@ const Brand = () => {
 	const updateSubmit = (e) => {
 		e.preventDefault();
 		setLoading(true);
-		updateBrand(slug,{ updateName } , user.idToken)
+		updateBrand(user, slug,{ updateName } , user.token)
 				.then(() => {
 					setLoading(false);
 					setUpdateName('')

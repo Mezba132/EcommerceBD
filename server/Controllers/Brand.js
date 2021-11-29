@@ -10,7 +10,7 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
 	try {
-		let { name } = req.body;
+		let { name } = req.body.brand;
 		const created = await new Brand({ name, slug: slugify(name) }).save();
 		res.json(created);
 	}
@@ -40,7 +40,7 @@ exports.read = async (req, res) => {
 
 exports.update = async (req, res) => {
 	try {
-		const { updateName } = req.body;
+		const { updateName } = req.body.brand;
 
 		const updated = await Brand.findOneAndUpdate(
 				{ slug: req.params.slug },

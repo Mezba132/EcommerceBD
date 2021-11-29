@@ -2,7 +2,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 
 export const userSignUp = async (data) => {
-      let encrypt_pass = CryptoJS.AES.encrypt(data.password, process.env.CRYPTOJS_SECRETKEY).toString();
+      let encrypt_pass = CryptoJS.AES.encrypt(data.password, "secret_key#leo132").toString();
       data.password = encrypt_pass;
 
       return await axios.post(`${process.env.REACT_APP_API}/register`, data,
@@ -16,7 +16,7 @@ export const userSignUp = async (data) => {
 };
 
 export const userSignIn = async (data) => {
-      let encrypt_pass = CryptoJS.AES.encrypt(data.password, process.env.CRYPTOJS_SECRETKEY).toString();
+      let encrypt_pass = CryptoJS.AES.encrypt(data.password, "secret_key#leo132").toString();
       data.password = encrypt_pass;
 
       return await axios.post(`${process.env.REACT_APP_API}/login`, data,
@@ -30,7 +30,7 @@ export const userSignIn = async (data) => {
 };
 
 export const currentAdmin = async (user,token) => {
-      return await axios.post(`${process.env.REACT_APP_API}/current-admin`, user,
+      return await axios.post(`${process.env.REACT_APP_API}/current-admin`, {user},
             {
                 headers : {
                     Accept : 'application/json',
@@ -42,7 +42,7 @@ export const currentAdmin = async (user,token) => {
 };
 
 export const currentUser = async (user, token) => {
-    return await axios.post(`${process.env.REACT_APP_API}/current-user`, user,
+    return await axios.post(`${process.env.REACT_APP_API}/current-user`, {user},
             {
                 headers : {
                     Accept : 'application/json',

@@ -3,9 +3,11 @@ const slugify = require('slugify')
 
 exports.create = async (req, res) => {
 	try {
-		req.body.slug = slugify(req.body.title);
-		req.body.tagList = req.body.tags.toLowerCase().split(',');
-		const product = await new Product( req.body ).save();
+		let singleProduct = req.body.product;
+		if(singleProduct.shipping === "") singleProduct.shipping = "No"
+		singleProduct.slug = slugify(singleProduct.title);
+		singleProduct.tagList = singleProduct.tags.toLowerCase().split(',');
+		const product = await new Product( singleProduct ).save();
 		res.json( product );
 	}
 	catch (err) {
@@ -15,7 +17,6 @@ exports.create = async (req, res) => {
 }
 
 exports.listByFilters = async (req, res) => {
-	console.log(req.body.filters)
 	let findArgs = {};
 	for (let key in req.body.filters) {
 		if(req.body.filters[key].length > 0) {
@@ -58,15 +59,15 @@ exports.read = async (req, res) => {
 
 exports.update = async (req, res) => {
 	try {
-		if(req.body.title) {
-			req.body.slug = slugify(req.body.title);
-		}
-		if(req.body.tags) {
-			req.body.tagList = req.body.tags.toLowerCase().split(',');
-		}
+
+		let updateProduct = req.body.product;
+		if(updateProduct.title) updateProduct.slug = slugify(updateProduct.title);
+		if(updateProduct.tags) updateProduct.tagList = updateProduct.tags.toLowerCase().split(',');
+		if(updateProduct.shipping === "") updateProduct.shipping = "No"
+
 		const updated = await Product.findOneAndUpdate(
 				{ slug: req.params.slug },
-				 req.body ,
+				updateProduct ,
 				{ new : true }
 		)
 		res.json(updated)
