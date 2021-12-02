@@ -1,17 +1,16 @@
 import React, {useEffect, useState} from "react";
 import AdminNav from "../../../Components/Nav/AdminNav";
 import {Spin} from "antd";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {
 		createProduct
 	} from '../../../Functions/Product'
 import {
-		getCategories,
 		getSubCategories
 } from '../../../Functions/Categoy'
-import { getBrands } from '../../../Functions/Brand'
 import CreateProductForm from "../../../Components/Shared/Form/Admin/CreateProduct";
+import {CREATE_PRODUCT} from "../../../Redux/Constants";
 
 const initialState = {
 	title:'',
@@ -44,17 +43,18 @@ const NewProduct = ({history}) => {
 
 	const {title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs, size, shipping, sizes, tags, listTag} = values
 
+	const dispatch = useDispatch()
 	const { user }  = useSelector(user => user);
-
-	useEffect(() => {
-		loadFields()
-	}, [])
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		createProduct(user, values, user.token)
-			.then(() => {
+			.then((res) => {
 				setLoading(false);
+				dispatch({
+					type : CREATE_PRODUCT,
+					payload : res.data
+				})
 				setValues({...values,
 					title:'',
 					description:'',
@@ -94,17 +94,6 @@ const NewProduct = ({history}) => {
 		}
 		setValues({...values, [action.name] : e.value})
 	}
-
-	const loadFields = () => {
-		getCategories()
-			.then((category) => {
-				getBrands()
-					.then((brand) => {
-						setValues({...values, brands: brand.data, categories: category.data})
-					})
-			})
-
-	};
 
 	return (
 			<div className="container-fluid">

@@ -3,7 +3,7 @@ import AdminNav from "../../../Components/Nav/AdminNav";
 import { getProductsByFilters, removeProduct, getProduct, updateProduct } from "../../../Functions/Product";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
 import {toast} from "react-toastify";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
 	getCategories,
 	getSubCategories
@@ -15,6 +15,8 @@ import ListFilter from "../../../Components/Shared/Filters/Admin/ProductsFilter"
 import Delete from "../../../Components/Shared/Modal/Delete";
 import ProductUpdate from "../../../Components/Shared/Modal/Admin/ProductUpdate";
 import ShowProduct from "../../../Components/Shared/Modal/Admin/ProductShow";
+import { FetchProducts, FetchProduct } from '../../../Redux/Actions'
+import {DELETE_PRODUCT, FETCH_PRODUCT, UPDATE_PRODUCT} from "../../../Redux/Constants";
 
 const initialState = {
 	title:'',
@@ -44,7 +46,6 @@ const initialState = {
 
 const ListProducts = () => {
 
-	const [products, setProducts] = useState([])
 	const [keyword, setKeyword] = useState('');
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -64,7 +65,10 @@ const ListProducts = () => {
 		}
 	})
 
-	const { user } = useSelector(user => user)
+	const dispatch = useDispatch()
+	const { user, product } = useSelector(state => state)
+	const products = product.getProducts;
+
 
 	const {
 			title,
@@ -104,24 +108,26 @@ const ListProducts = () => {
 		]
 
 	useEffect(() => {
-		loadProducts(filteredData.filters);
-		loadFields();
-	},[])
+		let isMounted = true
+		if(isMounted) {
+			loadProducts(filteredData.filters);
+		}
+		// cleanup
+		return () => { isMounted = false }
+	},[dispatch])
 
 	const loadProducts = (currentFilters) => {
-		getProductsByFilters(currentFilters)
-				.then(res => {
-					setProducts(res.data);
-				})
-				.catch(err => {
-					console.log(err);
-				})
+		dispatch(FetchProducts(currentFilters))
 	}
 
 	const LoadSingleProduct = (slug) => {
 		getProduct(slug)
 				.then(res => {
 					let value = res.data;
+					dispatch({
+						type : FETCH_PRODUCT,
+						payload : res.data
+					})
 					getSubCategories(value.category._id)
 							.then(sub =>
 							{
@@ -154,14 +160,6 @@ const ListProducts = () => {
 				})
 	}
 
-	const loadFields = () => {
-		getCategories().then(category => {
-			getBrands().then(brand => {
-				setValues({...values, categories: category.data, brands: brand.data})
-			})
-		})
-	}
-
 	const onOpenDeleteHandler = (slug) => {
 		setShowDeleteModal(true);
 		setSlug(slug);
@@ -176,7 +174,11 @@ const ListProducts = () => {
 		removeProduct(user, slug, user.token)
 				.then(res => {
 					setShowDeleteModal(false);
-					toast.success(`${res.data.title} deleted Successfully`)
+					toast.success(`${res.data.title} deleted Successfully`);
+					dispatch({
+						type : DELETE_PRODUCT,
+						payload : res.data
+					})
 					loadProducts();
 				})
 				.catch(err => {
@@ -200,6 +202,10 @@ const ListProducts = () => {
 		updateProduct(user, slug, values, user.token)
 				.then(res => {
 					toast.success(`${res.data.title} Update Successfully`);
+					dispatch({
+						type : UPDATE_PRODUCT,
+						payload : res.data
+					})
 					setShowUpdateModal(false);
 					loadProducts();
 				})
@@ -282,11 +288,9 @@ const ListProducts = () => {
 							<div className="jumbotron">
 								<ListFilter
 										filteredData={filteredData}
-										categories={categories}
 										setFilteredData={setFilteredData}
 										loadProducts={loadProducts}
 										subCategories={subCategories}
-										brands={brands}
 										colors={colors}
 										stockOption={stockOption}
 										values={values}

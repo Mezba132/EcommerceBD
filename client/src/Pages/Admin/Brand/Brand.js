@@ -12,10 +12,12 @@ import {
 import LocalSearch from "../../../Components/Shared/LocalSearch";
 import {toast} from "react-toastify";
 import ReactPaginate from 'react-paginate'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Delete from "../../../Components/Shared/Modal/Delete";
 import UpdateBrand from "../../../Components/Shared/Modal/Admin/BrandUpdate";
 import BrandList from "../../../Components/Shared/ListPages/Admin/ListBrand";
+import { FetchBrands, FetchBrand } from "../../../Redux/Actions";
+import {CREATE_BRAND, DELETE_BRAND, UPDATE_BRAND} from "../../../Redux/Constants";
 
 const Brand = () => {
 
@@ -25,40 +27,37 @@ const Brand = () => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
 	const [updateName, setUpdateName] = useState('')
-	const [brands, setBrands] = useState([])
 	const [keyword, setKeyword] = useState('')
 	const [pageNumber, setPageNumber] = useState(0)
 
-	const { user } = useSelector(user => user)
+	const dispatch = useDispatch()
+	const { user, brand } = useSelector(state => state)
+	const brands = brand.getBrands
+	const singleBrand = brand.getBrand
 
 	useEffect(() => {
-		loadBrands()
-	},[])
-
-	const loadBrands = () => {
-		setLoading(true);
-		getBrands()
-				.then(res => {
-					setLoading(false)
-					setBrands(res.data)
-				})
-	}
+		dispatch(FetchBrands())
+		setUpdateName(singleBrand.name)
+	},[dispatch, singleBrand])
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setLoading(true);
 		createBrand(user,{ name } , user.token)
-			.then(() => {
+			.then((res) => {
 				setLoading(false);
 				setName('');
-				loadBrands();
-				toast.success(`${name} - Brand inserted Successfully`);
+				toast.success(`${res.data.name} - Brand Inserted Successfully`);
+				dispatch({
+					type : CREATE_BRAND,
+					payload : res.data
+				})
+				dispatch(FetchBrands())
 			})
 			.catch(err => {
-				console.log(err)
 				setLoading(false);
 				setName('')
-				toast.error(`${name} - Brand inserts Failed`);
+				toast.error(`${name} - Brand Inserts Failed`);
 			})
 	}
 
@@ -77,7 +76,11 @@ const Brand = () => {
 				.then(res => {
 					setShowDeleteModal(false);
 					toast.success(`${res.data.name} - Brand deleted Successfully`)
-					loadBrands();
+					dispatch({
+						type : DELETE_BRAND,
+						payload : res.data
+					})
+					dispatch(FetchBrands())
 				})
 				.catch(err => {
 					toast.error( "deleted Failed")
@@ -87,10 +90,7 @@ const Brand = () => {
 	const onOpenUpdateHandler = (slug) => {
 		setShowUpdateModal(true);
 		setSlug(slug);
-		getBrand(slug)
-				.then(res => {
-					setUpdateName(res.data.name)
-				})
+		dispatch(FetchBrand(slug))
 	};
 
 	const onCancelUpdateHandler = () => {
@@ -102,13 +102,17 @@ const Brand = () => {
 		e.preventDefault();
 		setLoading(true);
 		updateBrand(user, slug,{ updateName } , user.token)
-				.then(() => {
+				.then((res) => {
 					setLoading(false);
 					setUpdateName('')
 					toast.success(`${updateName} Update Successfully`);
 					setShowUpdateModal(false);
 					setSlug('');
-					loadBrands()
+					dispatch({
+						type : UPDATE_BRAND,
+						payload : res.data
+					})
+					dispatch(FetchBrands())
 				})
 				.catch(err => {
 					setLoading(false);

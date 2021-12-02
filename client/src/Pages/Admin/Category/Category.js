@@ -3,12 +3,10 @@ import AdminNav from "../../../Components/Nav/AdminNav";
 import {Spin} from "antd";
 import {
       createCategory,
-      getCategories,
       removeCategory,
       updateCategory,
-      getCategory
 } from '../../../Functions/Categoy'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import ReactPaginate from 'react-paginate'
 import {toast} from "react-toastify";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
@@ -16,11 +14,12 @@ import CreateCategoryForm from "../../../Components/Shared/Form/Admin/CreateCate
 import Delete from "../../../Components/Shared/Modal/Delete";
 import CategoryUpdate from "../../../Components/Shared/Modal/Admin/CategoryUpdate";
 import CategoryList from "../../../Components/Shared/ListPages/Admin/ListCategory";
+import { FetchCategories, FetchCategory } from '../../../Redux/Actions'
+import {CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY} from "../../../Redux/Constants";
 
 const Category = () => {
       const [name, setName] = useState('')
       const [loading, setLoading] = useState(false)
-      const [categories, setCategories] = useState([]);
       const [slug, setSlug] = useState('')
       const [showDeleteModal, setShowDeleteModal] = useState(false);
       const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -28,12 +27,17 @@ const Category = () => {
       const [keyword, setKeyword] = useState('') // step-1
       const [pageNumber, setPageNumber] = useState(0)
 
+      const dispatch = useDispatch()
+      const { user, category }  = useSelector(state => state);
 
-    const { user }  = useSelector(user => user);
+      const categories = category.getCategories
+      const singleCategory = category.getCategory
 
       useEffect(() => {
-            loadCategories()
-      }, [])
+          dispatch(FetchCategories())
+          setUpdateName(singleCategory.name)
+      },
+      [dispatch, singleCategory])
 
       const onOpenDeleteHandler = (slug) => {
             setShowDeleteModal(true);
@@ -48,10 +52,7 @@ const Category = () => {
       const onOpenUpdateHandler = (slug) => {
             setShowUpdateModal(true);
             setSlug(slug);
-            getCategory(slug)
-                  .then(res => {
-                        setUpdateName(res.data.name)
-                  })
+            dispatch(FetchCategory(slug))
       };
 
       const onCancelUpdateHandler = () => {
@@ -59,21 +60,16 @@ const Category = () => {
             setSlug('');
       };
 
-      const loadCategories = () => {
-            setLoading(true);
-            getCategories()
-                  .then((res) => {
-                        setLoading(false);
-                        setCategories(res.data);
-                  })
-      };
-
       const onConfirmDeleteHandler = () => {
             removeCategory(user , slug, user.token)
                   .then(res => {
                         setShowDeleteModal(false);
+                        dispatch({
+                          type: DELETE_CATEGORY,
+                          payload : res.data
+                        })
                         toast.success(`${res.data.name} deleted Successfully`)
-                        loadCategories();
+                        dispatch(FetchCategories())
                   })
                   .catch(err => {
                         toast.error( "deleted Failed")
@@ -84,11 +80,15 @@ const Category = () => {
             e.preventDefault();
             setLoading(true);
             createCategory(user,{ name } , user.token)
-                  .then(() => {
+                  .then((res) => {
                         setLoading(false);
                         setName('')
-                        toast.success(`${name} inserted Successfully`);
-                        loadCategories();
+                        toast.success(`${res.data.name} inserted Successfully`);
+                        dispatch({
+                            type: CREATE_CATEGORY,
+                            payload : res.data
+                        })
+                        dispatch(FetchCategories())
                   })
                   .catch(err => {
                         console.log(err)
@@ -102,13 +102,17 @@ const Category = () => {
             e.preventDefault();
             setLoading(true);
             updateCategory(slug, user,{ updateName }, user.token )
-                  .then(() => {
+                  .then((res) => {
                         setLoading(false);
                         setUpdateName('')
                         toast.success(`${updateName} Update Successfully`);
                         setShowUpdateModal(false);
                         setSlug('');
-                        loadCategories()
+                        dispatch({
+                            type: UPDATE_CATEGORY,
+                            payload: res.data
+                        })
+                        dispatch(FetchCategories())
                   })
                   .catch(err => {
                         setLoading(false);
@@ -153,7 +157,14 @@ const Category = () => {
                               <AdminNav/>
                           </div>
                           <div className="adjustment">
-                          {loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :  <CreateCategoryForm handleSubmit={handleSubmit} name={name} setName={setName} loading={loading} />}
+                          {loading ?
+                                  <div className="text-center"> <Spin tip="Loading..." /> </div> :
+                                  <CreateCategoryForm
+                                          handleSubmit={handleSubmit}
+                                          name={name} setName={setName}
+                                          loading={loading}
+                                  />
+                          }
                           <LocalSearch keyword={keyword} setKeyword={setKeyword}/> {/* step-2 && step-3 */}
                           {categories.length > 0 ?
                             <div className="mt-3">

@@ -1,12 +1,30 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Select from "react-select";
 import FileUpload from "./FileUpload";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { FetchCategories, FetchBrands } from '../../../../Redux/Actions'
+import {useDispatch, useSelector} from "react-redux";
 
 const CreateProduct = ({ values, handleSubmit, handleChange, selectChange, setValues }) => {
 
-	const { title, description, cost_price, mrp_price, categories, category, subCategories, subs, ship, quantity, images, colors, brands, color, brand, showSubs, shipping, size, sizes, tags } = values
+	const dispatch = useDispatch()
+
+	const { category, brand } = useSelector(state => state)
+	const categories = category.getCategories
+	const brands = brand.getBrands
+
+	useEffect(() => {
+		let isMounted = true
+		if(isMounted) {
+			dispatch(FetchCategories())
+			dispatch(FetchBrands())
+		}
+		// cleanup
+		return () => { isMounted = false }
+	},[dispatch])
+
+	const { title, description, cost_price, mrp_price, subCategories, subs, ship, quantity, images, colors, color,  showSubs, shipping, size, sizes, tags } = values
 
 	return (
 		<form onSubmit={handleSubmit}>

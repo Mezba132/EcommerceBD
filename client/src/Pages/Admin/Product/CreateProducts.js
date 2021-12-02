@@ -15,7 +15,6 @@ const CreateProducts = () => {
 
 	const { user }  = useSelector(user => user);
 
-
 	const loadValues = () => {
 		getCategories().then(category => (
 			getBrands()

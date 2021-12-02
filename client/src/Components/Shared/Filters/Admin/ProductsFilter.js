@@ -1,24 +1,40 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Select from "react-select";
 import {getSubCategories} from "../../../../Functions/Categoy";
 import $ from "jquery";
 import daterangepicker from 'daterangepicker'
 import moment from "moment";
+import {useDispatch, useSelector} from "react-redux";
+import { FetchCategories, FetchBrands } from '../../../../Redux/Actions'
 
 const ListFilter = (
 			{
-				categories,
 				filteredData,
 				setFilteredData,
 				loadProducts,
 				subCategories,
-				brands,
 				colors,
 				stockOption,
 				values,
 				setValues
 			}
 		) => {
+
+		const dispatch = useDispatch()
+
+		const { category, brand } = useSelector(state => state)
+		const categories = category.getCategories
+		const brands = brand.getBrands
+
+		useEffect(() => {
+			let isMounted = true
+			if(isMounted) {
+				dispatch(FetchCategories())
+				dispatch(FetchBrands())
+			}
+			// cleanup
+			return () => { isMounted = false }
+		},[dispatch])
 
 		let start = moment().subtract(29, 'days');
 		let end = moment();

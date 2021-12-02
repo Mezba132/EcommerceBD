@@ -5,7 +5,7 @@ const Home = () => {
 
       let { user } = useSelector(user => user);
   return (
-    <div className='text-center'>
+    <div className='text-center adjustment'>
           {!user &&
                 <h1>Welcome to Homepage</h1>
           }

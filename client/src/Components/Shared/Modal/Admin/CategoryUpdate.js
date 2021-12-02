@@ -26,7 +26,7 @@ const CategoryUpdate = (
 										type="text"
 										onChange={e => setUpdateName(e.target.value)}
 										autoFocus
-										value={updateName}
+										value={updateName || ""}
 										disabled={loading}
 								/>
 							</div>

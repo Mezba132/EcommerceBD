@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import { Spin } from 'antd';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from "react-redux";
-import { LOGGED_IN_USER } from "../../Constants";
+import { LOGGED_IN_ADMIN, LOGGED_IN_USER } from "../../Redux/Constants";
 import { Link } from "react-router-dom";
-import { userSignIn, authenticate } from '../../Functions/Auth'
+import {userSignIn, authenticate, currentUser, currentAdmin} from '../../Functions/Auth'
 const initialState = {
     email : "leomezba@gmail.com",
     password : "m12345"
@@ -21,8 +21,12 @@ const Login = ({history}) => {
     const { user } = useSelector(user => user);
 
     useEffect(() => {
-        if(user && user.token) history.push('/')
-        setValues({...values})
+        let isMounted = true
+            if(user && user.token) {
+                if (isMounted) history.push('/')
+            }
+        // cleanup
+        return () => { isMounted = false }
     },[user,history])
 
     const roleBasedUser = (res) => {
@@ -47,16 +51,35 @@ const Login = ({history}) => {
                     authenticate(res.data, () => {
                         setValues({...values})
                     })
-                    dispatch({
-                        type: LOGGED_IN_USER,
-                        payload: {
-                            name: res.data.user.name,
-                            email: res.data.user.email,
-                            token: res.data.user.token,
-                            role: res.data.user.role,
-                            _id: res.data.user._id,
-                        }
-                    })
+
+                    let user = res.data.user;
+
+                    if(user && user.token && user.role === 'subscriber') {
+                        dispatch({
+                            type: LOGGED_IN_USER,
+                            payload: {
+                                name: user.name,
+                                email: user.email,
+                                token: user.token,
+                                role: user.role,
+                                _id: user._id,
+                            }
+                        })
+                    }
+
+                    if(user && user.token && user.role === 'admin') {
+                        dispatch({
+                            type: LOGGED_IN_ADMIN,
+                            payload: {
+                                name: user.name,
+                                email: user.email,
+                                token: user.token,
+                                role: user.role,
+                                _id: user._id,
+                            }
+                        })
+                    }
+
                     setLoading(false);
                     toast.success('Login Successfully');
                     setValues(initialState);
@@ -148,7 +171,7 @@ const Login = ({history}) => {
                                     <span>
                             <ul className='float-right'>
                                 <li className='list-unstyled text-right'>
-                                    <p><Link to='/forgot/password'>Forgot Password</Link></p>
+                                    <p><Link to='/reset-password'>Forgot Password</Link></p>
                                 </li>
                                 <li className='list-unstyled text-right'>
                                     <p>Not Registered ? <Link to='/register'>SignUp</Link></p>

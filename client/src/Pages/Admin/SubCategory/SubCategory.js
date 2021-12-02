@@ -3,15 +3,10 @@ import AdminNav from "../../../Components/Nav/AdminNav";
 import {Spin} from "antd";
 import {
 	createSubCategory,
-	getSubCategories,
 	removeSubCategory,
 	updateSubCategory,
-	getSubCategory
 } from '../../../Functions/SubCategory'
-import {
-	getCategories
-} from '../../../Functions/Categoy'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
 import CreateSub from "../../../Components/Shared/Form/Admin/CreateSub";
@@ -19,44 +14,36 @@ import ReactPaginate from 'react-paginate'
 import Delete from "../../../Components/Shared/Modal/Delete";
 import SubUpdate from "../../../Components/Shared/Modal/Admin/SubCategoryUpdate";
 import SubList from "../../../Components/Shared/ListPages/Admin/ListSub";
+import { FetchCategories, FetchSubCategories, FetchSubCategory } from '../../../Redux/Actions'
+import {CREATE_SUB_CATEGORY, DELETE_SUB_CATEGORY, UPDATE_SUB_CATEGORY} from "../../../Redux/Constants";
 
 const SubCategory = () => {
 	const [name, setName] = useState('')
 	const [loading, setLoading] = useState(false)
-	const [categories, setCategories] = useState([]);
-	const [subCategories, setSubCategories] = useState([]);
 	const [slug, setSlug] = useState('')
 	const [updateName, setUpdateName] = useState('')
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
 	const [keyword, setKeyword] = useState('');
-	const [category, setCategory] = useState('');
+	const [categoryId, setCategoryId] = useState('');
 	const [catName, setCatName] = useState('');
 	const [parentId, setParentId] = useState(null)
 	const [parentName, setParentName] = useState('')
 	const [pageNumber, setPageNumber] = useState(0)
 
-	const { user }  = useSelector(user => user);
+	const dispatch = useDispatch()
+	const { user, category, subs }  = useSelector(user => user);
+	const categories = category.getCategories
+	const subCategories = subs.getSubCategories
+	const sub = subs.getSubCategory
 
 	useEffect(() => {
-		loadCategories();
-		loadSubCategories();
-	}, [])
-
-	const loadCategories = () => {
-		getCategories()
-			.then((res) => {
-				setCategories(res.data);
-			})
-	};
-
-	const loadSubCategories = () => {
-		getSubCategories()
-				.then((res) => {
-					console.log(res.data)
-					setSubCategories(res.data)
-				})
-	}
+		dispatch(FetchCategories())
+		dispatch(FetchSubCategories())
+		setParentId(sub.parent)
+		setParentName(sub.cname)
+		setUpdateName(sub.name)
+	}, [dispatch, sub])
 
 	const onOpenDeleteHandler = (slug) => {
 		setShowDeleteModal(true);
@@ -73,7 +60,11 @@ const SubCategory = () => {
 				.then(res => {
 					setShowDeleteModal(false);
 					toast.success(`${res.data.name} deleted Successfully`)
-					loadSubCategories();
+					dispatch({
+						type : DELETE_SUB_CATEGORY,
+						payload : res.data
+					})
+					dispatch(FetchSubCategories())
 				})
 				.catch(err => {
 					toast.error( "deleted Failed")
@@ -83,12 +74,7 @@ const SubCategory = () => {
 	const onOpenUpdateHandler = (slug) => {
 		setShowUpdateModal(true);
 		setSlug(slug);
-		getSubCategory(slug)
-				.then(res => {
-					setParentId(res.data.parent)
-					setParentName(res.data.cname)
-					setUpdateName(res.data.name)
-				})
+		dispatch(FetchSubCategory(slug))
 	};
 
 	const onCancelUpdateHandler = () => {
@@ -99,20 +85,24 @@ const SubCategory = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		setLoading(true);
-		createSubCategory(user,{ name, parent : category, cname : catName } , user.token)
-			.then(() => {
+		createSubCategory(user,{ name, parent : categoryId, cname : catName } , user.token)
+			.then((res) => {
 				setLoading(false);
 				setName('')
 				toast.success(`${name} inserted Successfully`);
-				setCategory('')
-				loadSubCategories();
+				setCategoryId('')
+				dispatch({
+					type: CREATE_SUB_CATEGORY,
+					payload : res.data
+				})
+				dispatch(FetchSubCategories())
 			})
 			.catch(err => {
 				console.log(err)
 				setLoading(false);
 				setName('')
-				setCategory('')
-				toast.error(`${name} insert Failed`);
+				setCategoryId('')
+				toast.error(`${name} Insert Failed`);
 			})
 	}
 
@@ -120,13 +110,17 @@ const SubCategory = () => {
 		e.preventDefault();
 		setLoading(true)
 		updateSubCategory(user, slug,{ name : updateName, parent : parentId, cname : parentName } , user.token)
-			.then(() => {
+			.then((res) => {
 				setLoading(false);
 				setUpdateName('')
 				toast.success(`${updateName} Update Successfully`);
 				setShowUpdateModal(false);
 				setSlug('');
-				loadSubCategories()
+				dispatch({
+					type : UPDATE_SUB_CATEGORY,
+					payload : res.data
+				})
+				dispatch(FetchSubCategories())
 			})
 			.catch(err => {
 				setLoading(false);
@@ -180,9 +174,11 @@ const SubCategory = () => {
 							:
 							<CreateSub
 								handleSubmit={handleSubmit}
-								name={name} setName={setName}
-								loading={loading} categories={categories}
-								setCategory={setCategory}
+								name={name}
+								setName={setName}
+								loading={loading}
+								categories={categories}
+								setCategory={setCategoryId}
 								setCatName={setCatName}
 								category={category}
 							/>

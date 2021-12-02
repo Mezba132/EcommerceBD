@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {toast, ToastContainer} from 'react-toastify';
 import {useDispatch, useSelector} from "react-redux";
-import {LOGGED_IN_USER} from "./Constants";
+import {LOGGED_IN_USER, LOGGED_IN_ADMIN} from "./Redux/Constants";
 import 'react-toastify/dist/ReactToastify.css';
 
 import Home from './Pages/Home';
@@ -26,53 +26,60 @@ import Brand from "./Pages/Admin/Brand/Brand";
 
 const App = () => {
     const dispatch = useDispatch();
-
     const { user } = isAuthenticate()
-
 
     useEffect(() => {
 
-        if(user && user.token && user.role === 'subscriber') {
+        let isMounted = true;
 
-            currentUser(user, user.token)
-                .then((res) => {
-                    let data = res.data;
-                    dispatch({
-                        type: LOGGED_IN_USER,
-                        payload: {
-                            name: data.name,
-                            email: data.email,
-                            token: user.token,
-                            role: data.role,
-                            _id: data._id,
-                        }
-                    })
-                })
-                .catch(err => console.log(err))
+            if (user && user.token && user.role === 'subscriber') {
 
-        }
-
-        if(user && user.token && user.role === 'admin') {
-
-            currentAdmin(user, user.token)
-                    .then((res) => {
-                        let data = res.data;
-                        dispatch({
-                            type: LOGGED_IN_USER,
-                            payload: {
-                                name: data.name,
-                                email: data.email,
-                                token: user.token,
-                                role: data.role,
-                                _id: data._id,
+                 currentUser(user, user.token)
+                        .then((res) => {
+                            if(isMounted) {
+                                let data = res.data;
+                                dispatch({
+                                    type: LOGGED_IN_USER,
+                                    payload: {
+                                        name: data.name,
+                                        email: data.email,
+                                        token: user.token,
+                                        role: data.role,
+                                        _id: data._id,
+                                    }
+                                })
                             }
                         })
-                    })
-                    .catch(err => console.log(err))
+                        .catch(err => console.log(err))
 
-        }
+            }
 
-    },[dispatch])
+            if (user && user.token && user.role === 'admin') {
+
+                 currentAdmin(user, user.token)
+                        .then((res) => {
+                            if(isMounted) {
+                                let data = res.data;
+                                dispatch({
+                                    type: LOGGED_IN_ADMIN,
+                                    payload: {
+                                        name: data.name,
+                                        email: data.email,
+                                        token: user.token,
+                                        role: data.role,
+                                        _id: data._id,
+                                    }
+                                })
+                            }
+                        })
+                        .catch(err => console.log(err))
+
+            }
+
+        // cleanup
+        return () => { isMounted = false};
+
+    },[dispatch, user])
 
 
   return (
@@ -84,8 +91,8 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
-          <Route exact path="/forgot/password" component={ResetPassword} />
-          <Route exact path="/reset_password/:token" component={NewPassword} />
+          <Route exact path="/reset-password" component={ResetPassword} />
+          <Route exact path="/new-password/:token" component={NewPassword} />
           <UserRoute exact path="/user/history" component={History} />
           <UserRoute exact path="/user/wishlist" component={Wishlist} />
           <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />

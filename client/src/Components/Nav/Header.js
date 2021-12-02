@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu } from 'antd';
 import { HomeOutlined, UserSwitchOutlined, UserOutlined, UserAddOutlined, DashboardOutlined } from '@ant-design/icons';
-import {Link, useHistory} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import {userSignOut} from '../../Functions/Auth';
-import { LOGOUT } from "../../Constants";
+import { LOGOUT } from "../../Redux/Constants";
 import {toast} from "react-toastify";
 
 const { SubMenu, Item } = Menu;
@@ -15,8 +15,6 @@ const Header = () => {
 
     const dispatch = useDispatch();
     const { user } = useSelector(user => user);
-
-    const history = useHistory();
 
     const handleClick = (e) => {
         setCurrent(e.key);
@@ -31,7 +29,8 @@ const Header = () => {
                 })
                 localStorage.clear()
                 toast.success(res.data)
-                history.push('/');
+                window.location.href='/';
+                return false;
             })
             .catch(err => console.log(err))
     }
@@ -61,13 +60,13 @@ const Header = () => {
                                 className='float-right'
                         >
                             {user && user.role === "subscriber" &&
-                                <Item icon={<DashboardOutlined/>}>
+                                <Item key="subscriber" icon={<DashboardOutlined/>}>
                                     <Link to="/user/history">Dashboard</Link>
                                 </Item>
                             }
 
                             {user && user.role === "admin" &&
-                                <Item icon={<DashboardOutlined/>}>
+                                <Item key="admin" icon={<DashboardOutlined/>}>
                                     <Link to="/admin/dashboard">Dashboard</Link>
                                 </Item>
                             }

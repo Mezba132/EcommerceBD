@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import Resizer from 'react-image-file-resizer';
-import { useSelector } from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import axios from "axios";
 import {Avatar, Badge} from "antd";
 import { UserOutlined, LoadingOutlined } from '@ant-design/icons';
+import {IMAGE_REMOVE, IMAGE_UPLOAD} from "../../../../Redux/Constants";
 
 const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 
+	const dispatch = useDispatch()
 	const [loading, setLoading] = useState(false);
 	const { user }  = useSelector(user => user);
 
@@ -39,7 +41,10 @@ const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 								// console.log("Uploaded Images", res.data);
 								setLoading(false);
 								uploadedFiles.push(res.data)
-
+								dispatch({
+									type : IMAGE_UPLOAD,
+									payload : uploadedFiles
+								})
 								if(multiple) {
 									let data = [...arrays];
 									data[index]['images'] = uploadedFiles;
@@ -74,6 +79,13 @@ const FileUpload = ({values, setValues, multiple, index, arrays}) => {
 					setLoading(false);
 					let filteredImages = values.images.filter((item) => {
 						return item.public_id !== public_id
+					})
+					let deleteImage = values.images.filter((item) => {
+						return item.public_id === public_id
+					})
+					dispatch({
+						type : IMAGE_REMOVE,
+						payload : deleteImage
 					})
 					if(multiple) {
 						let data = [...arrays];

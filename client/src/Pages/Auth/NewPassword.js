@@ -14,7 +14,12 @@ const NewPassword = ({history}) => {
 	const { user } = useSelector(user => user);
 
 	useEffect(() => {
-		if (user && user.token) history.push('/');
+		let isMounted = true
+		if(user && user.token) {
+			if (isMounted) history.push('/')
+		}
+		// cleanup
+		return () => { isMounted = false }
 	},[user,history])
 
 

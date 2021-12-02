@@ -31,7 +31,7 @@ const SubUpdate = (
 								type="text"
 								onChange={e => setUpdateName(e.target.value)}
 								autoFocus
-								value={updateName}
+								value={updateName || ""}
 								disabled={loading}
 						/>
 						<p className="font-weight-bold">Update Category</p>
