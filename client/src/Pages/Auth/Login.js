@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from "react-redux";
 import { LOGGED_IN_ADMIN, LOGGED_IN_USER } from "../../Redux/Constants";
 import { Link } from "react-router-dom";
-import {userSignIn, authenticate, currentUser, currentAdmin} from '../../Functions/Auth'
+import { auth, googleAuthProvider, facebookAuthProvider, githubAuthProvider } from "../../firebase";
+import {userSignIn, authenticate, createOrUpdateUser} from '../../Functions/Auth'
 const initialState = {
     email : "leomezba@gmail.com",
     password : "m12345"
@@ -98,6 +99,108 @@ const Login = ({history}) => {
         }
     };
 
+    const googleLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const result = await auth.signInWithPopup(googleAuthProvider);
+            const { user } = result;
+            const idTokenResult = await user.getIdTokenResult();
+
+            createOrUpdateUser(idTokenResult.token)
+                    .then((res) => {
+                        authenticate({user : res.data}, () => {
+                            setValues({...values})
+                        })
+                        dispatch({
+                            type: LOGGED_IN_USER,
+                            payload: {
+                                name: res.data.name,
+                                email: res.data.email,
+                                token: idTokenResult.token,
+                                role: res.data.role,
+                                _id: res.data._id
+                            }
+                        })
+
+                        roleBasedUser(res);
+
+                    })
+                    .catch(err => console.log(err))
+            toast.success('Google Loging Success');
+        }
+        catch (e) {
+            toast.error(e.message)
+            setLoading(false);
+        }
+    }
+
+    const facebookLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const result = await auth.signInWithPopup(facebookAuthProvider);
+            const { user } = result;
+            const idTokenResult = await user.getIdTokenResult();
+
+            createOrUpdateUser(idTokenResult.token)
+                    .then((res) => {
+                        dispatch({
+                            type: LOGGED_IN_USER,
+                            payload: {
+                                name: res.data.name,
+                                email: res.data.email,
+                                idToken: idTokenResult.token,
+                                role: res.data.role,
+                                _id: res.data._id
+                            }
+                        })
+
+                        roleBasedUser(res);
+                    })
+                    .catch(err => console.log(err))
+            toast.success('Facebook Loging Success');
+        }
+        catch (e) {
+            toast.error(e.message)
+            setLoading(false);
+        }
+    }
+
+    const githubLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const result = await auth.signInWithPopup(githubAuthProvider);
+            const { user } = result;
+            const idTokenResult = await user.getIdTokenResult();
+
+            createOrUpdateUser(idTokenResult.token)
+                    .then((res) => {
+                        dispatch({
+                            type: LOGGED_IN_USER,
+                            payload: {
+                                name: res.data.name,
+                                email: res.data.email,
+                                idToken: idTokenResult.token,
+                                role: res.data.role,
+                                _id: res.data._id
+                            }
+                        })
+
+                        roleBasedUser(res);
+                    })
+                    .catch(err => console.log(err))
+            toast.success('Github Loging Success');
+            history.push('/');
+        }
+        catch (e) {
+            toast.error(e.message)
+            setLoading(false);
+        }
+    }
+
+
     const loginForm = () => (
         <form onSubmit={handleSubmit}>
             <div className="form-group input-group mb-2">
@@ -147,19 +250,19 @@ const Login = ({history}) => {
                                     <p>
                                         <button
                                                 className="btn btn-block btn-danger"
-                                                // onClick={googleLogin}
+                                                onClick={googleLogin}
                                         >
                                             <i className="fa fa-google"></i> Login via Google
                                         </button>
                                         <button
                                                 className="btn btn-block btn-facebook"
-                                                // onClick={facebookLogin}
+                                                onClick={facebookLogin}
                                         >
                                             <i className="fa fa-facebook-f"></i> Login via Facebook
                                         </button>
                                         <button
                                                 className="btn btn-block btn-dark"
-                                                // onClick={githubLogin}
+                                                onClick={githubLogin}
                                         >
                                             <i className="fa fa-github"></i> Login via Github
                                         </button>
@@ -169,15 +272,15 @@ const Login = ({history}) => {
                                     </p>
                                     {loginForm()}
                                     <span>
-                            <ul className='float-right'>
-                                <li className='list-unstyled text-right'>
-                                    <p><Link to='/reset-password'>Forgot Password</Link></p>
-                                </li>
-                                <li className='list-unstyled text-right'>
-                                    <p>Not Registered ? <Link to='/register'>SignUp</Link></p>
-                                </li>
-                            </ul>
-                        </span>
+                                        <ul className='float-right'>
+                                            <li className='list-unstyled text-right'>
+                                                <p><Link to='/reset-password'>Forgot Password</Link></p>
+                                            </li>
+                                            <li className='list-unstyled text-right'>
+                                                <p>Not Registered ? <Link to='/register'>SignUp</Link></p>
+                                            </li>
+                                        </ul>
+                                    </span>
                                 </div>
                         }
                     </article>

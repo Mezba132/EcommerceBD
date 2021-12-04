@@ -2,7 +2,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 
 export const userSignUp = async (data) => {
-      let encrypt_pass = CryptoJS.AES.encrypt(data.password, "secret_key#leo132").toString();
+      let encrypt_pass = CryptoJS.AES.encrypt(data.password, process.env.REACT_APP_CRYPTOJS_SECRETKEY).toString();
       data.password = encrypt_pass;
 
       return await axios.post(`${process.env.REACT_APP_API}/register`, data,
@@ -16,7 +16,7 @@ export const userSignUp = async (data) => {
 };
 
 export const userSignIn = async (data) => {
-      let encrypt_pass = CryptoJS.AES.encrypt(data.password, "secret_key#leo132").toString();
+      let encrypt_pass = CryptoJS.AES.encrypt(data.password, process.env.REACT_APP_CRYPTOJS_SECRETKEY).toString();
       data.password = encrypt_pass;
 
       return await axios.post(`${process.env.REACT_APP_API}/login`, data,
@@ -102,3 +102,25 @@ export const newPassword = async (password, token) => {
             }
     );
 }
+
+export const getUser = async () => {
+    return await axios.get(`${process.env.REACT_APP_API}/login/success`,
+            {
+                credentials: "include",
+                headers : {
+                    Accept : 'application/json',
+                    'Content-Type' : 'application/json',
+                }
+            }
+    );
+}
+
+export const createOrUpdateUser = async (authtoken) => {
+    return await axios.post(`${process.env.REACT_APP_API}/create-or-update-user`, {},
+            {
+                headers : {
+                    authtoken,
+                },
+            }
+    )
+};

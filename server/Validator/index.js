@@ -3,7 +3,7 @@ const CryptoJS = require('crypto-js')
 
 exports.passwordDecrypt = (req, res, next) => {
 
-	let hashPassword = CryptoJS.AES.decrypt(req.body.password, 'secret_key#leo132');
+	let hashPassword = CryptoJS.AES.decrypt(req.body.password, process.env.CRYPTOJS_SECRETKEY);
 	let textPassword = hashPassword.toString(CryptoJS.enc.Utf8);
 	req.body.password = textPassword;
 	next();

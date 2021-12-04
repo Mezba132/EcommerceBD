@@ -1,7 +1,8 @@
 const User = require("../Models/User");
+const SocialUser = require('../Models/SocialUser')
 const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
-const crypto = require('crypto')
+const crypto = require('crypto');
 
 // create reusable transporter object using the default SMTP transport
 let transporter = nodemailer.createTransport({
@@ -75,6 +76,37 @@ exports.userSignIn = async (req, res) => {
     return res.status(400).json(err)
   }
 }
+
+exports.createOrUpdateUser = async (req, res) => {
+    const { name, picture, email, email_verified } = req.user;
+
+    const user = await SocialUser.findOneAndUpdate(
+            { email },
+            { name, picture },
+            { new: true, useFindAndModify : false }
+    );
+    if (user) {
+        // console.log("USER UPDATED", user);
+        const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET);
+        res.cookie("CookieToken", token, {expire: new Date() + 9999})
+        const {_id, name, email, role} = user;
+        return res.json({_id, email, token, name, role})
+    } else {
+        const newUser = await new SocialUser({
+            email,
+            name,
+            picture,
+            email_verified
+        }).save((err, data) => {
+            // console.log("USER CREATED", newUser);
+            const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET);
+            res.cookie("CookieToken", token, {expire: new Date() + 9999})
+            const {_id, name, email, role} = data;
+            return res.json({_id, email, token, name, role})
+        });
+    }
+};
+
 
 exports.userSignOut = (req, res) => {
   res.clearCookie('CookieToken');
