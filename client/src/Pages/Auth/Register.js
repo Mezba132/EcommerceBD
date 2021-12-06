@@ -19,6 +19,7 @@ const Register = ({history}) => {
     const { user } = useSelector(user => user);
 
     useEffect(() => {
+        if( user && user.token ) history.push('/admin/dashboard')
     },[user, history])
 
     const handleChange = (e) => {

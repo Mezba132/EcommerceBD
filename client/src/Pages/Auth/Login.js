@@ -24,7 +24,7 @@ const Login = ({history}) => {
     useEffect(() => {
         let isMounted = true
             if(user && user.token) {
-                if (isMounted) history.push('/')
+                if (isMounted) history.push('/admin/dashboard')
             }
         // cleanup
         return () => { isMounted = false }
