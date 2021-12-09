@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import AdminNav from "../../../Components/Nav/AdminNav";
-import {Spin} from "antd";
+import {Layout, Spin} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {
@@ -11,6 +11,10 @@ import {
 } from '../../../Functions/Categoy'
 import CreateProductForm from "../../../Components/Shared/Form/Admin/CreateProduct";
 import {CREATE_PRODUCT} from "../../../Redux/Constants";
+const { Content } = Layout
+import HeaderAdmin from "../../../Components/Layout/Admin/Header";
+import SideBar from "../../../Components/Layout/Admin/Sidebar";
+import FooterAdmin from "../../../Components/Layout/Admin/Footer";
 
 const initialState = {
 	title:'',
@@ -96,12 +100,25 @@ const NewProduct = ({history}) => {
 	}
 
 	return (
-			<div className="container-fluid">
-				<div className="row">
-					<div className="sticky-sidebar">
-						<AdminNav/>
-					</div>
-					<div className="adjustment">
+			<Layout>
+				<HeaderAdmin/>
+				<SideBar/>
+				<Layout
+						style={{
+							marginTop : '80px',
+							marginLeft: '200px',
+							padding: '0 24px 24px',
+							width : '100%'
+						}}>
+					<Content
+							className="site-layout-background"
+							style={{
+								width : '80rem',
+								padding: 24,
+								margin: 0,
+								minHeight: 300,
+							}}
+					>
 						{loading ?
 								<div className="text-center"> <Spin tip="Loading..." /> </div>
 							:
@@ -115,9 +132,10 @@ const NewProduct = ({history}) => {
 									/>
 								</div>
 						}
-					</div>
-				</div>
-			</div>
+					</Content>
+					<FooterAdmin/>
+				</Layout>
+			</Layout>
 	)
 }
 

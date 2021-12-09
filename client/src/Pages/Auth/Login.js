@@ -24,7 +24,7 @@ const Login = ({history}) => {
     useEffect(() => {
         let isMounted = true
             if(user && user.token) {
-                if (isMounted) history.push('/admin/dashboard')
+                isMounted && history.push('/')
             }
         // cleanup
         return () => { isMounted = false }
@@ -244,7 +244,7 @@ const Login = ({history}) => {
             <div className="adjustment">
                 <div className="card bg-light mb-5">
                     <article className="card-body mx-auto">
-                        {loading ? <div > <Spin tip="Loading..." /> </div> :
+                        {loading ? <div > <Spin tip="Loading..." /> </div> : !user &&
                                 <div>
                                     <h4 className="card-title mt-3 text-center">LogIn</h4>
                                     <p>

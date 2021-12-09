@@ -134,26 +134,15 @@
 /***/
 
 .sticky-sidebar {
-    position:fixed;
-    max-width: 200px;
+    position: fixed;
     text-align: left;
-    margin-top: 50px;
-    background-color: #1d2124;
-    height: 100%;
-    z-index: 1000;
+    padding-top: 60px;
 }
 
 .fixed-header {
     width: 100%;
     position: fixed;
-    color: #fff;
-    z-index: 50;
-}
-
-.adjustment {
-    padding-top: 60px;
-    width: 98%;
-    padding-left: 150px;
+    z-index: 1;
 }
 
 .pointer {
@@ -222,3 +211,76 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 /***********************************/
+
+.underline{
+    border-bottom: 1px dotted #c03;
+    width: 100%;
+    display: block;
+}
+
+.category {
+    height: 350px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.category::-webkit-scrollbar-track {
+    border: 1px solid #000;
+    padding: 2px 0;
+    background-color: #404040;
+}
+
+.category::-webkit-scrollbar {
+    width: 10px;
+}
+
+.category::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #737272;
+    border: 1px solid #000;
+}
+
+
+body::-webkit-scrollbar-track {
+    border: 1px solid #000;
+    padding: 2px 0;
+    background-color: #404040;
+}
+
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #737272;
+    border: 1px solid #000;
+}
+
+.header_layout {
+    width: 100%;
+    background: #555;
+    color: #f1f1f1;
+    text-align: center;
+    padding: 10px;
+}
+
+/*.sticky {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    width: 100%;*/
+/*}*/
+
+/*.sticky + .content {*/
+/*    padding-top: 100px;*/
+/*}*/
+
+/*.sticky + .sticky-sidebar {*/
+/*    padding-top: 45px;*/
+/*}*/
+
+.site-layout-background {
+  background: #fff;
+}

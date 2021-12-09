@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import AdminNav from "../../../Components/Nav/AdminNav";
-import {Spin} from "antd";
+import {Layout, Spin} from "antd";
 import CreateBrand from "../../../Components/Shared/Form/Admin/CreateBrand";
 import {
 	getBrands,
@@ -18,6 +18,10 @@ import UpdateBrand from "../../../Components/Shared/Modal/Admin/BrandUpdate";
 import BrandList from "../../../Components/Shared/ListPages/Admin/ListBrand";
 import { FetchBrands, FetchBrand } from "../../../Redux/Actions";
 import {CREATE_BRAND, DELETE_BRAND, UPDATE_BRAND} from "../../../Redux/Constants";
+const {Content} = Layout
+import HeaderAdmin from "../../../Components/Layout/Admin/Header";
+import SideBar from "../../../Components/Layout/Admin/Sidebar";
+import FooterAdmin from "../../../Components/Layout/Admin/Footer";
 
 const Brand = () => {
 
@@ -150,12 +154,25 @@ const Brand = () => {
 					updateSubmit={updateSubmit}
 			/>
 
-			<div className="container-fluid">
-				<div className="row">
-					<div className="sticky-sidebar">
-						<AdminNav/>
-					</div>
-					<div className="adjustment">
+			<Layout>
+				<HeaderAdmin/>
+				<SideBar/>
+				<Layout
+						style={{
+							marginTop : '80px',
+							marginLeft: '200px',
+							padding: '0 24px 24px',
+							width : '100%'
+						}}>
+					<Content
+							className="site-layout-background"
+							style={{
+								width : '80rem',
+								padding: 24,
+								margin: 0,
+								minHeight: 300,
+							}}
+					>
 						{loading ? <div className="text-center"> <Spin tip="Loading..." /> </div> :
 							<CreateBrand
 								handleSubmit={handleSubmit}
@@ -193,9 +210,10 @@ const Brand = () => {
 								disabledClassName={"paginationDisabled"}
 								activeClassName={"paginationActive"}
 						/>
-					</div>
-				</div>
-			</div>
+					</Content>
+					<FooterAdmin/>
+				</Layout>
+			</Layout>
 		</React.Fragment>
 	)
 }

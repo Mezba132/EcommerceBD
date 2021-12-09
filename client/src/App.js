@@ -23,6 +23,7 @@ import CreateProduct from "./Pages/Admin/Product/CreateProduct";
 import CreateProducts from "./Pages/Admin/Product/CreateProducts";
 import ListProducts from "./Pages/Admin/Product/ListProducts";
 import Brand from "./Pages/Admin/Brand/Brand";
+import LocalAuthUser from "./Pages/Admin/User";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -84,7 +85,7 @@ const App = () => {
 
   return (
       <BrowserRouter>
-        <Header/>
+        {/*<Header/>*/}
         <ToastContainer />
         <Switch>
 
@@ -102,6 +103,7 @@ const App = () => {
           <AdminRoute exact path="/admin/create-products" component={CreateProducts} />
           <AdminRoute exact path="/admin/list-products" component={ListProducts}/>
           <AdminRoute exact path="/admin/brand" component={Brand} />
+          <AdminRoute exact path="/admin/users-local" component={LocalAuthUser} />
 
         </Switch>
       </BrowserRouter>

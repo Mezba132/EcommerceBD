@@ -2,9 +2,11 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Dotenv = require('dotenv-webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+require('regenerator-runtime/runtime')
 
 module.exports = {
 	mode : 'development',
+	entry : ["regenerator-runtime/runtime.js", './src/index.js'] ,
 	devServer: {
 		port: 3000,
 		devMiddleware: {
@@ -17,7 +19,6 @@ module.exports = {
 		historyApiFallback: true,
 		compress: true,
 	},
-	entry : './src/index.js',
 	output: {
 		path: path.resolve(__dirname, 'public'),
 		filename: 'bundle.js',
@@ -52,5 +53,6 @@ module.exports = {
 			    dry: false,
 			    dangerouslyAllowCleanPatternsOutsideProject: true
 		    })
+			// new CleanWebpackPlugin()
 	]
 }

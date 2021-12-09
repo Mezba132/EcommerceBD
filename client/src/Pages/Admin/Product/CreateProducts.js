@@ -6,6 +6,10 @@ import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 import MultiProductForm from "../../../Components/Shared/Form/Admin/MultiProducts";
 import {getBrands} from "../../../Functions/Brand";
+import {Layout} from "antd";
+const {Content} = Layout
+import HeaderAdmin from "../../../Components/Layout/Admin/Header";
+import SideBar from "../../../Components/Layout/Admin/Sidebar";
 
 const CreateProducts = () => {
 
@@ -104,12 +108,25 @@ const CreateProducts = () => {
 
 
 	return (
-			<div className="container-fluid">
-				<div className="row">
-					<div className="sticky-sidebar">
-							<AdminNav/>
-					</div>
-					<div className="adjustment">
+			<Layout>
+				<HeaderAdmin/>
+				<SideBar/>
+				<Layout
+						style={{
+							marginTop : '80px',
+							marginLeft: '200px',
+							padding: '0 24px 24px',
+							width : '100%'
+						}}>
+					<Content
+							className="site-layout-background"
+							style={{
+								width : '80rem',
+								padding: 24,
+								margin: 0,
+								minHeight: 300,
+							}}
+					>
 						<div className="jumbotron">
 							<h1 className="text-center">Add Multiple Products</h1>
 							<MultiProductForm
@@ -126,12 +143,12 @@ const CreateProducts = () => {
 						</div>
 
 						<button
-								className="btn-primary mb-5 p-3 float-right"
+								className="btn-primary mt-3 p-3 float-right"
 								onClick={handleSubmit}>Submit
 						</button>
-					</div>
-				</div>
-			</div>
+					</Content>
+				</Layout>
+			</Layout>
 	)
 }
 

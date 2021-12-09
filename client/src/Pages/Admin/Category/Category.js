@@ -16,6 +16,11 @@ import CategoryUpdate from "../../../Components/Shared/Modal/Admin/CategoryUpdat
 import CategoryList from "../../../Components/Shared/ListPages/Admin/ListCategory";
 import { FetchCategories, FetchCategory } from '../../../Redux/Actions'
 import {CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY} from "../../../Redux/Constants";
+import { Layout  } from "antd";
+const {Content} = Layout
+import HeaderAdmin from "../../../Components/Layout/Admin/Header";
+import SideBar from "../../../Components/Layout/Admin/Sidebar";
+import FooterAdmin from "../../../Components/Layout/Admin/Footer";
 
 const Category = () => {
       const [name, setName] = useState('')
@@ -151,51 +156,67 @@ const Category = () => {
                             updateSubmit={updateSubmit}
                     />
 
-                    <div className="container-fluid">
-                      <div className="row">
-                          <div className="sticky-sidebar">
-                              <AdminNav/>
-                          </div>
-                          <div className="adjustment">
-                          {loading ?
-                                  <div className="text-center"> <Spin tip="Loading..." /> </div> :
-                                  <CreateCategoryForm
-                                          handleSubmit={handleSubmit}
-                                          name={name} setName={setName}
-                                          loading={loading}
-                                  />
-                          }
-                          <LocalSearch keyword={keyword} setKeyword={setKeyword}/> {/* step-2 && step-3 */}
-                          {categories.length > 0 ?
-                            <div className="mt-3">
-                                <CategoryList
-                                        categories={categories}
-                                        searched={searched}
-                                        keyword={keyword}
-                                        onOpenUpdateHandler={onOpenUpdateHandler}
-                                        onOpenDeleteHandler={onOpenDeleteHandler}
-                                        pagesVisited={pagesVisited}
-                                        categoriesPerPages={categoriesPerPages}
-                                />
-                            </div> :
-                            <div className="text-center mt-5">
-                                  <h1>No Category Found</h1>
-                            </div>
-                          }
-                            <ReactPaginate
-                                    previousLabel={"Previous"}
-                                    nextLabel={"Next"}
-                                    pageCount={pageCount}
-                                    onPageChange={handlePageClick}
-                                    containerClassName={"paginationBtns"}
-                                    previousLinkClassName={"previousBtn"}
-                                    nextLinkClassName={"nextBtn"}
-                                    disabledClassName={"paginationDisabled"}
-                                    activeClassName={"paginationActive"}
-                            />
-                        </div>
-                      </div>
-                  </div>
+                    <Layout>
+                        <HeaderAdmin/>
+                        <SideBar/>
+                        <Layout
+                                style={{
+                                        marginTop : '80px',
+                                        marginLeft: '200px',
+                                        padding: '0 24px 24px',
+                                        width : '100%'
+                                    }}>
+                            <Content
+                                    className="site-layout-background"
+                                    style={{
+                                        width : '80rem',
+                                        padding: 24,
+                                        margin: 0,
+                                        minHeight: 300,
+                                    }}
+                            >
+                                <div>
+                                    {loading ?
+                                            <div className="text-center"> <Spin tip="Loading..." /> </div> :
+                                            <CreateCategoryForm
+                                                    handleSubmit={handleSubmit}
+                                                    name={name} setName={setName}
+                                                    loading={loading}
+                                            />
+                                    }
+                                    <LocalSearch keyword={keyword} setKeyword={setKeyword}/> {/* step-2 && step-3 */}
+                                    {categories.length > 0 ?
+                                            <div className="mt-3">
+                                                <CategoryList
+                                                        categories={categories}
+                                                        searched={searched}
+                                                        keyword={keyword}
+                                                        onOpenUpdateHandler={onOpenUpdateHandler}
+                                                        onOpenDeleteHandler={onOpenDeleteHandler}
+                                                        pagesVisited={pagesVisited}
+                                                        categoriesPerPages={categoriesPerPages}
+                                                />
+                                            </div> :
+                                            <div className="text-center mt-5">
+                                                <h1>No Category Found</h1>
+                                            </div>
+                                    }
+                                    <ReactPaginate
+                                            previousLabel={"Previous"}
+                                            nextLabel={"Next"}
+                                            pageCount={pageCount}
+                                            onPageChange={handlePageClick}
+                                            containerClassName={"paginationBtns"}
+                                            previousLinkClassName={"previousBtn"}
+                                            nextLinkClassName={"nextBtn"}
+                                            disabledClassName={"paginationDisabled"}
+                                            activeClassName={"paginationActive"}
+                                    />
+                                </div>
+                            </Content>
+                            <FooterAdmin/>
+                        </Layout>
+                    </Layout>
                 </React.Fragment>
             )
 }

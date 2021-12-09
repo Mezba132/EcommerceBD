@@ -17,6 +17,11 @@ import ProductUpdate from "../../../Components/Shared/Modal/Admin/ProductUpdate"
 import ShowProduct from "../../../Components/Shared/Modal/Admin/ProductShow";
 import { FetchProducts, FetchProduct } from '../../../Redux/Actions'
 import {DELETE_PRODUCT, FETCH_PRODUCT, UPDATE_PRODUCT} from "../../../Redux/Constants";
+import {Layout} from "antd";
+const {Content} = Layout
+import HeaderAdmin from "../../../Components/Layout/Admin/Header";
+import SideBar from "../../../Components/Layout/Admin/Sidebar";
+import FooterAdmin from "../../../Components/Layout/Admin/Footer";
 
 const initialState = {
 	title:'',
@@ -279,12 +284,25 @@ const ListProducts = () => {
 						showProductModal={showProductModal}
 				/>
 
-				<div className="container-fluid">
-					<div className="row">
-						<div className="sticky-sidebar">
-							<AdminNav/>
-						</div>
-						<div className="adjustment">
+				<Layout>
+					<HeaderAdmin/>
+					<SideBar/>
+					<Layout
+							style={{
+								marginTop : '80px',
+								marginLeft: '200px',
+								padding: '0 24px 24px',
+								width : '100%'
+							}}>
+						<Content
+								className="site-layout-background"
+								style={{
+									width : '80rem',
+									padding: 24,
+									margin: 0,
+									minHeight: 300,
+								}}
+						>
 							<div className="jumbotron">
 								<ListFilter
 										filteredData={filteredData}
@@ -321,9 +339,10 @@ const ListProducts = () => {
 											activeClassName={"paginationActive"}
 									/>
 							}
-						</div>
-					</div>
-				</div>
+						</Content>
+						<FooterAdmin/>
+					</Layout>
+				</Layout>
 			</React.Fragment>
 	)
 }
