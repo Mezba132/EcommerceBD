@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HomeOutlined, UserSwitchOutlined, UserOutlined, UserAddOutlined, DashboardOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserSwitchOutlined, UserOutlined, UserAddOutlined, DashboardOutlined, MenuOutlined } from '@ant-design/icons';
 import {Link} from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import {userSignOut} from '../../../Functions/Auth';
@@ -7,6 +7,7 @@ import { LOGOUT } from "../../../Redux/Constants";
 import {toast} from "react-toastify";
 
 import { Menu, Layout } from 'antd';
+import SideDrawer from "./SideDrawer";
 
 const { Header } = Layout;
 
@@ -15,6 +16,7 @@ const { SubMenu, Item } = Menu;
 const HeaderAdmin = () => {
 
 	const [current, setCurrent] = useState('');
+	const [visible, setVisible] = useState(false);
 
 	const dispatch = useDispatch();
 	const { user } = useSelector(user => user);
@@ -22,6 +24,13 @@ const HeaderAdmin = () => {
 	const handleClick = (e) => {
 	    setCurrent(e.key);
 	}
+
+	const showDrawer = () => {
+		setVisible(true);
+	};
+	const onClose = () => {
+		setVisible(false);
+	};
 
 	const logout = () => {
 		userSignOut()
@@ -43,7 +52,14 @@ const HeaderAdmin = () => {
 	return(
 			<div className='fixed-header'>
 				<Header className="header">
-					<Menu onClick={handleClick} theme='dark' selectedKeys={[current]} mode="horizontal" >
+					<span className="menubar" onClick={showDrawer}>
+					    <MenuOutlined />
+					</span>
+					<SideDrawer
+						onClose = {onClose}
+						visible = {visible}
+					/>
+					<Menu onClick={handleClick} className="menu" theme='dark' selectedKeys={[current]} mode="horizontal" >
 						<Item key="home" icon={<HomeOutlined/>}>
 							<Link to='/'>Home</Link>
 						</Item>

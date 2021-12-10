@@ -17,7 +17,7 @@ const ListProduct = (
 		}) => {
 
 	return (
-		<div>
+		<div className='product-table'>
 			<table className="table table-striped table-dark">
 				<thead className="text-center">
 				<tr>

@@ -53,6 +53,5 @@ module.exports = {
 			    dry: false,
 			    dangerouslyAllowCleanPatternsOutsideProject: true
 		    })
-			// new CleanWebpackPlugin()
 	]
 }

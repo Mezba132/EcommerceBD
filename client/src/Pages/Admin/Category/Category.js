@@ -159,22 +159,8 @@ const Category = () => {
                     <Layout>
                         <HeaderAdmin/>
                         <SideBar/>
-                        <Layout
-                                style={{
-                                        marginTop : '80px',
-                                        marginLeft: '200px',
-                                        padding: '0 24px 24px',
-                                        width : '100%'
-                                    }}>
-                            <Content
-                                    className="site-layout-background"
-                                    style={{
-                                        width : '80rem',
-                                        padding: 24,
-                                        margin: 0,
-                                        minHeight: 300,
-                                    }}
-                            >
+                        <Layout className='content-layout'>
+                            <Content className="site-layout-background content">
                                 <div>
                                     {loading ?
                                             <div className="text-center"> <Spin tip="Loading..." /> </div> :

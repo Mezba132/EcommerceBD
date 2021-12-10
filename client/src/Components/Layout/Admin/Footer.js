@@ -3,7 +3,7 @@ import {Layout} from "antd";
 const { Footer } = Layout;
 
 const FooterAdmin = () => (
-		<div>
+		<div className='fixed-footer'>
 			<Footer style={{ textAlign: 'center' }}>Updated by Nokibul Mezba</Footer>
 		</div>
 )

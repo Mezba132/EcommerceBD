@@ -37,10 +37,7 @@ const SideBar = (props) => {
 	useEffect(() => {},[current]);
 
 	return(
-			<div style={{
-				position: "fixed",
-				paddingTop: '60px'
-			}}>
+			<div className="sticky-sidebar">
 				<Sider collapsible collapsed={toggleCollapsed} onCollapse={changeToggleCollapsed}>
 					<Menu
 							mode="inline"
