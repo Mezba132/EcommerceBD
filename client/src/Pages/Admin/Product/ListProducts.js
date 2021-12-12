@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import AdminNav from "../../../Components/Nav/AdminNav";
 import { getProductsByFilters, removeProduct, getProduct, updateProduct } from "../../../Functions/Product";
 import LocalSearch from "../../../Components/Shared/LocalSearch";
 import {toast} from "react-toastify";

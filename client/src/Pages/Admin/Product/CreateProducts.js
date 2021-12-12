@@ -1,5 +1,4 @@
 import React, {useEffect, useState } from "react";
-import AdminNav from "../../../Components/Nav/AdminNav";
 import {getCategories, getSubCategories} from "../../../Functions/Categoy";
 import {createProduct} from "../../../Functions/Product";
 import {toast} from "react-toastify";

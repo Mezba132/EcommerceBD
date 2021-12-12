@@ -6,7 +6,6 @@ import {LOGGED_IN_USER, LOGGED_IN_ADMIN} from "./Redux/Constants";
 import 'react-toastify/dist/ReactToastify.css';
 
 import Home from './Pages/Home';
-import Header from './Components/Nav/Header';
 import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
 import NewPassword from "./Pages/Auth/NewPassword";

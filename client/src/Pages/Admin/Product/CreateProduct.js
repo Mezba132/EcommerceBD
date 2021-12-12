@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import AdminNav from "../../../Components/Nav/AdminNav";
 import {Layout, Spin} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";

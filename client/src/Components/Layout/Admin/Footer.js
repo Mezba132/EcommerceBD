@@ -4,7 +4,7 @@ const { Footer } = Layout;
 
 const FooterAdmin = () => (
 		<div className='fixed-footer'>
-			<Footer style={{ textAlign: 'center' }}>Updated by Nokibul Mezba</Footer>
+			<Footer style={{ textAlign: 'center' }}><small>&copy; Copyright 2021, Developed by Nokibul Amin Mezba</small> </Footer>
 		</div>
 )
 

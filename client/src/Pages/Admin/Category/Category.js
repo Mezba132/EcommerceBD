@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import AdminNav from "../../../Components/Nav/AdminNav";
 import {Spin} from "antd";
 import {
       createCategory,

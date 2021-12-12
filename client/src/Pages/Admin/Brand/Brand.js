@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from "react";
-import AdminNav from "../../../Components/Nav/AdminNav";
 import {Layout, Spin} from "antd";
 import CreateBrand from "../../../Components/Shared/Form/Admin/CreateBrand";
 import {
-	getBrands,
 	createBrand,
 	removeBrand,
-	getBrand,
 	updateBrand
 } from '../../../Functions/Brand'
 import LocalSearch from "../../../Components/Shared/LocalSearch";
