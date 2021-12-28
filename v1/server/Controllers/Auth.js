@@ -107,7 +107,6 @@ exports.createOrUpdateUser = async (req, res) => {
     }
 };
 
-
 exports.userSignOut = (req, res) => {
   res.clearCookie('CookieToken');
   res.json("SignOut Successfully Done")
