@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const crypto = require('crypto');
 
-// create reusable transporter object using the default SMTP transport
+
 let transporter = nodemailer.createTransport({
   host: "smtp.live.com",
   port: 587,

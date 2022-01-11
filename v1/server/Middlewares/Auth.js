@@ -1,5 +1,5 @@
 const expressJWT = require('express-jwt') // for authorization check
-const admin = require("../firebase");
+const admin = require("../Firebase/index");
 
 exports.authCheck = async (req, res, next) => {
   // console.log(req.headers); // token

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Route} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import LoadToRedirect from "../../Pages/User/LoadToRedirect";
 import {currentAdmin} from "../../Functions/Auth";
