@@ -1,31 +1,27 @@
 import React, {Component} from 'react';
 import {
-    BrowserRouter as Router,
+    BrowserRouter,
     Route,
     Routes
 } from "react-router-dom";
 import { ApolloProvider } from '@apollo/client'
 import Client from "./GraphQLClient";
-import { Login } from "./Pages/Auth/Login";
-import { Register } from "./Pages/Auth/Register";
-import {Home} from "./Pages/Home";
+import  Login  from "./Pages/Auth/Login";
+import Register from "./Pages/Auth/Register";
+import Home from "./Pages/Home";
 
-export class App extends Component {
-
-    render() {
+const App = () => {
         return (
-            <React.Fragment>
                 <ApolloProvider client={Client}>
-                    <Router>
-                        <Routes>
-
+                    <BrowserRouter>
+                            <Routes>
                                 <Route path="/" element={<Home/>} />
                                 <Route path="/register" element={<Register/>} />
                                 <Route path="/login" element={<Login/>} />
-                        </Routes>
-                    </Router>
+                            </Routes>
+                    </BrowserRouter>
                 </ApolloProvider>
-            </React.Fragment>
         )
     }
-}
+
+export default App;

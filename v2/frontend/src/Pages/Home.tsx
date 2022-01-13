@@ -1,9 +1,9 @@
-import React, {Component, Fragment} from "react";
+import React, { Fragment } from "react";
 import Header from "../Shared/Layout/Auth/Header";
 import Footer from "../Shared/Layout/Auth/Footer";
 
-export class Home extends Component{
-    render() {
+const Home = () => {
+
         return (
             <Fragment>
                 <Header/>
@@ -28,5 +28,7 @@ export class Home extends Component{
                 <Footer/>
             </Fragment>
         )
-    }
+
 }
+
+export default Home;
