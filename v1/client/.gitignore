@@ -26,3 +26,7 @@ yarn-error.log*
 ./src/firebase.js
 package-lock.json
 yarn.lock
+
+
+./public/bundle.js
+./public/main.css
