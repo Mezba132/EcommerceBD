@@ -36,6 +36,24 @@ exports.listByFilters = async (req, res) => {
 	res.json(listProduct);
 }
 
+exports.listByNewArrivals = async (req, res) => {
+	let currentDate = new Date();
+	let prev7Date = currentDate.setDate(currentDate.getDate()-7);
+
+	const newProduct = await Product.find({"createdAt": { $gt: prev7Date }})
+		.sort([["createdAt", "desc"]])
+		.exec()
+	res.json(newProduct);
+}
+
+exports.listByBestSell = async (req, res) => {
+
+	const newProduct = await Product.find({"sold": { $gt: 10 }})
+		.sort([["createdAt", "desc"]])
+		.exec()
+	res.json(newProduct);
+}
+
 exports.remove = async (req, res) => {
 	try {
 		const deleted = await Product.findOneAndDelete(

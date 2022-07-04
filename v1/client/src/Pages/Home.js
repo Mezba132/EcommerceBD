@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from '../Components/Layout/User/header';
 import SideBar from '../Components/Layout/User/sidebar';
 import Body from '../Components/Layout/User/body';
-import { FetchProducts } from '../Redux/Actions';
+import { FetchNewProducts, FetchBestProducts } from '../Redux/Actions/Shop/product';
 import ShoppingCart from '../Components/Shared/ShoppingCart';
 
 const initialState = {
@@ -19,34 +19,29 @@ const Home = () => {
 
       const { isShowSidebar, isShowShoppingCart, cart, totalCartItem } = data;
 
-      const [filteredData, setFilteredData] = useState({
-		filters: {
-			title: '',
-			category: '',
-			subs:[],
-			color:[],
-			brand:'',
-			stock: '',
-			createdDate:[]
-		}
-	})
-
 	const dispatch = useDispatch()
-	const { product } = useSelector(state => state)
-	const products = product.getProducts;
+	const { home } = useSelector(state => state)
+      
+	const newProducts = home.getNewProducts;
+      const bestProducts = home.getBestProducts;
 
 
 	useEffect(() => {
 		let isMounted = true
 		if(isMounted) {
-			loadProducts(filteredData.filters);
+			loadNewProducts()
+                  loadBestProducts()
 		}
 		// cleanup
 		return () => { isMounted = false }
 	},[dispatch])
 
-	const loadProducts = (currentFilters) => {
-		dispatch(FetchProducts(currentFilters))
+	const loadNewProducts = () => {
+		dispatch(FetchNewProducts());
+	}
+
+      const loadBestProducts = () => {
+		dispatch(FetchBestProducts());
 	}
 
       const toggleSidebar = () => {
@@ -89,7 +84,8 @@ const Home = () => {
                               isShowSidebar={isShowSidebar}
                         />
                         <Body
-                              products={products}
+                              newProducts={newProducts}
+                              bestProducts={bestProducts}
                               addToCartHandler={addToCartHandler}
                               isShowSidebar={isShowSidebar}
                               isShowShoppingCart={isShowShoppingCart}

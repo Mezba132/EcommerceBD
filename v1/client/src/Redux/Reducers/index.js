@@ -5,6 +5,7 @@ import SubCategory from "./Admin/SubCategory";
 import Brand from "./Admin/Brand";
 import Product from "./Admin/Product";
 import Image from "./Admin/Image";
+import Home from "./Shop/index";
 
 const rootReducer = combineReducers({
     user: AuthReducers,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     subs : SubCategory,
     brand : Brand,
     product : Product,
-    image : Image
+    image : Image,
+    home : Home
 });
 
 export default rootReducer;
