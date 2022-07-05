@@ -1,12 +1,40 @@
-import React, {useState} from 'react';
-import { useSelector } from "react-redux";
+import React, {useState, useEffect} from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { FetchProducts } from '../../../../Redux/Actions';
 
 const SearchForm = () => {
 
     const [value, setValue] = useState("");
 
-    const { product } = useSelector(state => state)
-    const products = product.getProducts;
+	const [filteredData, setFilteredData] = useState({
+		filters: {
+			title: '',
+			category: '',
+			subs:[],
+			color:[],
+			brand:'',
+			stock: '',
+			createdDate:[]
+		}
+	})
+
+	const dispatch = useDispatch()
+	const { product } = useSelector(state => state)
+	const products = product.getProducts;
+
+    useEffect(() => {
+		let isMounted = true
+		if(isMounted) {
+			loadProducts(filteredData.filters);
+		}
+		// cleanup
+		return () => { isMounted = false }
+	},[dispatch])
+
+	const loadProducts = (currentFilters) => {
+		dispatch(FetchProducts(currentFilters))
+	}
+    
 
     const onChange = (event) => {
         setValue(event.target.value);

@@ -17,7 +17,7 @@ mongoose
     useFindAndModify: true,
     useUnifiedTopology: true
   })
-  .then(() => console.log("DB CONNECTED"))
+  .then(() => console.log("DB Connected Sucessfully"))
   .catch((err) => console.log("DB CONNECTION ERR", err));
 
 // Middleware
