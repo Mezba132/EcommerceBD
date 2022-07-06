@@ -1,5 +1,5 @@
-.env
+# .env
 node_modules
 ./../.idea
 package-lock.json
-config/serviceAccountKey.json
+# config/serviceAccountKey.json
